@@ -1,0 +1,165 @@
+/* sign up */
+.toggle-button {
+  cursor: pointer;
+}
+
+/* header */
+.droping {
+  position: absolute;
+  top: 3rem ;
+  left: calc(100% - 15rem ) !important;
+ 
+}
+
+/* auth */
+.auth-bd{
+  background-color: #414BA3;
+  padding-top: 3rem;
+}
+
+/* dashboard */
+.text-poppins {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 22px;
+    color: #1D242E;
+  }
+  .text-poppins-bold {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 22px;
+    color: #1D242E;
+  }
+  .text-poppins-regular {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 22px;
+    color: #1D242E;
+    font-size: 12px;
+  }
+  .text-poppins-semibold {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+    color: #1D242E;
+    font-size: 16px;
+  }
+  
+
+  .bg-danger-light {
+    background-color: #f8d7da; /* Lighter shade of red (adjust the color as needed) */
+  }
+  .bg-info-light {
+    background-color: #d1ecf1; /* Lighter shade of blue (adjust the color as needed) */
+  }
+  .bg-warning-light {
+    background-color: #fff3cd; /* Lighter shade of yellow (adjust the color as needed) */
+  }
+  .bg-success-light {
+    background-color: #d4edda; /* Lighter shade of green (adjust the color as needed) */
+  }
+
+  /* DatePickerStyles.css */
+.custom-datepicker{
+    cursor: pointer;
+}
+.custom-datepicker-wrapper {
+    cursor: pointer;
+  }
+
+  /* point of entry */
+
+  .empty-cart{
+    background-color: #a0a0a0;
+  }
+  .ordersCard{
+    height: 30vh;
+    /* background-color: #1D242E; */
+    overflow-y: auto;
+  }
+  .ordersCard::-webkit-scrollbar {
+    width: 8px; /* adjust the width as needed */
+  }
+
+  .ordersCard::-webkit-scrollbar-thumb {
+    background-color: #888; /* color of the scrollbar thumb */
+    border-radius: 4px; /* round the corners of the thumb */
+  }
+  .order-display{
+    cursor: pointer;
+  }
+  .order-display-bg{
+    background-color: #f3f7f7;
+  }
+  .order-display:hover{
+    background-color: #e6e9e9;
+  }
+  .sales-entry-container{
+    height: calc(100vh - 3rem);
+  }
+  .inventory-select{
+    height: calc(100vh - 5.8rem);
+    background-color: #808080;
+    overflow-y: auto;
+  }
+  .inventory-select::-webkit-scrollbar {
+    width: 8px; /* adjust the width as needed */
+  }
+
+  .inventory-select::-webkit-scrollbar-thumb {
+    background-color: #3f3f3f; /* color of the scrollbar thumb */
+    border-radius: 4px; /* round the corners of the thumb */
+  }
+
+  .medicine-card{
+    padding: 1px;
+  }
+
+  .triangle {
+    width: 0;
+    height: 0;
+    border-left: 40px solid transparent; /* Adjust size as needed */
+    border-bottom: 40px solid transparent; /* Adjust size as needed */
+    border-top: 40px solid #93a6b9; /* Triangle color */
+  }
+
+  .scrollable-list {
+    max-width: 300px; /* Set a maximum width to enable horizontal scrolling */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    white-space: nowrap; /* Prevent text from wrapping to the next line */
+  }
+  .scrollable-list::-webkit-scrollbar {
+    height: 8px; /* adjust the width as needed */
+  }
+
+  .scrollable-list::-webkit-scrollbar-thumb {
+    background-color: #615d75; /* color of the scrollbar thumb */
+    border-radius: 4px; /* round the corners of the thumb */
+  }
+  
+.receipt{
+  height: calc(78vh);
+  overflow-y: auto;
+}
+.receipt::-webkit-scrollbar {
+  width: 8px; /* adjust the width as needed */
+}
+
+.receipt::-webkit-scrollbar-thumb {
+  background-color: #888; /* color of the scrollbar thumb */
+  border-radius: 4px; /* round the corners of the thumb */
+}
+ 
+.col-9, .col-3, .col-6, .col-4, .col-11, .col-12, .col-2, .col-md-5{
+  padding: 0;
+}
+  
+  
+  
+ 
