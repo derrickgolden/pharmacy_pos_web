@@ -23,11 +23,6 @@ const MedicineList: React.FC<MedicineListProps> = ({onHandleActionDetails}) =>{
     const [open_update_modal, setOpen_update_modal] = useState({ render: true, modal_open: false })
     const [open_edit_modal, setOpen_edit_modal] = useState({ render: true, modal_open: false })
 
-    const [apidata, setApidata] = useState([])
-    {/* data table column name */ }
-    const [apicol, setApiCol] = useState([])
-    const [rerendarApi, setRerendarApi] = useState(false)
-
     const dispatch = useDispatch();
     const medicineList = useSelector((state: RootState) => state.medicineList)
     const apiCall = useSelector((state: RootState) => state.callApi)

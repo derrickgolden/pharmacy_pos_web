@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSalesReportList } from '../../redux/salesReport';
 import { RootState } from '../../redux/store';
 import { ResultItem, calculateTotalSales } from './calculations/totalSalesUnits';
-import PagesHeader from '../components/sharedComponents/PagesHeader';
 import ReportHeader, { SelectedDate } from '../components/reports/ReportHeader';
+import SalesTable from '../components/reports/SalesTable';
 
 const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -77,6 +77,7 @@ const SalesReport = () =>{
                 </div>
             </div>
         </div>
+        <SalesTable salesData={sales} />
         </div>
     )
 }

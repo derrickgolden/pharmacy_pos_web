@@ -104,7 +104,36 @@ LEFT JOIN
     }
 };
 
+export const deleteMedicine = async (medicine_id: number ): Promise<universalResponse> => {    
+    try {
+        const connection: RowDataPacket = await pool.getConnection();
+
+            var [res] = await connection.query(`
+                DELETE FROM medicine_list
+                WHERE medicine_id = ?;
+            `, [medicine_id]);
+
+        connection.release();
+console.log(res);
+
+        return {
+            success: true,
+            msg: `Medicine deleted`,
+            details: res
+        };
+    } catch (error) {
+        console.error('Error:', error.message);
+
+        if (error.sqlMessage) {
+            return { success: false, msg: "Database Error", err: error.sqlMessage };
+        } else {
+            return { success: false, msg: "Database Error", err: error.message };
+        }
+    }
+};
+
 module.exports = {
     addMedicine,
     getMedicineList,
+    deleteMedicine,
 }

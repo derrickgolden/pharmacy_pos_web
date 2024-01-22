@@ -27,6 +27,7 @@ const SalesEntry = () =>{
     const [payMethods, setPayMethods] = useState([])
     const [saleRes, setSaleRes] = useState({});
     const [updateStock, setUpdateStock] = useState<{}[]>([]);
+    const [isDigitClicked, setIsDigitClicked] = useState(false)
 
     const navigate = useNavigate()
 
@@ -42,8 +43,25 @@ const SalesEntry = () =>{
 
     const PoeCalcHandles = {
         handleDigitClick: (digit: number) => {
-          // Your logic for handling digit click
-          console.log(`Digit ${digit} clicked`);
+          // console.log(`Digit ${digit} clicked`);
+          setOrderDetails((arr) => {
+              return arr.map((orderDetail) => {
+                if (orderDetail.medicine_id === activeCard && orderDetail.units > 0) {
+                  let newUnits;
+                  if(isDigitClicked){
+                    const newUnitsAsString = orderDetail.units.toString() + digit.toString();
+                    newUnits = parseInt(newUnitsAsString, 10);
+                  }else{
+                    newUnits = digit;
+                    setIsDigitClicked(true);
+                  }
+                  const price = orderDetail.sub_total/orderDetail.units
+                      return { ...orderDetail, units: newUnits, sub_total: newUnits * price };
+                } else {
+                  return orderDetail
+                }
+              })
+            })
         },
       
         handleQuantityIncByOne: () => {
@@ -76,9 +94,12 @@ const SalesEntry = () =>{
             if(orderDetail?.units > 0){
               return arr.map((orderDetail) => {
                 if (orderDetail.medicine_id === activeCard && orderDetail.units > 0) {
-                  const newUnits = orderDetail.units - 1
+                  const unitsString = orderDetail.units.toString();
+
+                  const newUnits = Math.max(parseInt(unitsString.slice(0, -1), 10) || 0, 0);
+
                   const price = orderDetail.sub_total/orderDetail.units
-                      return { ...orderDetail, units: newUnits, sub_total: orderDetail.sub_total - price };
+                      return { ...orderDetail, units: newUnits, sub_total: newUnits * price };
                 } else {
                   return orderDetail
                 }
@@ -148,8 +169,6 @@ const SalesEntry = () =>{
                       text: msg,
                     });
                   }else{
-                    console.log(`Remaining containers: ${remainingContainers}`);
-                    console.log(`Remaining units: ${remainingUnits}`);
                     setUpdateStock((stockArr) => [...stockArr, 
                       {medicine_id: newOrder.medicine_id, remainingContainers, remainingUnits}])
                     }
@@ -176,6 +195,7 @@ const SalesEntry = () =>{
             }
           });
           setActiveCard(newOrder.medicine_id);
+          isDigitClicked? setIsDigitClicked(false) :null;
       };
       
     const handleEditOrder = (order) =>{
