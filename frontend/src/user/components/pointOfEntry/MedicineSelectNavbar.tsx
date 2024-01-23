@@ -1,8 +1,19 @@
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 
 const MedicineSelectNavbar =({groupNames, setShowGroup, setSearchMedicine}) =>{
   // console.log(groupNames);
-  
+  const scrollableListRef = useRef(null);
+  useEffect(() =>{
+    if (scrollableListRef.current) {
+      const scrollableListWidth = scrollableListRef.current.offsetWidth;
+      // console.log(scrollableListRef.current);
+      
+      // console.log('Scrollable List Width:', scrollableListWidth);
+      // Do something with the width, such as store it in state
+    }
+  }, []);
+
     return(
       <nav className="navbar navbar-expand-lg navbar-light bg-light w-100 "
         style={{height: "2.8rem"}}>
@@ -13,7 +24,7 @@ const MedicineSelectNavbar =({groupNames, setShowGroup, setSearchMedicine}) =>{
         </button>
 
         <div className="flex justify-content-between collapse navbar-collapse" id="navbarSupportedContent" >
-          <div className="scrollable-list">
+          <div ref={scrollableListRef} className="scrollable-list">
             <ul className="navbar-nav mr-auto">
               {groupNames?.map((groupName, i) => (
                 <li onClick={() => setShowGroup(groupName)} className="nav-item active" key={i}>

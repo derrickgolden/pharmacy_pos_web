@@ -76,7 +76,7 @@ const PosEntry: React.FC<PosEntryProps> = ({ PoeCalcHandles }) => {
         <div className='d-flex flex-column col-2 p-0'>
           <button
             onClick={PoeCalcHandles.handleSetToQuantityChange}
-            className='btn btn-outline-secondary btn-calc rounded-0'
+            className='btn btn-outline-secondary btn-calc rounded-0 active'
           >
             Qty
           </button>

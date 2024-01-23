@@ -12,6 +12,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { getMedicineGroupList } from "../components/inventory/medicineGroup/apiCalls/getMedicinGroupList";
 import { getSalesReportApi } from "./apiCalls/getSalesReport";
+import { setSalesReportList } from "../../redux/salesReport";
 
 // {title: "My Pharmacy", side_title_link: "#", side_title_link_caption: "Go to Configuration", left_totals: 18, left_totals_caption: "Total no of Suppliers", right_totals: 14, right_totals_caption: "Total no of Users", display_date_picker: false},
 // {title: "Customers", side_title_link: "#", side_title_link_caption: "Go to Customer Page", left_totals: 298, left_totals_caption: "Total no of Customers", right_totals: 24, freq_bought_item:"Adalimumab", right_totals_caption: "Frequently bought item", display_date_picker: false}

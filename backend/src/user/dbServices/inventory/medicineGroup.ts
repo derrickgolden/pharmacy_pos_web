@@ -97,14 +97,15 @@ export const getMedicineGroups = async (filterNull: boolean): Promise<universalR
                     'medicine_id', ml.medicine_id,
                     'medicine_code', ml.medicine_code,
                     'medicine_name', ml.medicine_name,
-                    'stock_qty', ml.stock_qty,
                     'instructions', ml.instructions,
                     'side_effect', ml.side_effect,
                     'img_path', ml.img_path,
                     'pricing_id', p.pricing_id,
                     'price', p.price,
                     'unit_of_measurement', p.unit_of_measurement,
-                    'package_size', p.package_size
+                    'stock_qty', s.containers,
+                    'package_size', s.units_per_container,
+                    'open_container_units', s.open_container_units
                 )
             ) AS medicines
         FROM
@@ -113,10 +114,12 @@ export const getMedicineGroups = async (filterNull: boolean): Promise<universalR
             medicine_list ml ON mg.group_id = ml.group_id
         LEFT JOIN
             pricing p ON ml.medicine_id = p.medicine_id
+        LEFT JOIN
+            stock s ON ml.medicine_id = s.medicine_id
         ${filterNull ? "WHERE ml.medicine_id IS NOT NULL" : ""}
         GROUP BY
             mg.group_id, mg.group_name, mg.description;
-    
+
         `;
 
         const [res] = await connection.query(query);

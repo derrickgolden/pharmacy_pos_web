@@ -16,7 +16,7 @@ const InventorySelect: React.FC<InventorySelectProps> = ({handleNewOrderSelect})
 
     const dispatch = useDispatch()
 
-    const medicineGroup = useSelector((state: RootState) => state.groupList)
+    const medicineGroup = useSelector((state: RootState) => state.groupList)    
 
     useEffect(()=>{
         const groupNames: string[] = medicineGroup.map((group) => {

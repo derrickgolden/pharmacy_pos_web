@@ -4,7 +4,7 @@ import OrdersCard from "../../components/pointOfEntry/OrdersCard";
 
 const OrderDisplay = ({newOrders, activeCard, handleEditOrder, orderDetails, totalPrice}) =>{
     const scrollRef = useRef(null);
-console.log(newOrders);
+// console.log(newOrders);
 
     useEffect(() => {
         // Scroll to the bottom when the component renders

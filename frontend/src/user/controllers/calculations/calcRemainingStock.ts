@@ -1,6 +1,4 @@
 type Medicine = {
-  name: string;
-  pricePerUnit: number; // Cost per unit in dollars
   unitsPerContainer: number; // Number of units in a container (e.g., tablets, capsules, etc.)
   containersInStock: number; // Number of containers in stock
   openContainerUnits: number; // Number of units in the open container
@@ -10,6 +8,9 @@ export const calculateRemainingStock = (
   medicine: Medicine,
   unitsSold: number
 ): { error: boolean; msg: string; remainingContainers?: number; remainingUnits?: number } => {
+  console.log(medicine);
+  console.log("unitsSold: ", unitsSold);
+  
   if (unitsSold < 0) {
     return {
       error: true,
@@ -45,6 +46,8 @@ export const calculateRemainingStock = (
     remainingUnits =
       closedContainersToDeduct * medicine.unitsPerContainer - unitsSold;
 
+      console.log("remainingClosedContainers: ", remainingClosedContainers)
+      console.log("remainingUnits: ", remainingUnits)
     return {
       error: false,
       msg: '',

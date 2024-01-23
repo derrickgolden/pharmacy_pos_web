@@ -12,13 +12,17 @@ import { useNavigate } from "react-router-dom";
 import { calculateRemainingStock } from "../controllers/calculations/calcRemainingStock";
 import Swal from "sweetalert2";
 
+interface OrderDetail {
+  medicine_id: number;
+  units: number;
+  sub_total: number;
+  price: number;
+  package_size: number;
+  stock_qty: number;
+  open_container_units: number;
+}
 const SalesEntry = () =>{
 
-  interface OrderDetail {
-    medicine_id: number;
-    units: number;
-    sub_total: number;
-  }
     const [medicineDetails, setSelectedMedicine] = useState([])
     const [activeCard, setActiveCard] = useState(0)
     const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
@@ -46,7 +50,7 @@ const SalesEntry = () =>{
           // console.log(`Digit ${digit} clicked`);
           setOrderDetails((arr) => {
               return arr.map((orderDetail) => {
-                if (orderDetail.medicine_id === activeCard && orderDetail.units > 0) {
+                if (orderDetail.medicine_id === activeCard && orderDetail.units >= 0) {
                   let newUnits;
                   if(isDigitClicked){
                     const newUnitsAsString = orderDetail.units.toString() + digit.toString();
@@ -55,8 +59,9 @@ const SalesEntry = () =>{
                     newUnits = digit;
                     setIsDigitClicked(true);
                   }
-                  const price = orderDetail.sub_total/orderDetail.units
-                      return { ...orderDetail, units: newUnits, sub_total: newUnits * price };
+
+                  const newStockDetails = handleUpdatingStock(orderDetail, setUpdateStock, activeCard, newUnits);
+                  return newStockDetails;
                 } else {
                   return orderDetail
                 }
@@ -65,8 +70,24 @@ const SalesEntry = () =>{
         },
       
         handleQuantityIncByOne: () => {
-          // Your logic for handling quantity increment by one
-          console.log('Quantity incremented by one');
+          // Your logic for handling quantity increment by one          
+          setOrderDetails((arr) => {            
+            if (arr.length > 0) {
+              const newOrders = arr.map(medicine => {
+                if (medicine.medicine_id === activeCard) {
+                  const newUnits = medicine.units + 1;
+                  const newOrderDEtails = handleUpdatingStock(medicine, setUpdateStock, newUnits, activeCard);
+                  return newOrderDEtails;
+
+                } else {
+                  return medicine;
+                }
+              });
+              return newOrders;
+            }else{
+              return arr;
+            }
+          });
         },
       
         handleSetToQuantityChange: () => {
@@ -90,16 +111,17 @@ const SalesEntry = () =>{
           
           setOrderDetails((arr) => {
             const [orderDetail] = arr.filter(orderDetail => orderDetail?.medicine_id === activeCard);
-
+            
             if(orderDetail?.units > 0){
               return arr.map((orderDetail) => {
                 if (orderDetail.medicine_id === activeCard && orderDetail.units > 0) {
                   const unitsString = orderDetail.units.toString();
 
                   const newUnits = Math.max(parseInt(unitsString.slice(0, -1), 10) || 0, 0);
+                  
+                  const newStockDetails = handleUpdatingStock(orderDetail, setUpdateStock, activeCard, newUnits);
+                  return newStockDetails;
 
-                  const price = orderDetail.sub_total/orderDetail.units
-                      return { ...orderDetail, units: newUnits, sub_total: newUnits * price };
                 } else {
                   return orderDetail
                 }
@@ -120,9 +142,24 @@ const SalesEntry = () =>{
           console.log('Handling Refund');
         },
       
-        handleCustomerNote: () => {
+        handleCustomerNote: async() => {
           // Your logic for handling customer note
           console.log('Handling Customer Note');
+          const { value: text } = await Swal.fire({
+            input: "textarea",
+            inputLabel: "Customer Note",
+            inputPlaceholder: "Type your note here...",
+            inputAttributes: {
+              "aria-label": "Type your message here"
+            },
+            showClass: {
+              popup: '',      // Disable show animation
+            },
+            showCancelButton: true
+          });
+          if (text) {
+            console.log(text);
+          }
         },
       
         handlePayment: () => {
@@ -136,16 +173,7 @@ const SalesEntry = () =>{
         }
       };
             
-    const handleNewOrderSelect = (
-          newOrder: { medicine_id: number, medicine_name: string, price: number, package_size: number, stock_qty: number }
-        ) => {
-          const medicine2 = {
-            name: 'ExampleMedicine',
-            pricePerUnit: 5,
-            unitsPerContainer: newOrder.package_size,
-            containersInStock: newOrder.stock_qty,
-            openContainerUnits: 0,
-          };
+    const handleNewOrderSelect = ( newOrder: OrderDetail ) => {
 
           setSelectedMedicine((arr) => {
             if (arr.some(medicine => medicine.medicine_id === newOrder.medicine_id)) {
@@ -159,60 +187,44 @@ const SalesEntry = () =>{
               const newOrders = arr.map(medicine => {
                 if (medicine.medicine_id === newOrder.medicine_id) {
                   const newUnits = medicine.units + 1;
-                 
-                  const { error, msg, remainingContainers, remainingUnits  } = calculateRemainingStock( medicine2, newUnits);
+                  const useActiveCard = false;
+                  const newUpdateDetails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits, useActiveCard)
+                  return newUpdateDetails;
 
-                  if(error){
-                    Swal.fire({
-                      icon: "error",
-                      title: "Oops...",
-                      text: msg,
-                    });
-                  }else{
-                    setUpdateStock((stockArr) => [...stockArr, 
-                      {medicine_id: newOrder.medicine_id, remainingContainers, remainingUnits}])
-                    }
-                    return { ...medicine, units: newUnits, sub_total: newOrder.price * newUnits };
                 } else {
                   return medicine;
                 }
               });
               return newOrders;
             }else{
-              // calculateTotalPayments(arr)
-              const { error, msg, remainingContainers, remainingUnits } = calculateRemainingStock( medicine2, 1 );
-              if(error){
-                Swal.fire({
-                  icon: "error",
-                  title: "Oops...",
-                  text: msg,
-                });
-              }else{
-                setUpdateStock((stockArr) => [...stockArr, 
-                  {medicine_id: newOrder.medicine_id, remainingContainers, remainingUnits}])
-                }
-                return [...arr, { medicine_id: newOrder.medicine_id, units: 1, sub_total: newOrder.price }];
+              // calculate Remaining stock; 
+              const newUnits = 1; 
+              const useActiveCard = false;
+              const newUpdateDetails = handleUpdatingStock(newOrder, setUpdateStock, activeCard, newUnits, useActiveCard)
+              return [...arr, newUpdateDetails]; 
+
             }
           });
           setActiveCard(newOrder.medicine_id);
           isDigitClicked? setIsDigitClicked(false) :null;
-      };
-      
+        };
+        
     const handleEditOrder = (order) =>{
-        setActiveCard(order.medicine_id)
-
-    }
+      setActiveCard(order.medicine_id);
+      setIsDigitClicked(false);
+    };
     const handleVilidateClick = (customerGave: number, change: {}) =>{
       const moneyTrans = {...change, customerGave}
       
       regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, setEntryStep, setSaleRes})
-    }
+    };
+    
     const handleStartNewOrderClick = () =>{
       setOrderDetails([]);
       setSelectedMedicine([]);
       setPayMethods([]);
       setEntryStep("ordersentry");
-    }
+    };
 
     return(
       <>
@@ -288,3 +300,31 @@ const SalesEntry = () =>{
 }
 
 export default SalesEntry;
+
+const handleUpdatingStock = (medicine: OrderDetail, 
+                            setUpdateStock: (value: React.SetStateAction<{}[]>) => void, 
+                            activeCard: number, newUnits: number, 
+                            useActiveCard = true) =>{
+  console.log(medicine);
+  
+  const medicine2 = {
+    unitsPerContainer: medicine.package_size,
+    containersInStock: medicine.stock_qty,
+    openContainerUnits: medicine.open_container_units,
+  };
+  // const newUnits = medicine?.units ? medicine?.units + 1 : 1;
+ 
+  const { error, msg, remainingContainers, remainingUnits  } = calculateRemainingStock( medicine2, newUnits);
+
+  if(error){
+    Swal.fire({
+      icon: "error",
+      title: "Oops...",
+      text: msg,
+    });
+  }else{
+    setUpdateStock((stockArr) => [...stockArr, 
+      {medicine_id: useActiveCard? activeCard : medicine.medicine_id, remainingContainers, remainingUnits}])
+    }
+    return { ...medicine, units: newUnits, sub_total: medicine.price * newUnits };
+}
