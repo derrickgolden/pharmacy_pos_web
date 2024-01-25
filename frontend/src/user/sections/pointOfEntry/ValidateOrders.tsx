@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import CustomerInvoice from "../../components/pointOfEntry/CustomerInvoice";
 import PaymentCalc from "../../components/pointOfEntry/PaymentCalc"
 import PaymentMethod from "../../components/pointOfEntry/PaymentMethod";
-import { calculateRemainingStock } from "../../controllers/calculations/calcRemainingStock";
 
 interface ValidateOrdersProps{
     handleVilidateClick: () => void;
@@ -13,7 +12,7 @@ interface ValidateOrdersProps{
 const ValidateOrders: React.FC<ValidateOrdersProps> = (
     {handleVilidateClick, totalPrice, setPayMethods, payMethods}) =>{
 
-    const [customerGave, setCustomeGave] = useState(0)
+    const [customerGave, setCustomeGave] = useState(totalPrice)
     const [change, setChange] = useState({remaining: 0.00, change: 0.00})
 
     const PaymentCalcHandles = {

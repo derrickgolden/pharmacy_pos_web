@@ -54,7 +54,7 @@ app.use("/user", adminauth);
 app.use("/user", upload.single('logo'), authenticateToken, pharmacy);
 app.use("/user/inventory", medicinegroup);
 app.use("/user/inventory", medicineList);
-app.use("/user/sales", sales);
+app.use("/user/sales", authenticateToken, sales);
 app.use("/user/sales", report);
 app.use("/user/stock", stock);
 

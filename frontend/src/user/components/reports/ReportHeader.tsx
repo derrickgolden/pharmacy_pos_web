@@ -4,9 +4,13 @@ import DatePicker, {ReactDatePickerProps} from 'react-datepicker';
 
 import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
+import { salesProps } from "./SalesTable";
+import { CSVLink } from 'react-csv';
+import { csvAttributes } from "./csvAttributes";
 
 interface PagesHeaderProps{
-    handleRegenerateGraph: (date: SelectedDate) => void
+    handleRegenerateGraph: (date: SelectedDate) => void;
+    salesData: salesProps[] | undefined
 }
 export interface SelectedDate {
     startDate: Date;
@@ -28,7 +32,7 @@ const today = new Date();
 const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph}) =>{
+const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesData}) =>{
     const [selectedDate, setSelectedDate] = useState<SelectedDate>({
         startDate:  thirtyDaysAgo,
         endDate: new Date(),
@@ -40,6 +44,19 @@ const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph}) =>{
         } else {
             setSelectedDate((dates) =>({ ...dates, startDate: date }));
         }
+    };
+
+    // Trigger download
+    const handleDownload = () => {
+        const {csvData, headers} = csvAttributes(salesData);
+        const startDate = new Date(selectedDate.startDate).toLocaleDateString()
+        const endDate = new Date(selectedDate.endDate).toLocaleDateString()
+
+        const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = `Sales Report ${startDate}-${endDate}.csv`;
+        link.click();
     };
 
     return(
@@ -59,17 +76,10 @@ const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph}) =>{
                     <p className="font-family-poppins font-weight-400 font-size-14 line-height-21 text-dark">
                         Sales related report of the pharmacy.
                     </p>
-                </div>
-                <div className="bg-white d-flex align-items-center" style={{ width: "192px", height: "46px" }}>
-                    <select className="form-select flex-grow-1 font-family-poppins font-weight-400 font-size-15 line-height-22 text-dark"
-                    aria-label="Download Report">
-                        <option value="download">Download Report</option>
-                        <option value="sales">Day Sales</option>
-                        <option value="payments">Week Sales</option>
-                        <option value="payments">Month Sales</option>
-                            {/* Add more options as needed */}
-                    </select>
                 </div>                
+                    <button className="btn btn-outline-primary" onClick={handleDownload}>
+                        Download Sales Report
+                    </button>
             </div>
             <div className="d-flex col-11 m-auto gap-5 align-items-center">
                 <div className="col-6 d-flex align-items-end gap-4">

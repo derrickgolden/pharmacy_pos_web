@@ -13,7 +13,7 @@ const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
 const SalesReport = () =>{
-    const [totalDaySales, setTotalDaySales] = useState<ResultItem[]>([])
+    const [sortedSalesByDateSelect, setSortedSalesByDateSelect] = useState<ResultItem>({accumulatedSales: [], sortedSales: []})
     const [selectedDate, setSelectedDate] = useState<SelectedDate>({
         startDate:  thirtyDaysAgo,
         endDate: new Date(),
@@ -32,19 +32,19 @@ const SalesReport = () =>{
     }, [sales.length === 0]);
 
     useEffect(() =>{
-        const totalDaySales = calculateTotalSales(sales, selectedDate)
-        setTotalDaySales(totalDaySales);
+        const sortedSalesByDate = calculateTotalSales(sales, selectedDate)
+        setSortedSalesByDateSelect(sortedSalesByDate);
         console.log(sales);
         
-        // console.log(totalDaySales);
+        console.log(sortedSalesByDate);
     }, [sales])
 
     const handleRegenerateGraph = (date: SelectedDate) =>{
         if(date.endDate === null){
             date.endDate = new Date();
         }
-        const totalDaySales = calculateTotalSales(sales, date)
-        setTotalDaySales(totalDaySales);
+        const sortedSalesByDate = calculateTotalSales(sales, date)
+        setSortedSalesByDateSelect(sortedSalesByDate);
     }
 
     return(
@@ -52,11 +52,12 @@ const SalesReport = () =>{
         <div className="upper-section bg-light mb-5 ">
             <ReportHeader 
                 handleRegenerateGraph = {handleRegenerateGraph}
+                salesData={sortedSalesByDateSelect?.sortedSales}
             />
             <div className='d-lg-flex flex-row  gap-4 px-5'>
                 <div>
                     <h4>Unit Solid and Clients Served per Day</h4>
-                    <LineChart width={400} height={300} data={totalDaySales}>
+                    <LineChart width={400} height={300} data={sortedSalesByDateSelect?.accumulatedSales}>
                         <Line type="monotone" dataKey="Clients" stroke="#8884d8" />
                         <Line type="monotone" dataKey="units_sold" stroke="#0004d8" />
                         <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
@@ -67,7 +68,7 @@ const SalesReport = () =>{
                 </div>
                 <div>
                 <h4>Daily Total Sales(Ksh) </h4>
-                    <LineChart width={400} height={300} data={totalDaySales}>
+                    <LineChart width={400} height={300} data={sortedSalesByDateSelect?.accumulatedSales}>
                         <Line type="monotone" dataKey="day_sales" stroke="#8884d8" />
                         <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
                         <XAxis dataKey="day" />
@@ -77,7 +78,7 @@ const SalesReport = () =>{
                 </div>
             </div>
         </div>
-        <SalesTable salesData={sales} />
+        <SalesTable salesData={sortedSalesByDateSelect?.sortedSales} />
         </div>
     )
 }

@@ -8,13 +8,14 @@ interface salesItemProps{
     sub_total: string,
     units_sold: number
 }
-interface salesProps{
+export interface salesProps{
     sale_id: number,
     sale_date: Date,
     sales_items: salesItemProps[],
     total_price: string,
+    cashier: {cashier_f_name: string, cashier_l_name: string, cashier_id: number},
 }
-interface salesDataProps{
+export interface salesDataProps{
     salesData: salesProps[]
 }
 
@@ -26,6 +27,8 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => 
     { name: 'Sale ID', selector: (row: salesProps) => row.sale_id, sortable: true },
     { name: 'Sale Date', selector: (row: salesProps) => row.sale_date, sortable: true },
     { name: 'Total Price', selector: (row: salesProps) => row.total_price, sortable: true },
+    { name: 'Cashier Name', selector: (row: salesProps) => row.cashier.cashier_f_name, sortable: true },
+    { name: 'Cashier Id', selector: (row: salesProps) => row.cashier.cashier_id, sortable: true },
   ];
 
   // Define columns for the nested DataTable (Sales Items)
@@ -38,21 +41,22 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => 
   ];
 
   // Map the sales data to match the main DataTable structure
-  const mappedData = salesData.map((sale) => ({
-    id: sale.sale_id,
-    sale_id: sale.sale_id,
-    sale_date: new Date(sale.sale_date).toLocaleString(),
-    total_price: `Ksh. ${parseFloat(sale.total_price).toFixed(2)}`,
-    children: sale.sales_items.map((item) => ({
-        ...item,
-        sub_total: `Ksh. ${parseFloat(item.sub_total).toFixed(2)}`,
-      id: `${sale.sale_id}-${item.sales_item_id}`, // Unique identifier for each row
-    })),
-}));
+    const mappedData = salesData?.map((sale) => ({
+        id: sale.sale_id,
+        sale_id: sale.sale_id,
+        sale_date: new Date(sale.sale_date).toLocaleString(),
+        total_price: `Ksh. ${parseFloat(sale.total_price).toFixed(2)}`,
+        cashier: sale.cashier,
+        children: sale.sales_items.map((item) => ({
+            ...item,
+            sub_total: `Ksh. ${parseFloat(item.sub_total).toFixed(2)}`,
+        id: `${sale.sale_id}-${item.sales_item_id}`, // Unique identifier for each row
+        })),
+    }));
 
     // const nestData = mappedData?.children
     const ExpandedComponent = ({data}) => {
-        console.log(data);
+        // console.log(data);
         return(
             <div className="card " style={{border: "1px solid #91becc", borderTop: "2px solid #3aaed1" }}>
                 <div className="card-header d-flex justify-content-between border-bottom pb-1">

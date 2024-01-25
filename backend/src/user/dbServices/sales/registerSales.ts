@@ -3,7 +3,7 @@ import { universalResponse } from "user/types/universalResponse";
 import { RegisterSalesProp } from "../types";
 const { pool } = require("../../../mysqlSetup");
 
-export const registerSales = async (saleDetails: RegisterSalesProp ): Promise<universalResponse> => {
+export const registerSales = async (saleDetails: RegisterSalesProp, user_id: number ): Promise<universalResponse> => {
 
     // console.log(saleDetails);
     const orderDetails = saleDetails.orderDetails;
@@ -19,9 +19,9 @@ export const registerSales = async (saleDetails: RegisterSalesProp ): Promise<un
         await connection.beginTransaction();
             const {customerGave, change} = moneyTrans;
             var [res] = await connection.query(`
-                INSERT INTO sales (sale_date, total_price, client_gave, change_amount)
-                VALUES (?, ?, ?, ?)
-            `, [sale_date, totalPrice, customerGave, change]);
+                INSERT INTO sales (sale_date, total_price, client_gave, change_amount, cashier)
+                VALUES (?, ?, ?, ?, ?)
+            `, [sale_date, totalPrice, customerGave, change, user_id]);
 
             const sale_id = res.insertId;
 

@@ -96,15 +96,7 @@ const UserDashboard: React.FC = () =>{
                             A quick data overview of the inventory.
                         </p>
                     </div>
-                    <div className="bg-white d-flex align-items-center" style={{ width: "192px", height: "46px" }}>
-                        <select className="form-select flex-grow-1 font-family-poppins font-weight-400 font-size-15 line-height-22 text-dark"
-                        aria-label="Download Report">
-                            <option value="download">Download Report</option>
-                            <option value="sales">Sales Report</option>
-                            <option value="payments">Payments Report</option>
-                            {/* Add more options as needed */}
-                        </select>
-                    </div>
+                    
                 </div>
                 <div className="d-flex flex-row flex-wrap justify-content-around">
                    {upperDashboardData? upperDashboardData.map((data, i) =>(

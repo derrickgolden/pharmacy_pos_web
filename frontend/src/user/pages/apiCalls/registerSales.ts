@@ -7,10 +7,11 @@ interface handleAddGroupProps{
     totalPrice : number;
     moneyTrans: {};
     updateStock: {}[];
-    setEntryStep: (step: string) =>{}, 
-    setSaleRes: (saleId: number) =>{}
+    payMethods: string[];
+    setEntryStep: (step: string) =>void;
+    setSaleRes: (saleId: number) =>void;
 }
-export const regiterSalesApi = ({orderDetails, totalPrice, moneyTrans, updateStock, setEntryStep, setSaleRes}: handleAddGroupProps) =>{
+export const regiterSalesApi = ({orderDetails, totalPrice, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes}: handleAddGroupProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
 
@@ -25,7 +26,7 @@ export const regiterSalesApi = ({orderDetails, totalPrice, moneyTrans, updateSto
         return
     }
 
-    let data = JSON.stringify({orderDetails, totalPrice, moneyTrans, updateStock});
+    let data = JSON.stringify({orderDetails, totalPrice, moneyTrans, updateStock, payMethods});
     
     let config = {
         method: 'post',

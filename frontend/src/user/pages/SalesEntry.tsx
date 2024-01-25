@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import InventorySelect from "../sections/pointOfEntry/InventorySelect";
 import OrderDisplay from "../sections/pointOfEntry/OrderDisplay";
 import PosEntry from "../sections/pointOfEntry/POEcalc";
-import MedicineSelectNavbar from "../components/pointOfEntry/MedicineSelectNavbar";
-import { calculateTotalPayments } from "../controllers/calculations/calculateTotalPayment";
 import ValidateOrderNavbar from "../components/pointOfEntry/ValidateOrderNavbar";
 import ValidateOrders from "../sections/pointOfEntry/ValidateOrders";
 import PrintReceipt from "../sections/pointOfEntry/PrintReceipt";
@@ -216,7 +214,7 @@ const SalesEntry = () =>{
     const handleVilidateClick = (customerGave: number, change: {}) =>{
       const moneyTrans = {...change, customerGave}
       
-      regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, setEntryStep, setSaleRes})
+      regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes})
     };
     
     const handleStartNewOrderClick = () =>{

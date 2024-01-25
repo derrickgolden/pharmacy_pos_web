@@ -11,6 +11,12 @@ export const getSalesReport = async ( pharmacy_id: number): Promise<universalRes
                 s.sale_id,
                 s.sale_date,
                 s.total_price,
+                'cashier',
+                JSON_OBJECT(
+                    'cashier_f_name', ud.first_name,
+                    'cashier_l_name', ud.last_name,
+                    'cashier_id', s.cashier
+                ) As cashier,
                 JSON_ARRAYAGG(
                     JSON_OBJECT(
                         'sales_item_id', si.sales_item_id,
@@ -22,6 +28,8 @@ export const getSalesReport = async ( pharmacy_id: number): Promise<universalRes
                 ) AS sales_items
             FROM
                 sales s
+            JOIN
+                user_details ud ON s.cashier = ud.user_id
             JOIN
                 sales_items si ON s.sale_id = si.sale_id
             JOIN
