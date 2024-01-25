@@ -93,7 +93,9 @@ export default function LandingPageHeader() {
         const target = e.currentTarget as HTMLAnchorElement;
 
         const value = target.id;
-        setActiveLink(value)         
+        setActiveLink(value) 
+        setHeaderToggle(false)
+        setheaderNavManu(false)        
     }
 
     const logoutHandle=()=>{
@@ -132,8 +134,7 @@ export default function LandingPageHeader() {
                     </div>
                 
                     <ul  className={`dropdown-menu droping position-absolute ${toggleProfile? ' show' : ''}`} 
-                        style={{padding: '0, 2rem'}} 
-                    aria-labelledby="dropdownMenuButton1">
+                        style={{padding: '0, 2rem'}} aria-labelledby="dropdownMenuButton1" >
                         {
                         pharmacyListDetails.map((data, i) =>(
                             <li key={i} onClick={() => {
@@ -182,7 +183,7 @@ export default function LandingPageHeader() {
                                 <div className="accordion" id="accordionExample">
                                     <div className="accordion-item">
                                         <p className="accordion-header" id="headingOne">
-                                            <Link onClick={handleLinkClick} to="/user/inventory" type="button"
+                                            <Link  to="/user/inventory" type="button"
                                                 data-bs-toggle="collapse" data-bs-target="#paymentSystem" aria-expanded="true" 
                                                 aria-controls="paymentSystem" id='inventory' 
                                                 className={`${activeLink === 'inventory'? 'text-white font-weight-bold ' :"" }nav_link`}>
@@ -196,7 +197,7 @@ export default function LandingPageHeader() {
                                                     <FaListAlt />
                                                     <span className="nav_name">List of Medicines</span>
                                                 </Link>
-                                                <Link onClick={updateActive} to="/user/inventory/medicine-group" className={`nav_link ${pathname == "/manage-bankTransfer" && 'active'}`}>
+                                                <Link onClick={handleLinkClick} to="/user/inventory/medicine-group" className={`nav_link ${pathname == "/manage-bankTransfer" && 'active'}`}>
                                                     <FaLayerGroup style={{color: ""}}/>
                                                     <span className="nav_name">Medicine Groups</span>
                                                 </Link>
@@ -207,7 +208,7 @@ export default function LandingPageHeader() {
                                 <div className="accordion" id="accordionExample">
                                     <div className="accordion-item">
                                         <p className="accordion-header" id="headingOne">
-                                            <Link onClick={handleLinkClick} to="/user/reports" type="button" id='report'
+                                            <Link  to="/user/reports" type="button" id='report'
                                             data-bs-toggle="collapse" data-bs-target="#systemSetting" aria-expanded="true" aria-controls="systemSetting" 
                                             className={`${activeLink === 'report'? 'text-white font-weight-bold ' :"" }nav_link`}>
                                                 <TbReportMoney size={20}/>
@@ -217,12 +218,12 @@ export default function LandingPageHeader() {
                                         </p>
                                         <div id="systemSetting" className="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div className="accordion-body">
-                                                <Link onClick={updateActive} to="/user/report/sales" className={`nav_link ${pathname == "/system-setting/app-setting" && 'active'}`}>
+                                                <Link onClick={handleLinkClick} to="/user/report/sales" className={`nav_link ${pathname == "/system-setting/app-setting" && 'active'}`}>
                                                     <FaSalesforce  style={{color: ""}}/>
                                                     <span className="nav_name">Sales Report</span>
                                                 </Link>
                                               
-                                                <Link onClick={updateActive} to="/user/report/payments" className={`nav_link ${pathname == "/system-setting/templete" && 'active'}`}>
+                                                <Link onClick={handleLinkClick} to="/user/report/payments" className={`nav_link ${pathname == "/system-setting/templete" && 'active'}`}>
                                                     <MdPayments style={{color: ""}}/>
                                                     <span className="nav_name">Payments Report</span>
                                                 </Link>
@@ -281,7 +282,7 @@ export default function LandingPageHeader() {
                                     <FontAwesomeIcon icon={faStore} />
                                     <span className="nav_name">Theme Market</span>
                                 </Link> */}
-                                <Link onClick={handleLinkClick} to="#" id='changepass'
+                                <Link onClick={handleLinkClick} to="/user/change-pass" id='changepass'
                                 className={`${activeLink === 'changepass'? 'text-white font-weight-bold ' :"" }nav_link`}>
                                     <FontAwesomeIcon icon={faGear} />
                                     <span className="nav_name" id='changepass'>Change Password</span>

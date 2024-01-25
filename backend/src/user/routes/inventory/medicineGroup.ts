@@ -2,6 +2,7 @@ import express, {Request, Response} from 'express';
 import { 
     addMedicineGroup, 
     getMedicineGroups, 
+    shiftMedicineGroup, 
     updateMedicineDetails 
 } from '../../dbServices/inventory/medicineGroup';
 import { medicinegroupDetails } from 'user/types/medicineGroupTypes';
@@ -45,6 +46,21 @@ router.post('/update', async(req: Request, res: Response) =>{
     
     try {
         const response:universalResponse = await updateMedicineDetails (body)
+        response.success ? 
+            res.status(200).json(response):
+            res.status(302).json(response)
+        
+    } catch (error) {
+        console.log(error)
+        res.status(302).json({success: false, msg: "sever side error", err: error.message})
+    }
+});
+
+router.patch('/shift-group', async(req: Request, res: Response) =>{
+    const body = req.body;
+    
+    try {
+        const response:universalResponse = await shiftMedicineGroup(body)
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response)

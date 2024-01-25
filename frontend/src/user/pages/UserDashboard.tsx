@@ -21,7 +21,7 @@ const UserDashboard: React.FC = () =>{
 
     const pharmacyListDetails = useSelector((state: RootState) => state.pharmacyListDetailsList) 
 
-    const [ lowerDashboardData, setLowerDashboardData ] = useState<lowerDashboardData[]>();
+    const [ lowerDashboardData, setLowerDashboardData ] = useState<{}>();
     const [ upperDashboardData, setUpperDashboardData] = useState<upperDashboardData[]>();
     
     useEffect(() =>{
@@ -61,9 +61,9 @@ const UserDashboard: React.FC = () =>{
                     totalGroup += details.medicines.length;
                 })
                 
-                setLowerDashboardData(data => [
-                    {title: "Inventory", side_title_link: "#", side_title_link_caption: "Go to Configuration", left_totals: totalMedicine, left_totals_caption: "Total no of Medicines", right_totals: totalGroup, right_totals_caption: "Medicine Groups", display_date_picker: false},
-                ])
+                setLowerDashboardData((data) => ({...data,
+                    inventory: {title: "Inventory", side_title_link: "/user/inventory/medicine-group", side_title_link_caption: "Go to Configuration", left_totals: totalMedicine, left_totals_caption: "Total no of Medicines", right_totals: totalGroup, right_totals_caption: "Medicine Groups", display_date_picker: false}
+                }))
             })
             
             const salesReport = getSalesReportApi()
@@ -75,9 +75,9 @@ const UserDashboard: React.FC = () =>{
                     medicinesSold += details.sales_items.length
                 })
                 
-                setLowerDashboardData((data = [])  => [...data,
-                    {title: "Quick Report", side_title_link: "#", side_title_link_caption: "Date", left_totals: medicinesSold, left_totals_caption: "Qty of Medicines Solid", right_totals: invoices, right_totals_caption: "Invoices Generated", display_date_picker: true},
-                ])
+                setLowerDashboardData((data )  => ({...data,
+                    quickReport: {title: "Quick Report", side_title_link: "#", side_title_link_caption: "Date", left_totals: medicinesSold, left_totals_caption: "Qty of Medicines Solid", right_totals: invoices, right_totals_caption: "Invoices Generated", display_date_picker: true},
+                }))
 
                 dispatch(setSalesReportList(data));
             })
@@ -116,10 +116,10 @@ const UserDashboard: React.FC = () =>{
                 </div>
             </section>
             <section className="lower-section bg-white d-flex flex-row flex-wrap justify-content-around">
-                {lowerDashboardData? lowerDashboardData.map((data, i) =>(
+                {lowerDashboardData? Object.keys(lowerDashboardData).map((key, i) =>(
                     <BottomSummaryCard 
                         key ={i}
-                        data= {data}
+                        data= {lowerDashboardData[key]}
                     />
                 )) : <h2>No data to show</h2>}
             </section>

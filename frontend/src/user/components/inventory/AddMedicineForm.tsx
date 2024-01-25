@@ -11,7 +11,7 @@ interface AddMedicineFormProps{
     onHandleAddMedicineForm: ({}) => void;
     setShowDetails: (showDetails: string) => void
 }
-interface GroupListProps{
+export interface GroupListProps{
     group_name: string;
     group_id: number;
 }
@@ -40,9 +40,7 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
     const handleFormInput = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>{
         const name = e.target.name;
         const value = e.target.value;
-    
-        // console.log(medicineDetails);
-        
+  
         setMedicineDetails((obj) =>({...obj, [name]: value}))
     }
     const handlePricingInput  = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement> )=>{

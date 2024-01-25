@@ -18,9 +18,7 @@ const InventoryMedicineGroup = () =>{
         setMedicineDetails(row);
         setShowDetails("details");
     }
-    const onHandleAddGroupForm = () =>{
-
-    }
+  
     return(
         <div className='body2 bg-white pb-5' style={{paddingTop: "2rem"}}>
             <PagesHeader 

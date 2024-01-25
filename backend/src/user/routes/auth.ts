@@ -15,6 +15,8 @@ import { generateAuthToken } from '../controllers/auth/generateToken';
 import { UserDetailsRes } from '../dbServices/users';
 import { SendEmailRes } from 'user/controllers/auth/sendEmail';
 import { StoreLinkTokenRes } from 'user/dbServices/auth';
+import { authenticateToken } from '../middlewares/authenticateToken';
+import { ModifiedReq } from 'user/types/universalResponse';
 
 const { getUserDetailsByemail } = require('../dbServices/users');
 const { sendEmail } = require('../controllers/auth/sendEmail');
@@ -82,6 +84,33 @@ router.post('/login', async (req: Request, res: Response): Promise<void> =>{
     } catch (error) {
         console.log(error)
         res.status(404).send({success: false, msg: error.message})
+    }
+});
+
+router.patch('/change-pass', authenticateToken, async(req: ModifiedReq, res: Response) =>{
+    const { newPassword, oldPassword } = req.body;
+    const {email} = req.user;
+
+    try {
+        const response: LoginResponse = await loginUser(email);
+        const { passwordHash } = response;
+        
+        const match: boolean = await bcrypt.compare(oldPassword, passwordHash);
+        if(match) {
+            const hash = await bcrypt.hash(newPassword, 10);
+    
+            const response = await resetPassword(hash, email)
+            return response.success ?
+                res.status(200).send({success: true, 
+                    msg: "Password changed, you are required to log in again"}) :
+                res.status(400).send(response)   
+        }else{
+            res.status(200).send({success: false, msg: "Incorrect Old Password"});
+        }
+
+    } catch (error) {
+        console.log(error)
+        res.status(404).send({success: false, err: error.message, msg: "Server side error"})
     }
 });
 

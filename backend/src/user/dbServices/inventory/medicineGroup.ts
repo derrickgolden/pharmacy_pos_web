@@ -142,10 +142,51 @@ export const getMedicineGroups = async (filterNull: boolean): Promise<universalR
     }
 };
 
+export const shiftMedicineGroup = async (medicinegroupDetails:  updateMedicineDetailsProps ): Promise<universalResponse> => {
+
+    const {medicine_id, group_id} = medicinegroupDetails;
+    
+    try {
+        const connection: RowDataPacket = await pool.getConnection();
+            var [res] = await connection.query(`
+                UPDATE medicine_list 
+                SET group_id = ?
+                WHERE medicine_id = ?
+            `, [group_id, medicine_id]);
+                
+        connection.release();
+
+        if ( res.affectedRows > 0) {
+            return {
+                err: false,
+                success: true,
+                msg: `Group has been shifted`,
+                details: res
+            };
+        } else {
+              return {
+                err: false,
+                  success: false,
+                  msg: `No rows were updated. Medicine not found.`,
+                  details: res
+              };
+          }
+
+    } catch (error) {
+        console.error('Error: ', error);
+
+        if (error.sqlMessage) {
+            return { success: false, msg: error.sqlMessage };
+        } else {
+            return { success: false, msg: error.message };
+        }
+    }
+};
      
 
 module.exports = {
     addMedicineGroup,
     getMedicineGroups,
-    updateMedicineDetails 
+    updateMedicineDetails ,
+    shiftMedicineGroup
 }

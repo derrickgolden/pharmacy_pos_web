@@ -7,6 +7,7 @@ import { ALogin } from './admin/components';
 import LandingPageHeader from './user/sections/LandingPageHeader';
 import RegisterPhamacy from './user/sections/pharmacy/RegisterPharmacy';
 import SummaryDetails from './user/components/inventory/SummaryDetails';
+import ChangePassword from './user/pages/ChangePassword';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
             <Route path='dashboard/details' element={<SummaryDetails />} />
             <Route path='register-pharmacy' element={<RegisterPhamacy />} />
             <Route path='session' element={<Session />} />
+            <Route path='change-pass' element={<ChangePassword />} />
             <Route path='inventory'>
               <Route index element={< Inventory />} />
               <Route path='medicine-list' element={<InventoryMedicineList />}/>

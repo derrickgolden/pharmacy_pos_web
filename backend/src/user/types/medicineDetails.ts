@@ -30,5 +30,8 @@ export interface medicineDetailsProps{
 }
 
 export interface updateMedicineDetailsProps{
-    medicine_id: number, warning_limit: number, medicine_name: string
+    medicine_id: number, 
+    warning_limit: number, 
+    medicine_name: string,
+    group_id: number,
 }

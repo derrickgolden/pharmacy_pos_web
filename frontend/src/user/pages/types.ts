@@ -1,4 +1,4 @@
-export interface upperDashboardData{
+interface details{
     icon: JSX.Element;
     status: string;
     totals: number;
@@ -6,6 +6,11 @@ export interface upperDashboardData{
     forCssDispaly: string;
     footerCaption: string;
     btnType: string;
+}
+
+export interface upperDashboardData{
+    inventory: details;
+    quickReport: details;
 };
 
 export interface lowerDashboardData{

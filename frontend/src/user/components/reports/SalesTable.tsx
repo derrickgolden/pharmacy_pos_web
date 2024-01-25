@@ -54,7 +54,7 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => 
     const ExpandedComponent = ({data}) => {
         console.log(data);
         return(
-            <div className="card border border-primary" style={{ borderTop: "2px solid #4723d9" }}>
+            <div className="card " style={{border: "1px solid #91becc", borderTop: "2px solid #3aaed1" }}>
                 <div className="card-header d-flex justify-content-between border-bottom pb-1">
                     <h6>Details</h6>   
                 </div>
@@ -95,6 +95,7 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => 
                         data={mappedData}
                         pagination
                         expandableRows
+                        expandOnRowClicked
                         expandableRowsComponent={ExpandedComponent}
                         highlightOnHover
                         striped

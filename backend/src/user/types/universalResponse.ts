@@ -12,5 +12,6 @@ export interface ModifiedReq extends Request{
     user: {
         user_id: number;
         added_by: number;
+        email: string;
     }
 }

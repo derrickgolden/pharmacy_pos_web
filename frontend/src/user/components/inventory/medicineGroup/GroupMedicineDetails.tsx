@@ -2,6 +2,13 @@ import { Link } from "react-router-dom";
 import DataTableComponent from "../../sharedComponents/DataTableComponent";
 import { GroupMedicineDetailsProps, MedicineGroup } from "./types";
 import { useEffect, useState } from "react";
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../redux/store";
+import { GroupListProps } from "../AddMedicineForm";
+import { shiftMedicineGroupApi } from "./apiCalls/shiftMedicineGroupApi";
 
 interface Column {
     name: string;
@@ -20,6 +27,11 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
     const [apicol, setApiCol] = useState([])
     const [rerendarApi, setRerendarApi] = useState(false)
 
+    const [selectedGroup, setSelectedGroup ] = useState<string>()
+    const [selectedMedicine, setSelectedMedicine ] = useState<number>()
+
+    const groupList: GroupListProps[] = useSelector((state: RootState) => state.groupList)
+
     const columns: Column[] = [
         {
             name: "Medicine Name",
@@ -34,9 +46,9 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
         {
             name: "Action",
             cell: (row: MedicineGroup) => <>
-            <button onClick={() => onHandleActionDetails(row)} 
+            <button variant="primary" onClick={() => handleShow(row)} 
                 className={`btn p-0 px-1 btn-outline-danger btn-sm`}  >
-                    Remove from group
+                    Shift group
                 </button></>,
         },
     ]
@@ -51,7 +63,24 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
     const handleSearchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSearch(e.target.value);
         setSearchType(e.target.value); // Prop to set the search type in the parent component
-      };
+    };
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = (row) =>{
+        setSelectedMedicine(row)
+        setShow(true);
+    } 
+    const handleShiftGroup = () =>{
+
+        console.log(selectedGroup)
+        console.log(selectedMedicine)
+        const [group ]= groupList.filter((group) => group.group_name === selectedGroup)
+        
+        shiftMedicineGroupApi(group.group_id, Number(selectedMedicine.medicine_id), handleClose);
+    }
+    
 
     return(
         <div className="px-1 px-sm-5">
@@ -75,6 +104,33 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
                                 />
                             </div>
                         </div>
+
+                        <Modal show={show} onHide={handleClose}>
+                            <Modal.Header closeButton>
+                            <Modal.Title>Shift {selectedMedicine?.medicine_name} to different Group</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                                <div className="form-group mb-3 col-sm-12">
+                                    <h6 className="p-2">Select a different group to shift the medicine to.</h6>
+                                    <select onChange={(e) => setSelectedGroup(e.target.value)} value={selectedGroup}
+                                    className="form-control" name="group_name">
+                                        <option>-select group-</option>
+                                        {groupList.map((group, i)=>(
+                                            <option key={i} >{group.group_name}</option>
+                                        ))}
+                                    </select>
+                                </div>                    
+                            </Modal.Body>
+                            <Modal.Footer>
+                            <Button variant="secondary" onClick={handleClose}>
+                                Close
+                            </Button>
+                            <Button variant="primary" onClick={handleShiftGroup}>
+                                Save Changes
+                            </Button>
+                            </Modal.Footer>
+                        </Modal>
+
                         <div className="bg-white my-5 d-flex align-items-center justify-content-between" >
                             <button onClick={() => setShowDetails("list")}
                                 type="button" className="btn btn-primary text-white">
