@@ -66,7 +66,8 @@ const UserDashboard: React.FC = () =>{
                 }))
             })
             
-            const salesReport = getSalesReportApi()
+            const url = "sales/get-sales"
+            const salesReport = getSalesReportApi({url});
             salesReport.then((data) =>{
 
                 const invoices = data.length;

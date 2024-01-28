@@ -49,3 +49,44 @@ export const csvAttributes = (salesData: salesProps[]) =>{
 
     return {headers, csvData}
 }
+export const csvPaymentsAttributes = (salesData: salesProps[]) =>{
+    // Flatten the nested structure
+    const flattenedData = salesData.map((sale) => {
+        const { sale_id, sale_date, total_price, payment_methods } = sale;
+        return payment_methods.map((item, i) => {
+            if(i === 0){
+                return{
+                    sale_id,
+                    sale_date: new Date(sale_date).toLocaleString(),
+                    total_price,
+                    ...item,
+                }
+            }else{
+                return{
+                    sale_id: null,
+                    sale_date: null,
+                    total_price: null,
+                    ...item,
+                }
+            }
+        });
+    }).flat();
+
+    // CSV headers
+    const headers = [
+        { label: 'Sale ID', key: 'sale_id' },
+        { label: 'Sale Date', key: 'sale_date' },
+        { label: 'Total Price', key: 'total_price' },
+        { label: 'Sales Item ID', key: 'sales_item_id' },
+        { label: 'Payment Method', key: 'payment_method'},
+        { label: 'Amount', key: 'amount'},
+    ];
+
+    // CSV data
+    const csvData = Papa.unparse({
+        fields: headers.map((header) => header.key),
+        data: flattenedData,
+    });
+
+    return {headers, csvData}
+}

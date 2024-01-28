@@ -29,7 +29,7 @@ const PaymentCalc = ({ totalPrice, payMethods, PaymentCalcHandles, change }) => 
           </div>
         )
         }
-        {payMethods.length && (
+        {payMethods.length !== 0 && (
           <div className='d-flex justify-content-between align-items-center p-2 h-100'>
             <div>
               <h3 className=''>Remaining <span className='text-warning'>{change.remaining} Ksh</span></h3>
@@ -64,12 +64,12 @@ const PaymentCalc = ({ totalPrice, payMethods, PaymentCalcHandles, change }) => 
           </div>
         </div>
         <div className='d-flex flex-column col-3'>
-          {["+10", "+20", "+50"].map((figure, i) =>(
+          {[10, 20, 50].map((figure, i) =>(
             <button key={i}
-              onClick={PaymentCalcHandles?.handleSetToQuantityChange}
+              onClick={() => PaymentCalcHandles?.handleSetToQuantityChange(figure)}
               className='btn btn-outline-secondary flex-grow-1 rounded-0'
             >
-              {figure}
+              +{figure}
             </button>
           ))}
           <button

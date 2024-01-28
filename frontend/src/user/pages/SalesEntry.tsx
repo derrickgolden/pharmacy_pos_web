@@ -9,8 +9,9 @@ import { regiterSalesApi } from "./apiCalls/registerSales";
 import { useNavigate } from "react-router-dom";
 import { calculateRemainingStock } from "../controllers/calculations/calcRemainingStock";
 import Swal from "sweetalert2";
+import { handleUpdatingStock } from "./calculations/handleUpdatingStock";
 
-interface OrderDetail {
+export interface OrderDetail {
   medicine_id: number;
   units: number;
   sub_total: number;
@@ -127,7 +128,7 @@ const SalesEntry = () =>{
             }else{
               setSelectedMedicine((arr) =>(arr.filter(medicine => medicine.medicine_id !== activeCard)))
               setActiveCard(medicineDetails[(medicineDetails.length-2)]?.medicine_id);
-              const newarr = arr.filter(orderDetail => orderDetail?.medicine_id !== activeCard);
+              setUpdateStock((stockArr) =>stockArr.filter(stock => stock?.medicine_id !== activeCard));
               
               return arr.filter(orderDetail => orderDetail?.medicine_id !== activeCard);
             }
@@ -185,8 +186,7 @@ const SalesEntry = () =>{
               const newOrders = arr.map(medicine => {
                 if (medicine.medicine_id === newOrder.medicine_id) {
                   const newUnits = medicine.units + 1;
-                  const useActiveCard = false;
-                  const newUpdateDetails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits, useActiveCard)
+                  const newUpdateDetails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits)
                   return newUpdateDetails;
 
                 } else {
@@ -212,15 +212,16 @@ const SalesEntry = () =>{
       setIsDigitClicked(false);
     };
     const handleVilidateClick = (customerGave: number, change: {}) =>{
-      const moneyTrans = {...change, customerGave}
-      
-      regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes})
+      const moneyTrans = {...change, customerGave: customerGave || totalPrice};
+      console.log(updateStock);
+      regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, setEntryStep, setSaleRes})
     };
     
     const handleStartNewOrderClick = () =>{
       setOrderDetails([]);
       setSelectedMedicine([]);
       setPayMethods([]);
+      setUpdateStock([]);
       setEntryStep("ordersentry");
     };
 
@@ -299,30 +300,3 @@ const SalesEntry = () =>{
 
 export default SalesEntry;
 
-const handleUpdatingStock = (medicine: OrderDetail, 
-                            setUpdateStock: (value: React.SetStateAction<{}[]>) => void, 
-                            activeCard: number, newUnits: number, 
-                            useActiveCard = true) =>{
-  console.log(medicine);
-  
-  const medicine2 = {
-    unitsPerContainer: medicine.package_size,
-    containersInStock: medicine.stock_qty,
-    openContainerUnits: medicine.open_container_units,
-  };
-  // const newUnits = medicine?.units ? medicine?.units + 1 : 1;
- 
-  const { error, msg, remainingContainers, remainingUnits  } = calculateRemainingStock( medicine2, newUnits);
-
-  if(error){
-    Swal.fire({
-      icon: "error",
-      title: "Oops...",
-      text: msg,
-    });
-  }else{
-    setUpdateStock((stockArr) => [...stockArr, 
-      {medicine_id: useActiveCard? activeCard : medicine.medicine_id, remainingContainers, remainingUnits}])
-    }
-    return { ...medicine, units: newUnits, sub_total: medicine.price * newUnits };
-}

@@ -83,9 +83,13 @@ const PrintReceipt = (
                             <h3>TOTAL</h3>
                             <h3>{totalPrice} Ksh</h3>
                         </div>
-                        <div className="d-flex pl-4 justify-content-between">
-                            <p>{payMethods[0]}</p>
-                            <p>{saleRes.customerGave} Ksh</p>
+                        <div >
+                            {Object.keys(saleRes.customerGave).map((key, i) =>(
+                                <div key={i} className="d-flex pl-4 justify-content-between">
+                                    <p>{key}</p>
+                                    <p>{saleRes.customerGave[key]} Ksh</p>
+                                </div>
+                            ))}
                         </div>
                         <div className="d-flex col-8 pl-4 justify-content-between"
                         style={{ marginLeft: 'auto' }}>

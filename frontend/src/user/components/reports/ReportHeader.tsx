@@ -6,11 +6,12 @@ import { FaChevronDown, FaChevronRight } from "react-icons/fa";
 import { SlCalender } from "react-icons/sl";
 import { salesProps } from "./SalesTable";
 import { CSVLink } from 'react-csv';
-import { csvAttributes } from "./csvAttributes";
+import { csvAttributes, csvPaymentsAttributes } from "./csvAttributes";
 
 interface PagesHeaderProps{
     handleRegenerateGraph: (date: SelectedDate) => void;
     salesData: salesProps[] | undefined
+    dataType: "Payments" | "Sales"
 }
 export interface SelectedDate {
     startDate: Date;
@@ -32,7 +33,7 @@ const today = new Date();
 const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesData}) =>{
+const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesData, dataType}) =>{
     const [selectedDate, setSelectedDate] = useState<SelectedDate>({
         startDate:  thirtyDaysAgo,
         endDate: new Date(),
@@ -48,15 +49,23 @@ const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesD
 
     // Trigger download
     const handleDownload = () => {
-        const {csvData, headers} = csvAttributes(salesData);
-        const startDate = new Date(selectedDate.startDate).toLocaleDateString()
-        const endDate = new Date(selectedDate.endDate).toLocaleDateString()
+        // console.log(salesData);
+        let data;
+        if(dataType === "Sales"){
+            data = csvAttributes(salesData);
+        }else if(dataType === "Payments"){
+            data = csvPaymentsAttributes(salesData);
+        }
+        if(data){
+            const startDate = new Date(selectedDate.startDate).toLocaleDateString()
+            const endDate = new Date(selectedDate.endDate).toLocaleDateString()
 
-        const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = `Sales Report ${startDate}-${endDate}.csv`;
-        link.click();
+            const blob = new Blob([data.csvData], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `${dataType} Report ${startDate}-${endDate}.csv`;
+            link.click();
+        }
     };
 
     return(
@@ -70,15 +79,15 @@ const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesD
                         </h1>
                         <FaChevronRight />
                         <h1 className="font-weight-bold fs-4" style={{ fontFamily: 'Poppins', color: '#1D242E' }}>
-                            &nbsp; Sales Report
+                            &nbsp; {dataType} Report
                         </h1>
                     </div>
                     <p className="font-family-poppins font-weight-400 font-size-14 line-height-21 text-dark">
-                        Sales related report of the pharmacy.
+                        {dataType} related report of the pharmacy.
                     </p>
                 </div>                
                     <button className="btn btn-outline-primary" onClick={handleDownload}>
-                        Download Sales Report
+                        Download {dataType} Report
                     </button>
             </div>
             <div className="d-flex col-11 m-auto gap-5 align-items-center">

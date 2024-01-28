@@ -2,7 +2,11 @@ import axios from "axios";
 import { server_baseurl } from "../../../baseUrl";
 import Swal from "sweetalert2";
 
-export const getSalesReportApi = async() =>{
+interface salesReportProps{
+    url: string
+}
+
+export const getSalesReportApi = async({url}: salesReportProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
     const localPharm = sessionStorage.getItem("activepharmacy")
@@ -34,7 +38,7 @@ export const getSalesReportApi = async() =>{
     let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `${server_baseurl}/user/sales/get-sales`,
+        url: `${server_baseurl}/user/${url}`,
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `${token}`

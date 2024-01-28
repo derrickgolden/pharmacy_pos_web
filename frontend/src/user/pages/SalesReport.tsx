@@ -9,7 +9,7 @@ import { ResultItem, calculateTotalSales } from './calculations/totalSalesUnits'
 import ReportHeader, { SelectedDate } from '../components/reports/ReportHeader';
 import SalesTable from '../components/reports/SalesTable';
 
-const thirtyDaysAgo = new Date();
+export const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
 const SalesReport = () =>{
@@ -24,26 +24,24 @@ const SalesReport = () =>{
     const sales = useSelector((state: RootState) => state.salesReport)
 
     useEffect(() =>{
-        const salesReport = getSalesReportApi()
+        const url = "sales/get-sales"
+        const salesReport = getSalesReportApi({url});
         salesReport.then((data) =>{
-
             dispatch(setSalesReportList(data));
         })
     }, [sales.length === 0]);
 
     useEffect(() =>{
-        const sortedSalesByDate = calculateTotalSales(sales, selectedDate)
+        const sortedSalesByDate = calculateTotalSales({data: sales, date: selectedDate, keyType: "sales_items" })
         setSortedSalesByDateSelect(sortedSalesByDate);
-        console.log(sales);
-        
-        console.log(sortedSalesByDate);
+        // console.log(sales);
     }, [sales])
 
     const handleRegenerateGraph = (date: SelectedDate) =>{
         if(date.endDate === null){
             date.endDate = new Date();
         }
-        const sortedSalesByDate = calculateTotalSales(sales, date)
+        const sortedSalesByDate = calculateTotalSales({data: sales, date, keyType: "sales_items"})
         setSortedSalesByDateSelect(sortedSalesByDate);
     }
 
@@ -53,29 +51,38 @@ const SalesReport = () =>{
             <ReportHeader 
                 handleRegenerateGraph = {handleRegenerateGraph}
                 salesData={sortedSalesByDateSelect?.sortedSales}
+                dataType='Sales'
             />
-            <div className='d-lg-flex flex-row  gap-4 px-5'>
-                <div>
-                    <h4>Unit Solid and Clients Served per Day</h4>
-                    <LineChart width={400} height={300} data={sortedSalesByDateSelect?.accumulatedSales}>
-                        <Line type="monotone" dataKey="Clients" stroke="#8884d8" />
-                        <Line type="monotone" dataKey="units_sold" stroke="#0004d8" />
-                        <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
-                        <XAxis dataKey="day" />
-                        <YAxis />
-                        <Tooltip />
-                    </LineChart>
+            
+           <div className='p-5 pt-0'>
+                <button className="btn btn-outline-primary col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    Show/Hide sales graph
+                </button>
+           </div>
+            <div className="collapse" id="collapseExample">
+                <div className='d-lg-flex flex-row  gap-4 px-5 pb-4'>
+                    <div>
+                        <h4>Unit Solid and Clients Served per Day</h4>
+                        <LineChart width={400} height={300} data={sortedSalesByDateSelect?.accumulatedSales}>
+                            <Line type="monotone" dataKey="Clients" stroke="#8884d8" />
+                            <Line type="monotone" dataKey="units_sold" stroke="#0004d8" />
+                            <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
+                            <XAxis dataKey="day" />
+                            <YAxis />
+                            <Tooltip />
+                        </LineChart>
+                    </div>
+                    <div>
+                    <h4>Daily Total Sales(Ksh) </h4>
+                        <LineChart width={400} height={300} data={sortedSalesByDateSelect?.accumulatedSales}>
+                            <Line type="monotone" dataKey="day_sales" stroke="#8884d8" />
+                            <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
+                            <XAxis dataKey="day" />
+                            <YAxis />
+                            <Tooltip />
+                        </LineChart>
                 </div>
-                <div>
-                <h4>Daily Total Sales(Ksh) </h4>
-                    <LineChart width={400} height={300} data={sortedSalesByDateSelect?.accumulatedSales}>
-                        <Line type="monotone" dataKey="day_sales" stroke="#8884d8" />
-                        <CartesianGrid stroke="#ccc" strokeDasharray="5 5"/>
-                        <XAxis dataKey="day" />
-                        <YAxis />
-                        <Tooltip />
-                    </LineChart>
-                </div>
+            </div>
             </div>
         </div>
         <SalesTable salesData={sortedSalesByDateSelect?.sortedSales} />

@@ -8,8 +8,6 @@ export const calculateRemainingStock = (
   medicine: Medicine,
   unitsSold: number
 ): { error: boolean; msg: string; remainingContainers?: number; remainingUnits?: number } => {
-  console.log(medicine);
-  console.log("unitsSold: ", unitsSold);
   
   if (unitsSold < 0) {
     return {
@@ -46,8 +44,6 @@ export const calculateRemainingStock = (
     remainingUnits =
       closedContainersToDeduct * medicine.unitsPerContainer - unitsSold;
 
-      console.log("remainingClosedContainers: ", remainingClosedContainers)
-      console.log("remainingUnits: ", remainingUnits)
     return {
       error: false,
       msg: '',

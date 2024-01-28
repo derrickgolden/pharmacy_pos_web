@@ -183,8 +183,8 @@ export default function LandingPageHeader() {
                                 <div className="accordion" id="accordionExample">
                                     <div className="accordion-item">
                                         <p className="accordion-header" id="headingOne">
-                                            <Link  to="/user/inventory" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#paymentSystem" aria-expanded="true" 
+                                            <Link  to="#" type="button"
+                                                data-toggle="collapse" data-target="#paymentSystem" aria-expanded="true" 
                                                 aria-controls="paymentSystem" id='inventory' 
                                                 className={`${activeLink === 'inventory'? 'text-white font-weight-bold ' :"" }nav_link`}>
                                                 <MdInventory id='inventory'/>
@@ -208,15 +208,15 @@ export default function LandingPageHeader() {
                                 <div className="accordion" id="accordionExample">
                                     <div className="accordion-item">
                                         <p className="accordion-header" id="headingOne">
-                                            <Link  to="/user/reports" type="button" id='report'
-                                            data-bs-toggle="collapse" data-bs-target="#systemSetting" aria-expanded="true" aria-controls="systemSetting" 
+                                            <Link  to="#" type="button" id='report'
+                                            data-toggle="collapse" data-target="#systemSetting" aria-expanded="true" aria-controls="systemSetting" 
                                             className={`${activeLink === 'report'? 'text-white font-weight-bold ' :"" }nav_link`}>
                                                 <TbReportMoney size={20}/>
                                                 <span className="nav_name " id='report'
                                                 >Reports <b>{plus2 ? <FontAwesomeIcon icon={faChevronLeft} /> : <FontAwesomeIcon icon={faChevronDown} />}</b></span>
                                             </Link>
                                         </p>
-                                        <div id="systemSetting" className="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div id="systemSetting" className="collapse " >
                                             <div className="accordion-body">
                                                 <Link onClick={handleLinkClick} to="/user/report/sales" className={`nav_link ${pathname == "/system-setting/app-setting" && 'active'}`}>
                                                     <FaSalesforce  style={{color: ""}}/>

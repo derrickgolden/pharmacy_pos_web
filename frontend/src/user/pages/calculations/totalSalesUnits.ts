@@ -13,6 +13,7 @@ interface Sale {
     sale_date: string;
     total_price: string;
     sales_items: SalesItem[];
+    payment_methods: {}[];
 }
 
 export interface ResultItem {
@@ -25,7 +26,11 @@ export interface ResultItem {
     sortedSales: {}[]
 }
 
-export function calculateTotalSales(data: Sale[], date: SelectedDate): ResultItem {
+interface calculateTotalSalesProps {
+    data: Sale[], date: SelectedDate, keyType: "payment_methods" | "sales_items"
+}
+
+export function calculateTotalSales({data, date, keyType}: calculateTotalSalesProps): ResultItem {
     const accumulatedSales = [];
     const sortedSales: {}[] = [];
     const startDate = new Date(date?.startDate);

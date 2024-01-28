@@ -5,7 +5,7 @@ const { pool } = require("../../../mysqlSetup");
 
 export const registerSales = async (saleDetails: RegisterSalesProp, user_id: number ): Promise<universalResponse> => {
 
-    // console.log(saleDetails);
+    console.log(saleDetails);
     const orderDetails = saleDetails.orderDetails;
     const totalPrice = saleDetails.totalPrice;
     const moneyTrans = saleDetails.moneyTrans;
@@ -19,9 +19,9 @@ export const registerSales = async (saleDetails: RegisterSalesProp, user_id: num
         await connection.beginTransaction();
             const {customerGave, change} = moneyTrans;
             var [res] = await connection.query(`
-                INSERT INTO sales (sale_date, total_price, client_gave, change_amount, cashier)
-                VALUES (?, ?, ?, ?, ?)
-            `, [sale_date, totalPrice, customerGave, change, user_id]);
+                INSERT INTO sales (sale_date, total_price, change_amount, cashier)
+                VALUES (?, ?, ?, ?)
+            `, [sale_date, totalPrice, change, user_id]);
 
             const sale_id = res.insertId;
 
@@ -32,7 +32,15 @@ export const registerSales = async (saleDetails: RegisterSalesProp, user_id: num
                     VALUES (?, ?, ?, ?)
                 `, [sale_id, medicine_id, units, sub_total]);
             })
-                
+            
+            // insert paymentMethods
+            Object.entries(customerGave).map( async([key, value]) =>{
+                var [paymentMethods_res] = await connection.query(`
+                    INSERT INTO sale_payments (sale_id, payment_method, amount)
+                    VALUES (?, ?, ?)
+                `, [sale_id, key, value]);
+            })
+
             // update stock
             updateStock.map( async(details) =>{
                 const { medicine_id, remainingContainers, remainingUnits } = details;

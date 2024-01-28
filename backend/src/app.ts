@@ -14,6 +14,8 @@ import sales from './user/routes/sales/registerSales'
 import report from './user/routes/sales/getSalesReport'
 import pharmacy from './user/routes/pharmacy'
 import stock from './user/routes/stock'
+import paymentMethod from './user/routes/payments/getPayMethodsReport'
+
 import {authenticateToken} from './user/middlewares/authenticateToken';
 
 const storage = multer.diskStorage({
@@ -57,6 +59,7 @@ app.use("/user/inventory", medicineList);
 app.use("/user/sales", authenticateToken, sales);
 app.use("/user/sales", report);
 app.use("/user/stock", stock);
+app.use("/user/pay-method", paymentMethod);
 
 app.use('/uploads', express.static('uploads'));
 
