@@ -153,9 +153,12 @@ export default function LandingPageHeader() {
                         <li className="dropdown-item" onClick={logoutHandle}>Log Out</li>
                     </ul>
             </header>
+            {/* <div>
+                <p></p>
+            </div> */}
  
             <div className="manubar">
-                <div className={`l-navbar ${headerToggle ? "show" : ""}`} id="nav-bar">
+                <div className={`l-navbar menubar scroll-bar ${headerToggle ? "show" : ""}`} id="nav-bar">
                     <nav className="nav">
                         <div> 
                             <Link to="/user/dashboard" className="nav_logo"> 
@@ -191,7 +194,7 @@ export default function LandingPageHeader() {
                                                 <span className="nav_name "  id='inventory'>Invetory <b>{plus ? <FontAwesomeIcon icon={faChevronLeft} /> : <FontAwesomeIcon icon={faChevronDown} />}</b></span>
                                             </Link>
                                         </p>
-                                        <div id="paymentSystem" className="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div id="paymentSystem" className="collapse " aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div className="accordion-body">
                                                 <Link onClick={handleLinkClick} to="/user/inventory/medicine-list" className={`nav_link ${pathname == "/mobailBank/bKash" && 'active'}`}>
                                                     <FaListAlt />
@@ -216,7 +219,7 @@ export default function LandingPageHeader() {
                                                 >Reports <b>{plus2 ? <FontAwesomeIcon icon={faChevronLeft} /> : <FontAwesomeIcon icon={faChevronDown} />}</b></span>
                                             </Link>
                                         </p>
-                                        <div id="systemSetting" className="collapse " >
+                                        <div id="systemSetting" className="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                             <div className="accordion-body">
                                                 <Link onClick={handleLinkClick} to="/user/report/sales" className={`nav_link ${pathname == "/system-setting/app-setting" && 'active'}`}>
                                                     <FaSalesforce  style={{color: ""}}/>

@@ -1,9 +1,14 @@
 import Swal from "sweetalert2";
 import { calculateRemainingStock } from "../../controllers/calculations/calcRemainingStock";
 import { OrderDetail } from "../SalesEntry";
+import { Dispatch, SetStateAction } from "react";
+
+export interface UpdateStockProps{
+    medicine_id: number;
+}
 
 export const handleUpdatingStock = (medicine: OrderDetail, 
-    setUpdateStock: (value: React.SetStateAction<{medicine_id:number}[]>) => void, 
+    setUpdateStock: Dispatch<SetStateAction<UpdateStockProps[]>>, 
     activeCard: number, newUnits: number, 
     useActiveCard = true) =>{
 
@@ -23,9 +28,7 @@ export const handleUpdatingStock = (medicine: OrderDetail,
         });
     }else{
         setUpdateStock((stockArr) => {
-        
             if(useActiveCard){
-                console.log("if: ", stockArr);
                 const updatedStockArr = stockArr.map((item) => {
                     if (item.medicine_id === activeCard ) {
                         return {
@@ -39,7 +42,6 @@ export const handleUpdatingStock = (medicine: OrderDetail,
                 }); 
                 return updatedStockArr; 
             }else{
-                console.log("else: ", stockArr)
                 if(!stockArr.some(stock => stock.medicine_id === medicine.medicine_id)){
                     return(
                         [...stockArr, 
@@ -51,5 +53,6 @@ export const handleUpdatingStock = (medicine: OrderDetail,
             }
         })
     }
-    return { ...medicine, units: newUnits, sub_total: medicine.price * newUnits };
+    const customer_note = medicine.customer_note || "";
+    return { ...medicine, units: newUnits, sub_total: medicine.price * newUnits, customer_note };
 }

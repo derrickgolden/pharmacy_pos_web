@@ -17,6 +17,17 @@
   padding-top: 3rem;
 }
 
+
+.l-navbar::-webkit-scrollbar {
+  width: 8px !important; /* adjust the width as needed */
+  overflow-y: auto;
+}
+
+.l-navbar::-webkit-scrollbar-thumb {
+  background-color: #888; /* color of the scrollbar thumb */
+  border-radius: 4px; /* round the corners of the thumb */
+}
+
 /* dashboard */
 .text-poppins {
     font-family: 'Poppins', sans-serif;

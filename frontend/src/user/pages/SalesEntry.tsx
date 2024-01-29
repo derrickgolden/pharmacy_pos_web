@@ -7,9 +7,8 @@ import ValidateOrders from "../sections/pointOfEntry/ValidateOrders";
 import PrintReceipt from "../sections/pointOfEntry/PrintReceipt";
 import { regiterSalesApi } from "./apiCalls/registerSales";
 import { useNavigate } from "react-router-dom";
-import { calculateRemainingStock } from "../controllers/calculations/calcRemainingStock";
 import Swal from "sweetalert2";
-import { handleUpdatingStock } from "./calculations/handleUpdatingStock";
+import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpdatingStock";
 
 export interface OrderDetail {
   medicine_id: number;
@@ -19,6 +18,7 @@ export interface OrderDetail {
   package_size: number;
   stock_qty: number;
   open_container_units: number;
+  customer_note: string;
 }
 const SalesEntry = () =>{
 
@@ -27,9 +27,9 @@ const SalesEntry = () =>{
     const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
     const [totalPrice, setTotalPrice] = useState(0)
     const [entryStep, setEntryStep] = useState("ordersentry");
-    const [payMethods, setPayMethods] = useState([])
+    const [payMethods, setPayMethods] = useState<string[]>([])
     const [saleRes, setSaleRes] = useState({});
-    const [updateStock, setUpdateStock] = useState<{}[]>([]);
+    const [updateStock, setUpdateStock] = useState<UpdateStockProps[]>([]);
     const [isDigitClicked, setIsDigitClicked] = useState(false)
 
     const navigate = useNavigate()
@@ -46,7 +46,7 @@ const SalesEntry = () =>{
 
     const PoeCalcHandles = {
         handleDigitClick: (digit: number) => {
-          // console.log(`Digit ${digit} clicked`);
+          console.log(`Digit ${digit} clicked`);
           setOrderDetails((arr) => {
               return arr.map((orderDetail) => {
                 if (orderDetail.medicine_id === activeCard && orderDetail.units >= 0) {
@@ -75,7 +75,7 @@ const SalesEntry = () =>{
               const newOrders = arr.map(medicine => {
                 if (medicine.medicine_id === activeCard) {
                   const newUnits = medicine.units + 1;
-                  const newOrderDEtails = handleUpdatingStock(medicine, setUpdateStock, newUnits, activeCard);
+                  const newOrderDEtails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits);
                   return newOrderDEtails;
 
                 } else {
@@ -106,7 +106,7 @@ const SalesEntry = () =>{
       
         handleDecreaseNcancelOrder: () => {
           // Your logic for setting to Decrement and cancel order
-          console.log(orderDetails);
+          // console.log(orderDetails);
           
           setOrderDetails((arr) => {
             const [orderDetail] = arr.filter(orderDetail => orderDetail?.medicine_id === activeCard);
@@ -143,22 +143,41 @@ const SalesEntry = () =>{
       
         handleCustomerNote: async() => {
           // Your logic for handling customer note
-          console.log('Handling Customer Note');
+          let note; 
+          orderDetails.map((orderDetail) =>{
+            if(orderDetail.medicine_id === activeCard){
+              note = orderDetail.customer_note;
+            }
+          })
           const { value: text } = await Swal.fire({
             input: "textarea",
             inputLabel: "Customer Note",
             inputPlaceholder: "Type your note here...",
+            inputValue: `${note}`,
             inputAttributes: {
               "aria-label": "Type your message here"
             },
             showClass: {
               popup: '',      // Disable show animation
             },
-            showCancelButton: true
+            showCancelButton: true,
+            returnInputValueOnDeny:true
           });
-          if (text) {
-            console.log(text);
-          }
+          setOrderDetails((arr) => {
+              const newOrders = arr.map(orderDetail => {
+                if (orderDetail?.medicine_id === activeCard) {
+                  if (text) {
+                    orderDetail.customer_note = text;
+                  }else{
+                    orderDetail.customer_note = "";
+                  }
+                  return orderDetail;
+                } else {
+                  return orderDetail;
+                }
+              });
+              return newOrders;
+          });
         },
       
         handlePayment: () => {
@@ -188,7 +207,6 @@ const SalesEntry = () =>{
                   const newUnits = medicine.units + 1;
                   const newUpdateDetails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits)
                   return newUpdateDetails;
-
                 } else {
                   return medicine;
                 }
@@ -200,7 +218,6 @@ const SalesEntry = () =>{
               const useActiveCard = false;
               const newUpdateDetails = handleUpdatingStock(newOrder, setUpdateStock, activeCard, newUnits, useActiveCard)
               return [...arr, newUpdateDetails]; 
-
             }
           });
           setActiveCard(newOrder.medicine_id);
@@ -211,6 +228,7 @@ const SalesEntry = () =>{
       setActiveCard(order.medicine_id);
       setIsDigitClicked(false);
     };
+
     const handleVilidateClick = (customerGave: number, change: {}) =>{
       const moneyTrans = {...change, customerGave: customerGave || totalPrice};
       console.log(updateStock);

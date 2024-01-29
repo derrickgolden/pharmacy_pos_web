@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import CustomerInvoice from "../../components/pointOfEntry/CustomerInvoice";
 import PaymentCalc from "../../components/pointOfEntry/PaymentCalc"
 import PaymentMethod from "../../components/pointOfEntry/PaymentMethod";
 import { calcAndSetChange } from "../../controllers/calculations/calcAndSetChange";
 
 interface ValidateOrdersProps{
-    handleVilidateClick: () => void;
+    handleVilidateClick: (customerGave: number, change: {}) => void;
     totalPrice: number;
-    setPayMethods: () => void;
-    payMethods: []
+    setPayMethods: Dispatch<SetStateAction<string[]>>;
+    payMethods: string[]
 }
 export type PaymentObject = {
     [key: string]: number;

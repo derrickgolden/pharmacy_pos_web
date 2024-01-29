@@ -1,9 +1,10 @@
 import axios from "axios";
 import { server_baseurl } from "../../../baseUrl";
 import Swal from "sweetalert2";
+import { OrderDetail } from "../SalesEntry";
 
 interface handleAddGroupProps{
-    orderDetails: {}[], 
+    orderDetails: OrderDetail[];
     totalPrice : number;
     moneyTrans: {};
     updateStock: {}[];

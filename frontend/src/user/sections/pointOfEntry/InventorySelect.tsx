@@ -5,9 +5,10 @@ import { RootState } from "../../../redux/store";
 import { useEffect, useState } from "react";
 import { getMedicineGroupList } from "../../components/inventory/medicineGroup/apiCalls/getMedicinGroupList";
 import { setGroupList } from "../../../redux/groupList";
+import { OrderDetail } from "../../pages/SalesEntry";
 
 interface InventorySelectProps {
-    handleNewOrderSelect: () =>void
+    handleNewOrderSelect: (newOrder: OrderDetail) =>void
 }
 const InventorySelect: React.FC<InventorySelectProps> = ({handleNewOrderSelect}) =>{
     const [groupNames, setGroupNames] = useState([])
