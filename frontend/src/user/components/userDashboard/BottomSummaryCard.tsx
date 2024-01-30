@@ -1,8 +1,8 @@
-import { MdArrowDropDown, MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
+import { MdOutlineKeyboardDoubleArrowRight } from "react-icons/md";
 import { FaChevronDown } from "react-icons/fa";
-import { BottomSummaryCardProps } from "./types";
+import { BottomSummaryCardProps, BottomSummaryCardValueProps } from "./types";
 
-import DatePicker, {ReactDatePickerProps} from 'react-datepicker';
+import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useState } from "react";
 import { Link } from "react-router-dom";
@@ -24,7 +24,7 @@ interface CustomDatePickerInputProps {
     </div>
   );
 
-const BottomSummaryCard: React.FC<BottomSummaryCardProps> = ({data}) =>{
+const BottomSummaryCard: React.FC<{data: BottomSummaryCardValueProps}> = ({data}) =>{
     const [selectedDate, setSelectedDate] = useState(new Date());
 
   const handleDateChange = (date: Date) => {
@@ -48,8 +48,8 @@ const BottomSummaryCard: React.FC<BottomSummaryCardProps> = ({data}) =>{
                             onChange={handleDateChange}
                             customInput={<CustomDatePickerInput />}
                             dateFormat="dd/MM/yyyy"
-                            className="custom-datepicker" // Apply custom class
-                            wrapperClassName="text-poppins-regular datepicker-wrapper custom-datepicker-wrapper" // Apply custom wrapper class
+                            className="custom-datepicker"
+                            wrapperClassName="text-poppins-regular datepicker-wrapper custom-datepicker-wrapper"
                             calendarClassName="custom-calendar"
                         />
                     </div>

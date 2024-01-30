@@ -9,6 +9,8 @@ import { regiterSalesApi } from "./apiCalls/registerSales";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpdatingStock";
+import { Medicine } from "../components/inventory/types";
+import { getSessionStorage } from "../controllers/getSessionStorage";
 
 export interface OrderDetail {
   medicine_id: number;
@@ -41,8 +43,9 @@ const SalesEntry = () =>{
         setTotalPrice(newTotalPrice)
     },[orderDetails])
 
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    const pharm = JSON.parse(sessionStorage.getItem("activepharmacy"))
+    const userPharm = getSessionStorage();
+    const { localPharm: pharm } = userPharm.localPharm;
+    const { user } = userPharm.user;
 
     const PoeCalcHandles = {
         handleDigitClick: (digit: number) => {
@@ -224,7 +227,7 @@ const SalesEntry = () =>{
           isDigitClicked? setIsDigitClicked(false) :null;
         };
         
-    const handleEditOrder = (order) =>{
+    const handleEditOrder = (order: Medicine) =>{
       setActiveCard(order.medicine_id);
       setIsDigitClicked(false);
     };
@@ -257,7 +260,7 @@ const SalesEntry = () =>{
         </header>
         {
           entryStep === "ordersentry" && 
-          <div className="sales-entry-container d-flex col-12" style={{paddingTop: "3rem"}}>
+          <div className="sales-entry-container d-flex flex-column flex-md-row col-12" style={{paddingTop: "3rem"}}>
               <div className="d-flex flex-column col-12 justify-content-between
               sales-entry-container col-md-5 p-0" >
                   <OrderDisplay 

@@ -5,14 +5,15 @@ import { IoIosWarning } from "react-icons/io";
 
 import TopSummaryCard from "../components/userDashboard/TopSummaryCard";
 import BottomSummaryCard from "../components/userDashboard/BottomSummaryCard";
-import { useEffect, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import { getStockDetailsApi } from "./apiCalls/getStockDetails";
-import { lowerDashboardData, upperDashboardData } from "./types";
+import { details } from "./types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 import { getMedicineGroupList } from "../components/inventory/medicineGroup/apiCalls/getMedicinGroupList";
 import { getSalesReportApi } from "./apiCalls/getSalesReport";
 import { setSalesReportList } from "../../redux/salesReport";
+import { BottomSummaryCardProps } from "../components/userDashboard/types";
 
 // {title: "My Pharmacy", side_title_link: "#", side_title_link_caption: "Go to Configuration", left_totals: 18, left_totals_caption: "Total no of Suppliers", right_totals: 14, right_totals_caption: "Total no of Users", display_date_picker: false},
 // {title: "Customers", side_title_link: "#", side_title_link_caption: "Go to Customer Page", left_totals: 298, left_totals_caption: "Total no of Customers", right_totals: 24, freq_bought_item:"Adalimumab", right_totals_caption: "Frequently bought item", display_date_picker: false}
@@ -21,8 +22,8 @@ const UserDashboard: React.FC = () =>{
 
     const pharmacyListDetails = useSelector((state: RootState) => state.pharmacyListDetailsList) 
 
-    const [ lowerDashboardData, setLowerDashboardData ] = useState<{}>();
-    const [ upperDashboardData, setUpperDashboardData] = useState<upperDashboardData[]>();
+    const [ lowerDashboardData, setLowerDashboardData ] = useState<SetStateAction<BottomSummaryCardProps>>();
+    const [ upperDashboardData, setUpperDashboardData] = useState<details[]>();
     
     useEffect(() =>{
         let lowStockMedicine: {}[] = [];
@@ -61,7 +62,7 @@ const UserDashboard: React.FC = () =>{
                     totalGroup += details.medicines.length;
                 })
                 
-                setLowerDashboardData((data) => ({...data,
+                setLowerDashboardData((data: BottomSummaryCardProps) => ({...data,
                     inventory: {title: "Inventory", side_title_link: "/user/inventory/medicine-group", side_title_link_caption: "Go to Configuration", left_totals: totalMedicine, left_totals_caption: "Total no of Medicines", right_totals: totalGroup, right_totals_caption: "Medicine Groups", display_date_picker: false}
                 }))
             })
@@ -76,7 +77,7 @@ const UserDashboard: React.FC = () =>{
                     medicinesSold += details.sales_items.length
                 })
                 
-                setLowerDashboardData((data )  => ({...data,
+                setLowerDashboardData((data: BottomSummaryCardProps )  => ({...data,
                     quickReport: {title: "Quick Report", side_title_link: "#", side_title_link_caption: "Date", left_totals: medicinesSold, left_totals_caption: "Qty of Medicines Solid", right_totals: invoices, right_totals_caption: "Invoices Generated", display_date_picker: true},
                 }))
 
@@ -109,10 +110,10 @@ const UserDashboard: React.FC = () =>{
                 </div>
             </section>
             <section className="lower-section bg-white d-flex flex-row flex-wrap justify-content-around">
-                {lowerDashboardData? Object.keys(lowerDashboardData).map((key, i) =>(
+                {lowerDashboardData? Object.values(lowerDashboardData).map((value, i) =>(
                     <BottomSummaryCard 
                         key ={i}
-                        data= {lowerDashboardData[key]}
+                        data= {value}
                     />
                 )) : <h2>No data to show</h2>}
             </section>

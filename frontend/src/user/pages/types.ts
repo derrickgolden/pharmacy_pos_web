@@ -1,4 +1,4 @@
-interface details{
+export interface details{
     icon: JSX.Element;
     status: string;
     totals: number;
@@ -6,6 +6,7 @@ interface details{
     forCssDispaly: string;
     footerCaption: string;
     btnType: string;
+    data: {}[];
 }
 
 export interface upperDashboardData{

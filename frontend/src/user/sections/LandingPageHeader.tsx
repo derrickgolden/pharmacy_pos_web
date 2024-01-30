@@ -29,15 +29,12 @@ export default function LandingPageHeader() {
     const [plus5, setPlus5] = useState(true)
     const [plus6, setPlus6] = useState(true)
     const pathname = window.location.pathname
-    // const [pathName, setPathName] = useState('/')
     const [render, setRender] = useState(true)
     const [headerToggle, setHeaderToggle] = useState(false)
     const [activeLink, setActiveLink] = useState("dashboard")
     const [headerNavManu, setheaderNavManu] = useState(true)
     const [toggleProfile, setToggleProfile] = useState(false)
     const [activePharmacy, setActivePharmacy] = useState()
-    // const [user, setUser] = useState({first_name: "", user_id: null})
-    // const [localPharm, setLocalPharm] = useState({})
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -45,8 +42,8 @@ export default function LandingPageHeader() {
     const pharmacyListDetails = useSelector((state: RootState) => state.pharmacyListDetailsList) 
 
     const userPharm = getSessionStorage();
-    const {localPharm} = userPharm.localPharm
-    const {user} = userPharm.user
+    const { localPharm, user } = userPharm;
+    console.log(userPharm);
     
     useEffect(() =>{
         const medicineList = getPharmacyDetailsApi()
@@ -130,7 +127,7 @@ export default function LandingPageHeader() {
                     style={{cursor: "pointer"}}
                     className="d-flex align-items-center dropdown-toggle" data-bs-toggle="dropdown">
                         <span className="header_img"> <RxAvatar  size={32}/> </span> 
-                        <span className="ms-1">{user?.first_name}({user?.user_id})</span> 
+                        <span className="ms-1">{user?.user?.first_name}({user?.user?.user_id})</span> 
                     </div>
                 
                     <ul  className={`dropdown-menu droping position-absolute ${toggleProfile? ' show' : ''}`} 
