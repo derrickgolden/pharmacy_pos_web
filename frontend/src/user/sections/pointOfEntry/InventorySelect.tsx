@@ -13,7 +13,7 @@ interface InventorySelectProps {
     handleNewOrderSelect: (newOrder: OrderDetail) =>void
 }
 const InventorySelect: React.FC<InventorySelectProps> = ({
-    handleNewOrderSelect, handleEditOrder, orderDetails, handlePayment }) =>{
+    handleNewOrderSelect, handleEditOrder, orderDetails, handlePayment, setShowInventoryOrders }) =>{
     const [groupNames, setGroupNames] = useState([])
     const [showGroup, setShowGroup] = useState("All")
     const [searchMedicine, setSearchMedicine] = useState("")
@@ -83,9 +83,10 @@ const InventorySelect: React.FC<InventorySelectProps> = ({
                     <button type="button" onClick={() => handlePayment()}
                     className="btn col-6 p- m-0 rounded-0 btn-warning">
                         <h5><b>Pay</b></h5>
-                        {orderDetails.reduce((acc, detail) => acc + detail.sub_total, 0)} Ksh
+                        {orderDetails.reduce((acc: number, detail) => acc + detail.sub_total, 0)} Ksh
                     </button>
-                    <button type="button" className="btn col-6 p- m-0 rounded-0 
+                    <button type="button" onClick={() => setShowInventoryOrders("orders")}
+                    className="btn col-6 p- m-0 rounded-0 
                     btn-info text-center">
                         <h5><b>Review</b></h5>
                         <span className="mb-0">{orderDetails.length} Items</span>

@@ -112,14 +112,18 @@
     background-color: #e6e9e9;
   }
   .sales-entry-container{
-    height: calc(100vh - 3rem);
+    height: calc(100vh - 3rem) !important;
   }
   .inventory-select{
     height: calc(100vh - 5.8rem);
     background-color: #808080;
     overflow-y: auto;
   }
+
   @media (max-width: 768px) {
+    .order-cards{
+      height: calc(100vh - 15rem);
+    }
     .inventory-select{
       height: calc(100vh - 14rem);
     }

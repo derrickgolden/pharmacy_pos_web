@@ -14,7 +14,7 @@ const OrderDisplay = ({newOrders, activeCard, handleEditOrder, orderDetails, tot
     }, [activeCard]);
     
     return(
-        <div className=" flex-grow-1 position-relative col-12 px-0 mx-0" >
+        <div className=" position-relative col-12 px-0 mx-0 order-cards"  >
             {newOrders.length === 0 ?(
                 <div className="d-flex flex-column justify-content-center align-items-center 
                 flex-grow-1 empty-cart" style={{height: "100%"}}>
@@ -22,7 +22,7 @@ const OrderDisplay = ({newOrders, activeCard, handleEditOrder, orderDetails, tot
                     <h2>The Cart is Empty</h2>
                 </div>
             ):(
-                <div className="d-flex flex-column justify-content-between h-100">
+                <div className="d-flex flex-column justify-content-between h-100 ">
                     <div ref={scrollRef}
                     className={`d-flex flex-column ordersCard border-3 flex-grow-1 px-1`}>
                         {newOrders.map((order,i) =>(

@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpdatingStock";
 import { Medicine } from "../components/inventory/types";
 import { getSessionStorage } from "../controllers/getSessionStorage";
+import { FaAnglesRight } from "react-icons/fa6";
 
 export interface OrderDetail {
   medicine_id: number;
@@ -32,7 +33,8 @@ const SalesEntry = () =>{
     const [payMethods, setPayMethods] = useState<string[]>([])
     const [saleRes, setSaleRes] = useState({});
     const [updateStock, setUpdateStock] = useState<UpdateStockProps[]>([]);
-    const [isDigitClicked, setIsDigitClicked] = useState(false)
+    const [isDigitClicked, setIsDigitClicked] = useState(false);
+    const [showInventoryOrders, setShowInventoryOrders] = useState("inventory")
 
     const navigate = useNavigate()
 
@@ -253,6 +255,13 @@ const SalesEntry = () =>{
         <header className="header dropdown px-3 col-12" id="header"
         style={{height: "2.5rem"}}>
           <div className="d-flex justify-content-between align-items-center col-12  h-100">
+            {
+              showInventoryOrders !== "inventory" && entryStep === "ordersentry" && (
+                <button type="button" onClick={() => setShowInventoryOrders("inventory")}
+                  className="btn btn-outline-link d-md-none">Inventory <FaAnglesRight />
+                </button>
+              )
+            }
             <button type="button" onClick={() => navigate('/user/dashboard', {replace: true})}
             className="btn btn-outline-danger">End Session</button>
             <h3>{pharm?.pharmacy_name}</h3>
@@ -263,8 +272,8 @@ const SalesEntry = () =>{
           entryStep === "ordersentry" && 
           <div className="sales-entry-container d-flex flex-column flex-md-row col-12" 
             style={{paddingTop: "3rem"}}>
-              <div className="d-none d-md-flex flex-column col-12 justify-content-between
-              sales-entry-container col-md-5 p-0 " >
+              <div className={`${showInventoryOrders === "orders" ? "" : "d-none "} d-md-flex 
+              flex-column col-12 justify-content-between sales-entry-container col-md-5 p-0 grow-1`} >
                   <OrderDisplay 
                       newOrders = {medicineDetails}
                       activeCard = {activeCard}
@@ -276,12 +285,14 @@ const SalesEntry = () =>{
                       PoeCalcHandles= {PoeCalcHandles}
                   />
               </div>
-              <div className="col-md-7 px-0" >
+              <div className={`${showInventoryOrders === "inventory" ? "" : "d-none"} 
+              col-md-7 px-0 d-md-flex`} >
                   <InventorySelect 
                       handleNewOrderSelect = {handleNewOrderSelect}
                       handleEditOrder = {handleEditOrder}
                       orderDetails = {orderDetails}
                       handlePayment= {PoeCalcHandles.handlePayment}
+                      setShowInventoryOrders = {setShowInventoryOrders}
                   />
               </div>
           </div>
