@@ -43,7 +43,7 @@ export default function LandingPageHeader() {
 
     const userPharm = getSessionStorage();
     const { localPharm, user } = userPharm;
-    console.log(userPharm);
+    // console.log(userPharm);
     
     useEffect(() =>{
         const medicineList = getPharmacyDetailsApi()

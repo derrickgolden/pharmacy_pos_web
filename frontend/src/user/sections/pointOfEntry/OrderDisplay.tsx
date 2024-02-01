@@ -19,7 +19,7 @@ const OrderDisplay = ({newOrders, activeCard, handleEditOrder, orderDetails, tot
                 <div className="d-flex flex-column justify-content-center align-items-center 
                 flex-grow-1 empty-cart" style={{height: "100%"}}>
                     <FaOpencart size={50} />
-                    <h2>This Order is Empty</h2>
+                    <h2>The Cart is Empty</h2>
                 </div>
             ):(
                 <div className="d-flex flex-column justify-content-between h-100">

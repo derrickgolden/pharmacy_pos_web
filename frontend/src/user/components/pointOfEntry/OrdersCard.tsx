@@ -15,10 +15,12 @@ const OrdersCard: React.FC<{key: number,
             ${activeCard === order?.medicine_id? "order-display-bg" : ""}`}>
                 <div 
                     className={`d-flex justify-content-between `}>
-                        <div>
-                            <span className="text-poppins-semibold">
-                                {order.medicine_name} 
+                        <div className="col-10">
+                        <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                            <span className="text-poppins-semibold" style={{ whiteSpace: 'nowrap',  }}>
+                                {order.medicine_name}
                             </span>
+                        </div>
                             <p className="mb-0"> 
                                 <span className="text-poppins-semibold">{
                                     orderDetail?.units
@@ -26,7 +28,7 @@ const OrdersCard: React.FC<{key: number,
                                 Units * {order.price} Ksh / Unit
                             </p>                          
                         </div>
-                        <div className="text-poppins-semibold">
+                        <div className="text-poppins-semibold col-2 pl-3">
                             Ksh.{orderDetail?.sub_total}
                         </div>
                 </div>

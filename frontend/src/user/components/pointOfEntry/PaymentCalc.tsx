@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaDeleteLeft } from 'react-icons/fa6';
+import ChangeDisplay from './ChangeDisplay';
 
 // import { PaymentCalcHandles } from './types';
 
@@ -20,28 +21,12 @@ const PaymentCalc = ({ totalPrice, payMethods, PaymentCalcHandles, change }) => 
   };
 
   return (
-    <div className='col-6 h-100' >
-      <div className='border' style={{height: "20vh"}}>
-        {!payMethods.length && (
-          <div className='d-flex flex-column justify-content-center text-center h-100'>
-            <h1 className='text-primary'>{totalPrice} Ksh</h1>
-            <p>Please select a payment method</p>
-          </div>
-        )
-        }
-        {payMethods.length !== 0 && (
-          <div className='d-flex justify-content-between align-items-center p-2 h-100'>
-            <div>
-              <h3 className=''>Remaining <span className='text-warning'>{change.remaining} Ksh</span></h3>
-              <p>Total Due {totalPrice} Ksh</p>
-            </div>
-            <div>
-              <h3>Change <span className='text-warning'>{change.change} Ksh</span></h3>
-            </div>
-          </div>
-        )
-        }
-      </div>
+    <div className='d-none d-md-block col-6 h-100' >
+      <ChangeDisplay 
+        payMethods = {payMethods} 
+        totalPrice = {totalPrice} 
+        change = {change}
+      />
       <div className='d-flex flex-grow-1 'style={{height: "60vh"}} >
         <div className='d-flex flex-column col-9 ' >
           <div className='d-flex flex-grow-1'>{renderDigitButtons([1, 2, 3])}</div>

@@ -119,6 +119,11 @@
     background-color: #808080;
     overflow-y: auto;
   }
+  @media (max-width: 768px) {
+    .inventory-select{
+      height: calc(100vh - 14rem);
+    }
+  }
   .inventory-select::-webkit-scrollbar {
     width: 8px; /* adjust the width as needed */
   }
@@ -153,9 +158,21 @@
     background-color: #615d75; /* color of the scrollbar thumb */
     border-radius: 4px; /* round the corners of the thumb */
   }
-  
+ 
+.print-receipt{
+  height: calc(100vh - 3rem);
+}
+
+@media (min-width: 768px) {
+  .print-receipt{
+    height: calc(82vh);
+  }
+}
+
+.center-receipt{
+  height: calc(50vh - 3rem);
+}
 .receipt{
-  height: calc(78vh);
   overflow-y: auto;
 }
 .receipt::-webkit-scrollbar {

@@ -5,6 +5,8 @@ import { FaAngleRight, FaRegCreditCard } from "react-icons/fa";
 import { MdAccountBalanceWallet, MdCancel } from "react-icons/md";
 import { PaymentObject } from "../../sections/pointOfEntry/ValidateOrders";
 import { calcAndSetChange } from "../../controllers/calculations/calcAndSetChange";
+import Swal from "sweetalert2";
+import ChangeDisplay from "./ChangeDisplay";
 
 const payments = [
     {icon:<BsCashCoin size={24}/>, method_name: "Cash", method: "cash", payment_method_id: 1},
@@ -30,9 +32,12 @@ interface PaymentProps{
     payment_method_id: number;
 }
 const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPayMethods, totalPrice,
-    payMethods, activePayMethod, customerGave, change, setCustomeGave, setActivePayMethod, setChange}) =>{
+    payMethods, activePayMethod, customerGave, change, setCustomeGave, setActivePayMethod, setChange, 
+    PaymentCalcHandles }) =>{
       
     const [ isValidateEnabled, setIsvalidateEnabled ] = useState(true)
+    const currentWidth = window.innerWidth;
+
     const handlePaymentMethod = (payment: PaymentProps) =>{
         if (!payMethods.includes(payment.method_name)) {
             setPayMethods([...payMethods, payment.method_name]);
@@ -61,11 +66,37 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
 
             return newObj;
         });
-        // const activeMethod = 
+    }
+
+    const handleChangeAmount = async(method: string) =>{
+
+        setActivePayMethod(method)
+        // setStartNewEntry(true);
+        if(method === activePayMethod && currentWidth < 768){
+            await Swal.fire({
+                title: "Enter new amount",
+                input: "number",
+                showCancelButton: true,
+                confirmButtonText: "Confirm",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    PaymentCalcHandles.handleDigitClick(result.value)
+                }
+            });
+        }
+        
     }
 
     return(
-        <div className="col-3 d-flex flex-column" style={{height: "80vh"}}>
+        <div className="col-12 col-md-3 d-flex flex-column" style={{height: "80vh"}}>
+            {
+                currentWidth < 768 && 
+                <ChangeDisplay 
+                    payMethods = {payMethods} 
+                    totalPrice = {totalPrice} 
+                    change = {change}
+                />
+            }
             <div className="py-2">
                 <h3>Payment Method</h3>
             </div>
@@ -84,18 +115,21 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
                 </div>
                 {
                     payMethods.map((method, i) =>(
-                        <div key={i} onClick={() => setActivePayMethod(method)}
-                        className={`${activePayMethod === method? "bg-light ": ""} d-flex py-4 px-2 
-                        border justify-content-between `}>
-                            <h6>{method}</h6>
-                            <div className="d-flex gap-4">
-                                <h6>
-                                    { customerGave[method] } 
-                                    <span>Ksh</span>
-                                </h6>
-                                <MdCancel size={24} 
-                                onClick={() => handleRemovePayment(method)} />
+                        <div className={`${activePayMethod === method? "bg-light ": ""} d-flex py-4 px-2 border col-12
+                        justify-content-between`}>
+                            <div key={i} onClick={() => handleChangeAmount(method)}
+                            className={`col-10 d-flex 
+                             justify-content-between `}>
+                                <h6>{method}</h6>
+                                <div className="d-flex gap-4">
+                                    <h6>
+                                        { customerGave[method] } 
+                                        <span>Ksh</span>
+                                    </h6>
+                                </div>
                             </div>
+                                    <MdCancel size={24} 
+                                    onClick={() => handleRemovePayment(method)} />
                         </div>
                     ))
                 }
@@ -117,3 +151,27 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
 }
 
 export default PaymentMethod;
+
+// <!-- Button trigger modal -->
+// <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+//   Launch demo modal
+// </button>
+
+// <!-- Modal -->
+// <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+//   <div class="modal-dialog">
+//     <div class="modal-content">
+//       <div class="modal-header">
+//         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+//         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+//       </div>
+//       <div class="modal-body">
+//         ...
+//       </div>
+//       <div class="modal-footer">
+//         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+//         <button type="button" class="btn btn-primary">Save changes</button>
+//       </div>
+//     </div>
+//   </div>
+// </div>

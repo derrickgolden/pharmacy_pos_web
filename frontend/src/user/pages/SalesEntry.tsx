@@ -184,6 +184,8 @@ const SalesEntry = () =>{
         },
       
         handlePayment: () => {
+          console.log(totalPrice);
+          
           if(totalPrice > 0){
             setEntryStep("validateorder")
           }
@@ -192,7 +194,7 @@ const SalesEntry = () =>{
         handleCustomer: () => {
             console.log("Handling Customer");           
         }
-      };
+    };
             
     const handleNewOrderSelect = ( newOrder: OrderDetail ) => {
 
@@ -225,7 +227,7 @@ const SalesEntry = () =>{
           });
           setActiveCard(newOrder.medicine_id);
           isDigitClicked? setIsDigitClicked(false) :null;
-        };
+    };
         
     const handleEditOrder = (order: Medicine) =>{
       setActiveCard(order.medicine_id);
@@ -254,15 +256,15 @@ const SalesEntry = () =>{
             <button type="button" onClick={() => navigate('/user/dashboard', {replace: true})}
             className="btn btn-outline-danger">End Session</button>
             <h3>{pharm?.pharmacy_name}</h3>
-            <h5>{user.first_name}</h5>
+            <h5>{user?.first_name}</h5>
           </div>
-          {/* <MedicineSelectNavbar /> */}
         </header>
         {
           entryStep === "ordersentry" && 
-          <div className="sales-entry-container d-flex flex-column flex-md-row col-12" style={{paddingTop: "3rem"}}>
-              <div className="d-flex flex-column col-12 justify-content-between
-              sales-entry-container col-md-5 p-0" >
+          <div className="sales-entry-container d-flex flex-column flex-md-row col-12" 
+            style={{paddingTop: "3rem"}}>
+              <div className="d-none d-md-flex flex-column col-12 justify-content-between
+              sales-entry-container col-md-5 p-0 " >
                   <OrderDisplay 
                       newOrders = {medicineDetails}
                       activeCard = {activeCard}
@@ -277,6 +279,9 @@ const SalesEntry = () =>{
               <div className="col-md-7 px-0" >
                   <InventorySelect 
                       handleNewOrderSelect = {handleNewOrderSelect}
+                      handleEditOrder = {handleEditOrder}
+                      orderDetails = {orderDetails}
+                      handlePayment= {PoeCalcHandles.handlePayment}
                   />
               </div>
           </div>
@@ -300,11 +305,13 @@ const SalesEntry = () =>{
         {
           entryStep === "receipt" &&
           <div style={{paddingTop: "3rem"}}>
-            <ValidateOrderNavbar 
-              setEntryStep = {setEntryStep}
-              totalPrice = {totalPrice}
-              step = {{step: "receipt"}}
-            />
+            <div className="d-none d-md-block">
+              <ValidateOrderNavbar 
+                setEntryStep = {setEntryStep}
+                totalPrice = {totalPrice}
+                step = {{step: "receipt"}}
+              />
+            </div>
             <PrintReceipt 
               orderDetails ={orderDetails}
               medicineDetails ={medicineDetails}

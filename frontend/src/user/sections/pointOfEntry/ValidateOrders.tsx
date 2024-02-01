@@ -15,7 +15,7 @@ export type PaymentObject = {
 };
 
 const ValidateOrders: React.FC<ValidateOrdersProps> = (
-    {handleVilidateClick, totalPrice, setPayMethods, payMethods}) =>{
+    {handleVilidateClick, totalPrice, setPayMethods, payMethods }) =>{
 
     const [customerGave, setCustomeGave] = useState<PaymentObject>({})
     const [change, setChange] = useState({remaining: 0.00, change: 0.00})
@@ -24,6 +24,7 @@ const ValidateOrders: React.FC<ValidateOrdersProps> = (
 
     const PaymentCalcHandles = {
         handleDigitClick: (digit: number) =>{
+            const currentWidth = window.innerWidth;
             setCustomeGave((obj) => {
                 const newFig = startNewEntry? digit : Number(obj[activePayMethod] + String(digit)) || 0;
 
@@ -37,7 +38,7 @@ const ValidateOrders: React.FC<ValidateOrdersProps> = (
 
                 return {...obj ,[activePayMethod]: newFig};
             });
-            setStartNewEntry(false);
+            currentWidth < 768 ? setStartNewEntry(true) : setStartNewEntry(false);
         },
         handleDeleteDigit: () =>{
             setCustomeGave((obj) => {
@@ -90,6 +91,7 @@ const ValidateOrders: React.FC<ValidateOrdersProps> = (
                 setCustomeGave = {setCustomeGave}
                 setActivePayMethod = {setActivePayMethod}
                 setChange = {setChange}
+                PaymentCalcHandles = {PaymentCalcHandles}
             />
             <PaymentCalc 
                 change = {change}
