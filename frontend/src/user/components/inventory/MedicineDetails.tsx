@@ -28,11 +28,11 @@ const MedicineDetails: React.FC<MedicineDetailsProps> = ({onHandleActionDetails,
     }
     
     return(
-        <div className="px-5">
+        <div className="px-2 px-md-5">
             {<DetailCard 
                 key={1}
                 data ={medicineDetails}/>}
-            <div className="bg-white d-flex align-items-center justify-content-between" >
+            <div className="bg-white d-flex gap-4 align-items-center justify-content-between" >
                 <button type="button" 
                 onClick={() => handleMedicineDelete(medicineDetails?.medicine_id, medicineDetails.medicine_name)}
                 className="btn btn-outline-danger">Delete Medicine</button>

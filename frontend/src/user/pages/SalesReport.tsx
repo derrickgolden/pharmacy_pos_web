@@ -54,8 +54,8 @@ const SalesReport = () =>{
                 dataType='Sales'
             />
             
-           <div className='p-5 pt-0'>
-                <button className="btn btn-outline-primary col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+           <div className='py-3 px-md-5 '>
+                <button className="btn btn-outline-info border-start-0 border-end-0 rounded-0 col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                     Show/Hide sales graph
                 </button>
            </div>

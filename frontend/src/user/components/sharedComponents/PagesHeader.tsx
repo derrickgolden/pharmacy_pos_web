@@ -25,8 +25,8 @@ const PagesHeader: React.FC<PagesHeaderProps> = ({setShowDetails, btnInfo }) =>{
         setShowDetails(btnInfo.navigate)
     }
     return(
-        <section className="upper-section bg-light py-5 mb-5">
-            <div className="d-flex justify-content-between align-items-center px-md-5">
+        <section className="upper-section bg-light py-5 px-2 mb-5">
+            <div className="d-flex flex-wrap justify-content-between align-items-center px-md-5">
                 <div>
                     <div className="d-flex align-items-center">
                         <h1 className="font-weight-bold fs-4 lh-1" 

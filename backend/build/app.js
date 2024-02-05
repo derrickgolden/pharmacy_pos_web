@@ -18,6 +18,7 @@ const registerSales_1 = __importDefault(require("./user/routes/sales/registerSal
 const getSalesReport_1 = __importDefault(require("./user/routes/sales/getSalesReport"));
 const pharmacy_1 = __importDefault(require("./user/routes/pharmacy"));
 const stock_1 = __importDefault(require("./user/routes/stock"));
+const getPayMethodsReport_1 = __importDefault(require("./user/routes/payments/getPayMethodsReport"));
 const authenticateToken_1 = require("./user/middlewares/authenticateToken");
 const storage = multer_1.default.diskStorage({
     destination: (req, file, callback) => {
@@ -49,15 +50,17 @@ app.use("/user", auth_1.default);
 app.use("/user", upload.single('logo'), authenticateToken_1.authenticateToken, pharmacy_1.default);
 app.use("/user/inventory", medicineGroup_1.default);
 app.use("/user/inventory", medicineList_1.default);
-app.use("/user/sales", registerSales_1.default);
+app.use("/user/sales", authenticateToken_1.authenticateToken, registerSales_1.default);
 app.use("/user/sales", getSalesReport_1.default);
 app.use("/user/stock", stock_1.default);
+app.use("/user/pay-method", getPayMethodsReport_1.default);
 app.use('/uploads', express_1.default.static('uploads'));
+const serverInstance = app.listen(port, () => {
+    console.log("Listening to port: ", port);
+});
 const server = () => {
-    const serverInstance = app.listen(port, () => {
-        console.log("Listening to port: ", port);
-    });
     return serverInstance;
 };
 exports.server = server;
+console.log("hello");
 //# sourceMappingURL=app.js.map

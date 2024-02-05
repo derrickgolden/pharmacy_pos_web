@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMedicineGroups = exports.updateMedicineDetails = exports.addMedicineGroup = void 0;
+exports.shiftMedicineGroup = exports.getMedicineGroups = exports.updateMedicineDetails = exports.addMedicineGroup = void 0;
 const { pool } = require("../../../mysqlSetup");
 const addMedicineGroup = async (medicinegroupDetails) => {
     const { group_name, description } = medicinegroupDetails;
@@ -85,14 +85,15 @@ const getMedicineGroups = async (filterNull) => {
                     'medicine_id', ml.medicine_id,
                     'medicine_code', ml.medicine_code,
                     'medicine_name', ml.medicine_name,
-                    'stock_qty', ml.stock_qty,
                     'instructions', ml.instructions,
                     'side_effect', ml.side_effect,
                     'img_path', ml.img_path,
                     'pricing_id', p.pricing_id,
                     'price', p.price,
                     'unit_of_measurement', p.unit_of_measurement,
-                    'package_size', p.package_size
+                    'stock_qty', s.containers,
+                    'package_size', s.units_per_container,
+                    'open_container_units', s.open_container_units
                 )
             ) AS medicines
         FROM
@@ -101,10 +102,12 @@ const getMedicineGroups = async (filterNull) => {
             medicine_list ml ON mg.group_id = ml.group_id
         LEFT JOIN
             pricing p ON ml.medicine_id = p.medicine_id
+        LEFT JOIN
+            stock s ON ml.medicine_id = s.medicine_id
         ${filterNull ? "WHERE ml.medicine_id IS NOT NULL" : ""}
         GROUP BY
             mg.group_id, mg.group_name, mg.description;
-    
+
         `;
         const [res] = await connection.query(query);
         connection.release();
@@ -125,9 +128,48 @@ const getMedicineGroups = async (filterNull) => {
     }
 };
 exports.getMedicineGroups = getMedicineGroups;
+const shiftMedicineGroup = async (medicinegroupDetails) => {
+    const { medicine_id, group_id } = medicinegroupDetails;
+    try {
+        const connection = await pool.getConnection();
+        var [res] = await connection.query(`
+                UPDATE medicine_list 
+                SET group_id = ?
+                WHERE medicine_id = ?
+            `, [group_id, medicine_id]);
+        connection.release();
+        if (res.affectedRows > 0) {
+            return {
+                err: false,
+                success: true,
+                msg: `Group has been shifted`,
+                details: res
+            };
+        }
+        else {
+            return {
+                err: false,
+                success: false,
+                msg: `No rows were updated. Medicine not found.`,
+                details: res
+            };
+        }
+    }
+    catch (error) {
+        console.error('Error: ', error);
+        if (error.sqlMessage) {
+            return { success: false, msg: error.sqlMessage };
+        }
+        else {
+            return { success: false, msg: error.message };
+        }
+    }
+};
+exports.shiftMedicineGroup = shiftMedicineGroup;
 module.exports = {
     addMedicineGroup: exports.addMedicineGroup,
     getMedicineGroups: exports.getMedicineGroups,
-    updateMedicineDetails: exports.updateMedicineDetails
+    updateMedicineDetails: exports.updateMedicineDetails,
+    shiftMedicineGroup: exports.shiftMedicineGroup
 };
 //# sourceMappingURL=medicineGroup.js.map

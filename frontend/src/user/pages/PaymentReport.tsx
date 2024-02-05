@@ -41,12 +41,12 @@ const PaymentReport = () =>{
                     salesData={sortedSalesByDateSelect?.sortedSales}
                     dataType = { "Payments" }
                 />
-                <div className='p-5 pt-0'>
-                    <button className="btn btn-outline-primary col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <div className='py-3 px-md-5 '>
+                    <button className="btn btn-outline-info border-start-0 border-end-0 rounded-0 col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         Show/Hide Payment Methods Graph
                     </button>
             </div>
-                <div className="collapse" id="collapseExample">
+                <div className="collapse col-12" id="collapseExample">
                     <div className='d-lg-flex flex-row  gap-4 px-5 pb-4 col-12'>
                         <div>
                             <h4 className="col-12">Total amount(Ksh) per payment method</h4>

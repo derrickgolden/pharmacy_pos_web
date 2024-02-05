@@ -15,12 +15,18 @@ const PrintReceipt = (
     const user = JSON.parse(sessionStorage.getItem("user"));
     const pharm = JSON.parse(sessionStorage.getItem("activepharmacy"))
 
-    console.log(user);
-    
-
-  const handlePrint = useReactToPrint({
-    content: () => componentRef.current,
-  });
+    const event = new KeyboardEvent('keydown', {
+        key: 'p',
+        ctrlKey: true,
+        shiftKey: true,
+    });
+          
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+        onBeforePrint: () => {
+            window.dispatchEvent(event);
+        },
+    });
 
     return(
         <div className="d-flex " >

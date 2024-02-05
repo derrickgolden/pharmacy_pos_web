@@ -80,7 +80,7 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => 
     };
 
   return (
-    <div className="container-fluid px-5" >
+    <div className="container-fluid px-md-5" >
     <div className="row my-3">
         <div className="col-12">
             <div className="card" style={{ borderTop: "2px solid #4723d9" }}>

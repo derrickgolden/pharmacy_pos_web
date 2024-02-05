@@ -48,7 +48,7 @@ const ChangePassword: React.FC = () => {
 
   return (
     <div className='body2 ' style={{paddingTop: "2rem", height: "100vh"}}>
-        <section className="upper-section bg-light p-5 mb-5 h-100">
+        <section className="upper-section bg-light px-2 px-sm-5 py-5 mb-5 h-100">
             <div className="card" style={{ borderTop: "2px solid rgb(71, 35, 217)" }}>
                 <div className="card-header d-flex justify-content-between border-bottom pb-1">
                 <div className="">Change Password</div>

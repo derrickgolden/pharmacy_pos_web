@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMedicineList = exports.addMedicine = void 0;
+exports.deleteMedicine = exports.getMedicineList = exports.addMedicine = void 0;
 const { pool } = require("../../../mysqlSetup");
 const addMedicine = async (medicineDetails, img_file) => {
     const { medicine_code, medicine_name, stock_qty, instructions, side_effect, group_id, price, unit_of_mesurement, package_size } = medicineDetails;
@@ -90,8 +90,35 @@ LEFT JOIN
     }
 };
 exports.getMedicineList = getMedicineList;
+const deleteMedicine = async (medicine_id) => {
+    try {
+        const connection = await pool.getConnection();
+        var [res] = await connection.query(`
+                DELETE FROM medicine_list
+                WHERE medicine_id = ?;
+            `, [medicine_id]);
+        connection.release();
+        console.log(res);
+        return {
+            success: true,
+            msg: `Medicine deleted`,
+            details: res
+        };
+    }
+    catch (error) {
+        console.error('Error:', error.message);
+        if (error.sqlMessage) {
+            return { success: false, msg: "Database Error", err: error.sqlMessage };
+        }
+        else {
+            return { success: false, msg: "Database Error", err: error.message };
+        }
+    }
+};
+exports.deleteMedicine = deleteMedicine;
 module.exports = {
     addMedicine: exports.addMedicine,
     getMedicineList: exports.getMedicineList,
+    deleteMedicine: exports.deleteMedicine,
 };
 //# sourceMappingURL=medicineList.js.map

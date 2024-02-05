@@ -69,8 +69,8 @@ const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesD
     };
 
     return(
-        <section className="upper-section bg-light pt-5 mb-4">
-            <div className="d-flex justify-content-between align-items-center px-md-5">
+        <section className="upper-section bg-light px-2 pt-5 mb-md-4">
+            <div className="d-flex flex-wrap justify-content-between align-items-center px-md-5">
                 <div>
                     <div className="d-flex align-items-center">
                         <h1 className="font-weight-bold fs-4 lh-1" 
@@ -86,13 +86,13 @@ const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesD
                         {dataType} related report of the pharmacy.
                     </p>
                 </div>                
-                    <button className="btn btn-outline-primary" onClick={handleDownload}>
-                        Download {dataType} Report
-                    </button>
+                <button className="btn btn-outline-primary align-content-center" onClick={handleDownload}>
+                    Download {dataType} Report
+                </button>
             </div>
-            <div className="d-flex col-11 m-auto gap-5 align-items-center">
-                <div className="col-6 d-flex align-items-end gap-4">
-                    <div>
+            <div className="d-flex  col-11 m-auto gap-5 align-items-center">
+                <div className="d-flex flex-wrap mt-4 mt-sm-0 align-items-end gap-1 gap-sm-4">
+                    <div className="my-0 my-sm-0 ">
                         <span>Date Range</span>
                         <div className="d-flex gap-2 border p-2 rounded "
                         style={{width: "fit-content"}}>
@@ -112,21 +112,20 @@ const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesD
                         </div>
                     </div>
                     <button onClick={() => handleRegenerateGraph(selectedDate)}
-                    type="button" className="btn btn-outline-secondary" 
-                    style={{height: "40px"}}>
-                        Regenerate
+                        type="button" className="btn btn-outline-secondary " 
+                        style={{height: "40px"}}>
+                            Regenerate
                     </button>
                 </div>
                 <div className="bg-white align-items-center bg-light" >
-                    <p className="bg-light col-12 m-0">Medicine Group</p>
+                    {/* <p className="bg-light col-12 m-0">Medicine Group</p>
                     <select className="form-select bg-light m-0 flex-grow-1 font-family-poppins font-weight-400 font-size-15 line-height-22 text-dark"
                     aria-label="Download Report">
                         <option value="download">- Select Group -</option>
                         <option value="sales">Day Sales</option>
                         <option value="payments">Week Sales</option>
                         <option value="payments">Month Sales</option>
-                            {/* Add more options as needed */}
-                    </select>
+                    </select> */}
                 </div>  
             </div>
         </section>

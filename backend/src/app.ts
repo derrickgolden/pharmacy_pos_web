@@ -63,10 +63,10 @@ app.use("/user/pay-method", paymentMethod);
 
 app.use('/uploads', express.static('uploads'));
 
-  const serverInstance = app.listen(port, ()=>{
-      console.log("Listening to port: ", port);
-  })
+const serverInstance = app.listen(port, ()=>{
+  console.log("Listening to port: ", port);
+})
 export const server = () =>{
   return serverInstance;
 }
-
+console.log("hello");

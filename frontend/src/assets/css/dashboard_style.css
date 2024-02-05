@@ -119,11 +119,14 @@
     background-color: #808080;
     overflow-y: auto;
   }
+  .order-cards{
+    height: calc(100vh - 15rem);
+  }
 
   @media (max-width: 768px) {
-    .order-cards{
+    /* .order-cards{
       height: calc(100vh - 15rem);
-    }
+    } */
     .inventory-select{
       height: calc(100vh - 14rem);
     }

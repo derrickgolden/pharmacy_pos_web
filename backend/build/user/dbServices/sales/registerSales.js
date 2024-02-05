@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerSales = void 0;
 const { pool } = require("../../../mysqlSetup");
-const registerSales = async (saleDetails) => {
-    // console.log(saleDetails);
+const registerSales = async (saleDetails, user_id) => {
+    console.log(saleDetails);
     const orderDetails = saleDetails.orderDetails;
     const totalPrice = saleDetails.totalPrice;
     const moneyTrans = saleDetails.moneyTrans;
@@ -14,9 +14,9 @@ const registerSales = async (saleDetails) => {
         await connection.beginTransaction();
         const { customerGave, change } = moneyTrans;
         var [res] = await connection.query(`
-                INSERT INTO sales (sale_date, total_price, client_gave, change_amount)
+                INSERT INTO sales (sale_date, total_price, change_amount, cashier)
                 VALUES (?, ?, ?, ?)
-            `, [sale_date, totalPrice, customerGave, change]);
+            `, [sale_date, totalPrice, change, user_id]);
         const sale_id = res.insertId;
         orderDetails.map(async (details) => {
             const { medicine_id, units, sub_total } = details;
@@ -24,6 +24,13 @@ const registerSales = async (saleDetails) => {
                     INSERT INTO sales_items (sale_id, medicine_id, units_sold, sub_total)
                     VALUES (?, ?, ?, ?)
                 `, [sale_id, medicine_id, units, sub_total]);
+        });
+        // insert paymentMethods
+        Object.entries(customerGave).map(async ([key, value]) => {
+            var [paymentMethods_res] = await connection.query(`
+                    INSERT INTO sale_payments (sale_id, payment_method, amount)
+                    VALUES (?, ?, ?)
+                `, [sale_id, key, value]);
         });
         // update stock
         updateStock.map(async (details) => {

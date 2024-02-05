@@ -9,7 +9,7 @@ const POEmedicineCard: React.FC<POEmedicineCardProps> = ({medicineDetails, handl
     // console.log(medicineDetails);
     return(
         <button onClick={() => handleNewOrderSelect(medicineDetails)}
-        className=" p-1 col-12 col-sm-3 col-lg-2 btn position-relative medicine-card "
+        className=" p-1 col-4 col-sm-3 col-lg-2 btn position-relative medicine-card "
          >
         <div className="card h-100 ">
             <div className="triangle position-absolute top-0 end-0"></div>

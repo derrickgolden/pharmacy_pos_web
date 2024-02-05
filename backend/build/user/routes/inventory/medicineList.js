@@ -33,5 +33,18 @@ router.get('/get-medicine', async (req, res) => {
         res.status(302).json({ success: false, msg: "sever side error", err: error.message });
     }
 });
+router.post('/delete', async (req, res) => {
+    const { medicine_id } = req.body;
+    try {
+        const response = await (0, medicineList_1.deleteMedicine)(medicine_id);
+        response.success ?
+            res.status(200).json(response) :
+            res.status(302).json(response);
+    }
+    catch (error) {
+        console.log(error);
+        res.status(302).json({ success: false, msg: "sever side error", err: error.message });
+    }
+});
 exports.default = router;
 //# sourceMappingURL=medicineList.js.map

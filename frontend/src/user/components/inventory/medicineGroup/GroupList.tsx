@@ -74,7 +74,7 @@ const GroupList = ({onHandleActionDetails}) =>{
       };
 
     return(
-        <div className="px-5 pb-5">
+        <div className="px-md-5 pb-5">
             <div className="container-fluid" >
                 {/* <Breadcrumb title={title} brad={brad} /> */}
                 {/* <Link to="#" ><button type="button" className="btn btn-outline-success active btn-sm ">All</button></Link> */}

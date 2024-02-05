@@ -4,13 +4,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const registerSales_1 = require("../../dbServices/sales/registerSales");
+const getPayMethodReport_1 = require("../../dbServices/payments/getPayMethodReport");
 const router = express_1.default.Router();
-router.post('/register-sales', async (req, res) => {
-    const saleDetails = req.body;
-    const { user_id } = req.user;
+router.post('/get-report', async (req, res) => {
+    const { pharmacy_id } = req.body;
     try {
-        const response = await (0, registerSales_1.registerSales)(saleDetails, user_id);
+        const response = await (0, getPayMethodReport_1.getPayMethodsReport)(pharmacy_id);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);
@@ -21,4 +20,4 @@ router.post('/register-sales', async (req, res) => {
     }
 });
 exports.default = router;
-//# sourceMappingURL=registerSales.js.map
+//# sourceMappingURL=getPayMethodsReport.js.map
