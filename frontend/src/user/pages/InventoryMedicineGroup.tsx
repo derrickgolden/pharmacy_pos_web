@@ -39,7 +39,6 @@ const InventoryMedicineGroup = () =>{
             }
             {showDetails === "addgroup" && 
                 <AddGroupForm 
-                    onHandleAddGroupForm ={onHandleAddGroupForm} 
                     setShowDetails ={setShowDetails}
                 />
             }

@@ -36,13 +36,19 @@ const GroupList = ({onHandleActionDetails}) =>{
         },
         {
             name: "No of Medicine",
-            selector: (row: MedicineGroup) => row.medicines.length,
+            selector: (row: MedicineGroup) => {
+                if(row.medicines.length === 1 && row.medicines[0].medicine_id === null){
+                    return 0;
+                }
+                return row.medicines.length;
+            },
             sortable: true
         },
         {
             name: "Action",
             cell: (row: MedicineGroup) => <>
             <button onClick={() => onHandleActionDetails(row)} 
+                disabled= {row.medicines[0].medicine_id === null ? true : false}
                 className={`btn p-0 px-1 btn-primary btn-sm`}  >
                     View in Detail
                 </button></>,

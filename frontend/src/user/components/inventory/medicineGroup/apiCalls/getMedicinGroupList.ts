@@ -1,6 +1,7 @@
 import axios from "axios";
 import { server_baseurl } from "../../../../../baseUrl";
 import Swal from "sweetalert2";
+import { getSessionStorage } from "../../../../controllers/getSessionStorage";
 
 interface handleAddGroupProps{
     groupDetails: {group_name: string, description: string}
@@ -21,7 +22,9 @@ export const getMedicineGroupList = async(filterNull: boolean) =>{
         return
     }
     
-    const data = JSON.stringify({filterNull});
+    const userPharm = getSessionStorage();
+    const { localPharm } = userPharm.localPharm;
+    const data = JSON.stringify({filterNull, pharmacy_id: localPharm.pharmacy_id});
     let config = {
         method: 'post',
         maxBodyLength: Infinity,
@@ -30,7 +33,7 @@ export const getMedicineGroupList = async(filterNull: boolean) =>{
             'Content-Type': 'application/json',
             'Authorization': `${token}`
         },
-        data: JSON.stringify({filterNull})
+        data: data
     };
 
     return await axios.request(config)

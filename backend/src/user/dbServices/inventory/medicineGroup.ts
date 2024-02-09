@@ -6,15 +6,15 @@ const { pool } = require("../../../mysqlSetup");
 
 export const addMedicineGroup = async (medicinegroupDetails: medicinegroupDetails ): Promise<universalResponse> => {
 
-    const {group_name, description} = medicinegroupDetails;
+    const {group_name, description, pharmacy_id} = medicinegroupDetails;
     
     try {
         const connection: RowDataPacket = await pool.getConnection();
 
             var [res] = await connection.query(`
-                INSERT INTO medicine_group (group_name, description)
-                VALUES (?, ?)
-            `, [group_name, description]);
+                INSERT INTO medicine_group (group_name, description, pharmacy_id)
+                VALUES (?, ?, ?)
+            `, [group_name, description, pharmacy_id]);
 
         connection.release();
 
@@ -82,10 +82,9 @@ export const updateMedicineDetails = async (medicinegroupDetails:  updateMedicin
     }
 };
 
-export const getMedicineGroups = async (filterNull: boolean): Promise<universalResponse> => {
+export const getMedicineGroups = async (filterNull: boolean, pharmacy_id: number): Promise<universalResponse> => {
     try {
         const connection: RowDataPacket = await pool.getConnection();
-
         // Organize SQL query for better readability
         const query = `
         SELECT
@@ -116,13 +115,14 @@ export const getMedicineGroups = async (filterNull: boolean): Promise<universalR
             pricing p ON ml.medicine_id = p.medicine_id
         LEFT JOIN
             stock s ON ml.medicine_id = s.medicine_id
-        ${filterNull ? "WHERE ml.medicine_id IS NOT NULL" : ""}
+        WHERE
+            ${filterNull ? "ml.medicine_id IS NOT NULL AND" : ""}
+            mg.pharmacy_id = ?
         GROUP BY
             mg.group_id, mg.group_name, mg.description;
-
         `;
 
-        const [res] = await connection.query(query);
+        const [res] = await connection.query(query, [pharmacy_id]);
 
         connection.release();
 

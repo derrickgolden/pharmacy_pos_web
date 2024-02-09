@@ -28,15 +28,18 @@ const Session = () =>{
                 <h3>Pharmacy: <b className="text-secondary">
                     {pharmacy?.pharmacy_name? pharmacy?.pharmacy_name : "Select a Pharmacy before proceding"}
                 </b></h3>
-                {/* <p>{new Date()}</p> */}
-                <div onClick={handleSessionStart} style={{width: "fit-content"}}
-                className="bg-white d-flex align-items-center justify-content-between" >
-                    <button type="button"  className="btn btn-outline-warning"> 
-                        <Link  to="/user/sales-entry" id='session' className="">              
-                            Start Session
-                        </Link>
-                    </button>
-                </div>
+                {
+                    pharmacy?.pharmacy_name ? (
+                        <div onClick={handleSessionStart} style={{width: "fit-content"}}
+                        className="bg-white d-flex align-items-center justify-content-between" >
+                            <button type="button"  className="btn btn-outline-warning"> 
+                                <Link  to="/user/sales-entry" id='session' className="">              
+                                    Start Session
+                                </Link>
+                            </button>
+                        </div>
+                    ): null
+                }
             </div>
         </div>
     )

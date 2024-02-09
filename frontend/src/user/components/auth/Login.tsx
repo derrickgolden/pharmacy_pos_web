@@ -35,11 +35,13 @@ const Login: React.FC = () =>{
         
         // console.log(loginDetails);
         let data = JSON.stringify({...loginDetails, auth_with: "app"});
+        console.log(data);
 
         fetch(`${server_baseurl}/user/login`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': 'no-cors'
         },
         body: data
         })

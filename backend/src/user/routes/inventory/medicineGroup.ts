@@ -11,11 +11,11 @@ import { universalResponse } from 'user/types/universalResponse';
 const router = express.Router();
 
 router.post('/add-group', async(req: Request, res: Response) =>{
-    const { group_name, description }: medicinegroupDetails = req.body;
+    const { group_name, description, pharmacy_id }: medicinegroupDetails = req.body;
     const token: string = req.header('Authorization');
 
     try {
-        const response:universalResponse = await addMedicineGroup({group_name, description})
+        const response:universalResponse = await addMedicineGroup({group_name, description, pharmacy_id})
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response)
@@ -27,10 +27,10 @@ router.post('/add-group', async(req: Request, res: Response) =>{
 });
 
 router.post('/get-groups', async(req: Request, res: Response) =>{
-    const {filterNull} = req.body || false
+    const {filterNull, pharmacy_id} = req.body || false
         
     try {
-        const response:universalResponse = await getMedicineGroups(filterNull)
+        const response:universalResponse = await getMedicineGroups(filterNull, pharmacy_id);
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response)

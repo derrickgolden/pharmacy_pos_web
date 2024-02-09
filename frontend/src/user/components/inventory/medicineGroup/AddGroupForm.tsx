@@ -1,25 +1,40 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { handleAddGroup } from "./apiCalls/handleAddGroup";
 import { useNavigate } from "react-router-dom";
+import { getSessionStorage } from "../../../controllers/getSessionStorage";
+import Swal from "sweetalert2";
 
 interface AddGroupFormProps{
-    onHandleAddGroupForm: ({}) => void;
-    setShowDetails: (showDetails: string) => void
+    setShowDetails: (showDetails: string) => void;
 }
-const AddGroupForm: React.FC<AddGroupFormProps> = ({onHandleAddGroupForm, setShowDetails}) =>{
-    const navigate = useNavigate()
+const AddGroupForm: React.FC<AddGroupFormProps> = ({ setShowDetails}) =>{
+    const navigate = useNavigate();
     const [groupDetails, setGroupDetails] = useState({
         group_name: "", description: ""
     })
-    const [selectRows, setSelectRows] = useState(3)
+    const [selectRows, setSelectRows] = useState(3);
+
+    const userPharm = getSessionStorage();
+    const { localPharm } = userPharm.localPharm;
+    // console.log(localPharm);
+    useEffect(() =>{
+        if(localPharm.pharmacy_name){
+            setGroupDetails((obj) =>({...obj, pharmacy_id: localPharm.pharmacy_id}))
+        }else{
+            Swal.fire({
+                title: "Select Pharmacy",
+                text: "Select the pharmacy you want to add the group first.",
+                icon: "warning"
+            });
+        }
+    }, []);
 
     const handleFormInput = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
         const name = e.target.name;
-        const value = e.target.value;    
-        // console.log(name, value);
-            
+        const value = e.target.value;     
         setGroupDetails((obj) =>({...obj, [name]: value}))
     }
+
     const handleAddGroupSubmit: React.FormEventHandler<HTMLFormElement> = (e) =>{
         e.preventDefault()
         handleAddGroup({groupDetails, setShowDetails});
@@ -27,6 +42,7 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({onHandleAddGroupForm, setSho
 
     return(
         <div className="px-5">
+            <h3>New medicine group for <span className="text-warning">{localPharm.pharmacy_name}</span></h3>
             <form onSubmit={handleAddGroupSubmit}
             className="col-sm-10"> 
                 <div className="d-flex flex-wrap justify-content-between align-items-center ">

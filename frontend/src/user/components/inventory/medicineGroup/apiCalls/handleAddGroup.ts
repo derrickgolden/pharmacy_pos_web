@@ -1,6 +1,7 @@
 import axios from "axios";
 import { server_baseurl } from "../../../../../baseUrl";
 import Swal from "sweetalert2";
+import { getSessionStorage } from "../../../../controllers/getSessionStorage";
 
 interface handleAddGroupProps{
     groupDetails: {group_name: string, description: string}
@@ -9,7 +10,9 @@ interface handleAddGroupProps{
 export const handleAddGroup = ({groupDetails, setShowDetails}: handleAddGroupProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
-
+    
+    
+// return;
     if (tokenString !== null) {
         var token = JSON.parse(tokenString);
     } else {
@@ -22,7 +25,7 @@ export const handleAddGroup = ({groupDetails, setShowDetails}: handleAddGroupPro
     }
 
     let data = JSON.stringify(groupDetails);
-    console.log(data);
+    // console.log(data);
     
     let config = {
         method: 'post',
