@@ -19,6 +19,7 @@ import { setRerender } from '../../redux/rerender';
 import { getSessionStorage } from '../controllers/getSessionStorage';
 import { server_baseurl } from '../../baseUrl';
 import { pharmLogo } from '../../assets/images';
+import { setActivePharmacy } from '../../redux/activePharmacy';
 
 export default function LandingPageHeader() {
 
@@ -34,34 +35,26 @@ export default function LandingPageHeader() {
     const [activeLink, setActiveLink] = useState("dashboard")
     const [headerNavManu, setheaderNavManu] = useState(true)
     const [toggleProfile, setToggleProfile] = useState(false)
-    const [activePharmacy, setActivePharmacy] = useState()
+    // const [activePharmacy, dispatch(setActivePharmacy] = useState()
+    const activePharmacy = useSelector((state: RootState) => state.activePharmacy); 
+    const pharmacyListDetails = useSelector((state: RootState) => state.pharmacyListDetailsList) 
 
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
-    const pharmacyListDetails = useSelector((state: RootState) => state.pharmacyListDetailsList) 
-
     const userPharm = getSessionStorage();
-    const { localPharm, user } = userPharm;
-    // console.log(userPharm);
+    const { user } = userPharm;
+    // console.log(activePharmacy);
     
     useEffect(() =>{
         const medicineList = getPharmacyDetailsApi()
         medicineList.then(data =>{
-            if(!activePharmacy) {
-                userPharm.localPharm.available? 
-                    setActivePharmacy(userPharm.localPharm.localPharm) : 
-                    setActivePharmacy(data[0]);
+            if(!activePharmacy.pharmacy) {
+                dispatch(setActivePharmacy({pharmacy: data[0]}));
             }
             dispatch(setPharmacyListDetails(data));
         })
     },[pharmacyListDetails.length === 0])
-
-    useEffect(()=>{
-        const pharm = activePharmacy || localPharm || pharmacyListDetails[0]
-        sessionStorage.setItem("activepharmacy", JSON.stringify(pharm));
-        dispatch(setRerender());
-    },[activePharmacy])
 
     const headerTogglehandle = () => {
         setHeaderToggle(!headerToggle)
@@ -80,10 +73,6 @@ export default function LandingPageHeader() {
             headerToggle !== true && headerSection.classList.remove('body-pd')
         }
     }, [headerToggle])
-
-    const updateActive = () => {
-        setRender(!render)
-    }
 
     const handleLinkClick: React.MouseEventHandler<HTMLAnchorElement>= (e) =>{
         setRender(!render); 
@@ -135,7 +124,7 @@ export default function LandingPageHeader() {
                         {
                         pharmacyListDetails.map((data, i) =>(
                             <li key={i} onClick={() => {
-                            setActivePharmacy(data);
+                            dispatch(setActivePharmacy({pharmacy: data}));
                             toggleProfileClick();
                         }
                             }>
@@ -162,7 +151,7 @@ export default function LandingPageHeader() {
                                 <img src={`${pharmLogo}`} alt=""
                                 className='rounded' 
                                 style={{height: "30px", width:"30px"}}/>
-                                <span className="text-white ">{activePharmacy?.pharmacy_name}</span> 
+                                <span className="text-white ">{activePharmacy?.pharmacy?.pharmacy_name}</span> 
                             </Link>
 
                             <div className="nav_list">

@@ -24,8 +24,9 @@ const MedicineList: React.FC<MedicineListProps> = ({onHandleActionDetails}) =>{
     const [open_edit_modal, setOpen_edit_modal] = useState({ render: true, modal_open: false })
 
     const dispatch = useDispatch();
-    const medicineList = useSelector((state: RootState) => state.medicineList)
-    const apiCall = useSelector((state: RootState) => state.callApi)
+    const medicineList = useSelector((state: RootState) => state.medicineList);
+    const apiCall = useSelector((state: RootState) => state.callApi);
+    const activePharmacy = useSelector((state: RootState) => state.activePharmacy);
 
     const columns = [
         {
@@ -67,12 +68,13 @@ const MedicineList: React.FC<MedicineListProps> = ({onHandleActionDetails}) =>{
 
     {/* data receve from store */ }
     useEffect(() => {
-        const medicineList = getMedicineListApi()
-        medicineList.then(data =>{
-            console.log(data);
-            // setApidata(data)
-            dispatch(setMedicineList(data));
-        })
+        if(activePharmacy.pharmacy){
+            const medicineList = getMedicineListApi(activePharmacy.pharmacy.pharmacy_id);
+            medicineList.then(data =>{
+                console.log(data);
+                dispatch(setMedicineList(data));
+            })
+        }
     }, [medicineList.length === 0, apiCall])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -118,7 +120,7 @@ const MedicineList: React.FC<MedicineListProps> = ({onHandleActionDetails}) =>{
                                       apidata={medicineList} columns={columns} 
                                  />
                                 :
-                                <h1>Loading data...</h1>
+                                <h2>No data to show at the moment</h2>
                                 }  
                             </div>
                         </div>

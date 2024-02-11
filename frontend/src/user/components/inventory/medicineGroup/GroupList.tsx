@@ -20,13 +20,11 @@ const GroupList = ({onHandleActionDetails}) =>{
     const [searchType, setSearchType] = useState('group_name');
     const [apistate, setApiState] = useState([])
     {/* data table column name */ }
-    const [apicol, setApiCol] = useState([])
     const [rerendarApi, setRerendarApi] = useState(false)
 
-    const dispatch = useDispatch()
-
-    // const [groupList, setGroupList] = useState([])
-    const groupList = useSelector((state: RootState) => state.groupList)
+    const dispatch = useDispatch();
+    const groupList = useSelector((state: RootState) => state.groupList);
+    const activePharmacy = useSelector((state: RootState) => state.activePharmacy);
 
     const columns: Column[] = [
         {
@@ -57,14 +55,17 @@ const GroupList = ({onHandleActionDetails}) =>{
 
     useEffect(() =>{
         const filterNull = false
-        const apiRes = getMedicineGroupList(filterNull)
-        apiRes.then(data =>{
-            if(data.length){
-                dispatch(setGroupList(data))
-                // setGroupList(data);
-                setRerendarApi(true)
-            }
-        })   
+        const pharmacy_id = activePharmacy.pharmacy?.pharmacy_id;
+        if(pharmacy_id){
+            const apiRes = getMedicineGroupList(filterNull, pharmacy_id);
+            apiRes.then(data =>{
+                if(data.length){
+                    dispatch(setGroupList(data))
+                    // setGroupList(data);
+                    setRerendarApi(true)
+                }
+            })   
+        }
     }, [groupList.length === 0]);
 
     {/* data receve from store */ }
@@ -100,7 +101,9 @@ const GroupList = ({onHandleActionDetails}) =>{
                                 <DataTableComponent search={ searchType }
                                      apidata={groupList} columns={columns} 
                                 />  :
-                                <h1>Loading data...</h1>
+                                activePharmacy.pharmacy? 
+                                    <h2>No data to show at the moment.</h2> :
+                                    <h2>Select a pharmacy first.</h2>
                                 }           
                             </div>
                         </div>

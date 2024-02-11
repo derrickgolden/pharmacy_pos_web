@@ -3,10 +3,11 @@ import { server_baseurl } from "../../../baseUrl";
 import Swal from "sweetalert2";
 
 interface salesReportProps{
-    url: string
+    url: string,
+    pharmacy_id: number
 }
 
-export const getSalesReportApi = async({url}: salesReportProps) =>{
+export const getSalesReportApi = async({url, pharmacy_id}: salesReportProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
     const localPharm = sessionStorage.getItem("activepharmacy")
@@ -21,18 +22,7 @@ export const getSalesReportApi = async({url}: salesReportProps) =>{
         });
         return
     }
-
-    if (localPharm !== null) {
-        var {pharmacy_id} = JSON.parse(localPharm)
-    }else{
-        Swal.fire({
-            title: "",
-            text: "Select pharmacy before analyzing report.",
-            icon: "warning"
-        });
-        return
-    }
-
+    
     let data = JSON.stringify({pharmacy_id});
     
     let config = {

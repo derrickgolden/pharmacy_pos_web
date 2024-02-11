@@ -19,8 +19,8 @@ const InventorySelect: React.FC<InventorySelectProps> = ({
     const [searchMedicine, setSearchMedicine] = useState("")
 
     const dispatch = useDispatch()
-
-    const medicineGroup = useSelector((state: RootState) => state.groupList)    
+    const medicineGroup = useSelector((state: RootState) => state.groupList);
+    const activePharmacy = useSelector((state: RootState) => state.activePharmacy);   
 
     useEffect(()=>{
         const groupNames: string[] = medicineGroup.map((group) => {
@@ -30,13 +30,16 @@ const InventorySelect: React.FC<InventorySelectProps> = ({
     }, [medicineGroup])
 
     useEffect(()=>{
-        const filterNull = true;
-        const res = getMedicineGroupList(filterNull);
-        res.then((data) =>{        
-            dispatch(setGroupList(data));
-        })
+        if(activePharmacy.pharmacy){
+            const filterNull = true;
+            const pharmacy_id = activePharmacy.pharmacy?.pharmacy_id;
+            const res = getMedicineGroupList(filterNull, pharmacy_id);
+            res.then((data) =>{        
+                dispatch(setGroupList(data));
+            })
+        }
     },[medicineGroup.length === 0])
-    console.log(orderDetails)
+    // console.log(orderDetails)
     
     return(
         <div className="col-12 px-0">

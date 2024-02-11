@@ -7,7 +7,7 @@ interface handleAddGroupProps{
     groupDetails: {group_name: string, description: string}
     setShowDetails: (component: string) =>void
 }
-export const getMedicineGroupList = async(filterNull: boolean) =>{
+export const getMedicineGroupList = async(filterNull: boolean, pharmacy_id: number) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
 
@@ -22,9 +22,7 @@ export const getMedicineGroupList = async(filterNull: boolean) =>{
         return
     }
     
-    const userPharm = getSessionStorage();
-    const { localPharm } = userPharm.localPharm;
-    const data = JSON.stringify({filterNull, pharmacy_id: localPharm.pharmacy_id});
+    const data = JSON.stringify({ filterNull, pharmacy_id });
     let config = {
         method: 'post',
         maxBodyLength: Infinity,

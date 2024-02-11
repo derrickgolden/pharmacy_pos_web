@@ -23,9 +23,10 @@ router.post('/update', async(req: ModifiedReq, res: Response) =>{
 
 router.post('/stock-details', async(req: ModifiedReq, res: Response) =>{
     const {user_id} = req.user;
+    const {pharmacy_id} = req.body;
 
     try {
-        const response:universalResponse = await getStockDetails(user_id);
+        const response:universalResponse = await getStockDetails(user_id, pharmacy_id);
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response)

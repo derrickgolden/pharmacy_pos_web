@@ -6,6 +6,7 @@ import medicineListReducer from './medicineList'
 import pharmacyListDetailsReducer from './pharmacyListDetails'
 import salesReportReducer from './salesReport'
 import rerenderReducer from './rerender'
+import activePharmacyReducer from './activePharmacy'
 
 export const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ export const store = configureStore({
     pharmacyListDetailsList: pharmacyListDetailsReducer,
     salesReport: salesReportReducer,
     rerender: rerenderReducer,
+    activePharmacy: activePharmacyReducer,
   },
 })
 

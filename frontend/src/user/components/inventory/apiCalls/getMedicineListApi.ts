@@ -2,7 +2,7 @@ import axios from "axios";
 import { server_baseurl } from "../../../../baseUrl";
 import Swal from "sweetalert2";
 
-export const getMedicineListApi = async() =>{
+export const getMedicineListApi = async(pharmacy_id: number) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
 
@@ -17,14 +17,16 @@ export const getMedicineListApi = async() =>{
         return
     }
 
+    const data = JSON.stringify({pharmacy_id})
     let config = {
-        method: 'get',
+        method: 'POST',
         maxBodyLength: Infinity,
         url: `${server_baseurl}/user/inventory/get-medicine`,
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `${token}`
         },
+        data
     };
 
     return await axios.request(config)

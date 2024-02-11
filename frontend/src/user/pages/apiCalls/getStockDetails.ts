@@ -2,7 +2,7 @@ import axios from "axios";
 import { server_baseurl } from "../../../baseUrl";
 import Swal from "sweetalert2";
 
-export const getStockDetailsApi = async() =>{
+export const getStockDetailsApi = async(pharmacy_id: number) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
     const localPharm = sessionStorage.getItem("activepharmacy")
@@ -18,19 +18,7 @@ export const getStockDetailsApi = async() =>{
         return
     }
 
-    if (localPharm !== null && localPharm !== "undefined") {
-        var {pharmacy_id} = JSON.parse(localPharm)
-    }else{
-        // Swal.fire({
-        //     title: "",
-        //     text: "Select pharmacy before analyzing report.",
-        //     icon: "warning"
-        // });
-        return
-    }
-
-    let data = JSON.stringify({pharmacy_id});
-    
+    let data = JSON.stringify({pharmacy_id});   
     let config = {
         method: 'post',
         maxBodyLength: Infinity,

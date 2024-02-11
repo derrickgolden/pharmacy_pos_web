@@ -25,7 +25,7 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
     const [update_modal_data, setUpdate_modal_data] = useState<Medicine>()
 
     const [newStock, setNewStock] = useState<number>()
-    const [totalStock, setTotalStock] = useState<number>(select_data?.stock_qty || select_data?.containers)
+    const [totalStock, setTotalStock] = useState<number>(select_data?.stock_qty)
     const [editDetails, setEditDetails] = useState<{warning_limit: number, medicine_name: string}>()
 
     useEffect(() => {
@@ -33,7 +33,7 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
             group_name: select_data?.group_name, 
             medicine_id: select_data?.medicine_id,
             medicine_name: select_data?.medicine_name,
-            medicine_quantity: select_data?.stock_qty || select_data?.containers
+            medicine_quantity: select_data?.stock_qty
         })
 
         setNewStock(undefined);
@@ -54,8 +54,9 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(select_data);
         const value = e.target.value;
-        const total_stock = Number(value) + Number(select_data?.stock_qty || select_data?.containers);
+        const total_stock = Number(value) + Number(select_data?.stock_qty);
         setNewStock(Number(value));
         setTotalStock(total_stock);
     }

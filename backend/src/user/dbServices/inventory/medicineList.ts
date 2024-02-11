@@ -1,5 +1,5 @@
 import { RowDataPacket } from "mysql2";
-import { medicineDetailsProps } from "user/types/medicineDetails";
+import { GetMedicineListProps, medicineDetailsProps } from "user/types/medicineDetails";
 import { universalResponse } from "user/types/universalResponse";
 const { pool } = require("../../../mysqlSetup");
 
@@ -16,19 +16,19 @@ export const addMedicine = async (medicineDetails: medicineDetailsProps, img_fil
         await connection.beginTransaction();
 
             var [res] = await connection.query(`
-                INSERT INTO medicine_list (medicine_code, medicine_name, stock_qty, 
+                INSERT INTO medicine_list (medicine_code, medicine_name, 
                     instructions, side_effect, group_id, img_path)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-            `, [medicine_code, medicine_name, stock_qty, 
+                VALUES (?, ?, ?, ?, ?, ?)
+            `, [medicine_code, medicine_name, 
                 instructions, side_effect, group_id, path]);
                 
                 const medicine_id = res.insertId;
                 console.log("medicine_id: ", medicine_id);
                 
                 var [pricing_res] = await connection.query(`
-                INSERT INTO pricing (medicine_id, price, unit_of_measurement, package_size)
-                VALUES (?, ?, ?, ?)
-                `, [medicine_id, price, unit_of_mesurement, package_size]);
+                INSERT INTO pricing (medicine_id, price, unit_of_measurement )
+                VALUES (?, ?, ?)
+                `, [medicine_id, price, unit_of_mesurement]);
                 console.log("pricing_id: ", pricing_res.insertId);
 
                 var [stock_res] = await connection.query(`
@@ -56,37 +56,38 @@ export const addMedicine = async (medicineDetails: medicineDetailsProps, img_fil
     }
 };
 
-export const getMedicineList = async ( ): Promise<universalResponse> => {    
+export const getMedicineList = async ( details: GetMedicineListProps ): Promise<universalResponse> => {    
+    const {pharmacy_id} = details;
+    
     try {
         const connection: RowDataPacket = await pool.getConnection();
 
             var [res] = await connection.query(`
             SELECT
-    ml.medicine_id,
-    ml.medicine_code,
-    ml.medicine_name,
-    ml.instructions,
-    ml.side_effect,
-    ml.img_path,
-    mg.group_id,
-    mg.group_name,
-    mg.description,
-    s.containers AS stock_qty,
-    s.units_per_container,
-    s.open_container_units,
-    s.last_stocked,
-    s.warning_limit
-FROM
-    medicine_list ml
-JOIN
-    medicine_group mg ON ml.group_id = mg.group_id
-LEFT JOIN
-    stock s ON ml.medicine_id = s.medicine_id;
-         
-            `);
+                ml.medicine_id,
+                ml.medicine_code,
+                ml.medicine_name,
+                ml.instructions,
+                ml.side_effect,
+                ml.img_path,
+                mg.group_id,
+                mg.group_name,
+                mg.description,
+                s.containers AS stock_qty,
+                s.units_per_container,
+                s.open_container_units,
+                s.last_stocked,
+                s.warning_limit
+            FROM
+                medicine_list ml
+            JOIN
+                medicine_group mg ON ml.group_id = mg.group_id
+            LEFT JOIN
+                stock s ON ml.medicine_id = s.medicine_id
+            WHERE mg.pharmacy_id = ?
+            `, [pharmacy_id]);
 
         connection.release();
-// console.log(res);
 
         return {
             success: true,

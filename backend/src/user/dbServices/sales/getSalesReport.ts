@@ -2,7 +2,8 @@ import { RowDataPacket } from "mysql2";
 import { universalResponse } from "user/types/universalResponse";
 const { pool } = require("../../../mysqlSetup");
 
-export const getSalesReport = async ( pharmacy_id: number): Promise<universalResponse> => {    
+export const getSalesReport = async ( pharmacy_id: number): Promise<universalResponse> => {  
+    console.log(pharmacy_id)  
     try {
         const connection: RowDataPacket = await pool.getConnection();
 
@@ -34,10 +35,11 @@ export const getSalesReport = async ( pharmacy_id: number): Promise<universalRes
                 sales_items si ON s.sale_id = si.sale_id
             JOIN
                 medicine_list ml ON si.medicine_id = ml.medicine_id -- Join with medicine_list table
+            WHERE s.pharmacy_id = ?
             GROUP BY
                 s.sale_id, s.sale_date, s.total_price;
 
-            `);
+            `, [pharmacy_id]);
 
         connection.release();
 

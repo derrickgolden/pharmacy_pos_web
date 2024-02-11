@@ -5,15 +5,15 @@ const MedicineSelectNavbar =({groupNames, setShowGroup, setSearchMedicine}) =>{
     return(
       <nav className="navbar navbar-expand navbar-light bg-body-tertiary bg-light w-100 "
         style={{height: "2.8rem"}}>
-        <Link onClick={() => setShowGroup("All")}
-        className="navbar-brand pl-2" to="#">&nbsp; All</Link>
-        <button className="navbar-toggler shadow-sm" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
+        {/* <button className="navbar-toggler shadow-sm" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
-        </button>
+        </button> */}
 
-        <div className=" bg-light collapse navbar-collapse col-6" id="navbarNavDropdown" >
+        <div className=" bg-light collapse navbar-collapse col-6 h-100" id="navbarNavDropdown" >
           <ul className="flex justify-content-between navbar-nav col-12">
+              <Link onClick={() => setShowGroup("All")}
+              className="navbar-brand pl-2" to="#">&nbsp; All</Link>
               <li className="nav-item dropdown">
                   <Link className="nav-link dropdown-toggle" to="#" role="button" data-toggle="dropdown" aria-expanded="false">
                     Select Group

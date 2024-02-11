@@ -8,6 +8,7 @@ import { RootState } from '../../redux/store';
 import { ResultItem, calculateTotalSales } from './calculations/totalSalesUnits';
 import ReportHeader, { SelectedDate } from '../components/reports/ReportHeader';
 import SalesTable from '../components/reports/SalesTable';
+import Swal from 'sweetalert2';
 
 export const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
@@ -20,15 +21,24 @@ const SalesReport = () =>{
     });
 
     const dispatch = useDispatch()
-
     const sales = useSelector((state: RootState) => state.salesReport)
+    const activePharmacy = useSelector((state: RootState) => state.activePharmacy); 
 
     useEffect(() =>{
-        const url = "sales/get-sales"
-        const salesReport = getSalesReportApi({url});
-        salesReport.then((data) =>{
-            dispatch(setSalesReportList(data));
-        })
+        if(activePharmacy.pharmacy){
+            const url = "sales/get-sales"
+            const pharmacy_id = activePharmacy.pharmacy.pharmacy_id
+            const salesReport = getSalesReportApi({url, pharmacy_id});
+            salesReport.then((data) =>{
+                dispatch(setSalesReportList(data));
+            })
+        }else{
+            Swal.fire({
+                title: "",
+                text: "Select pharmacy before analyzing report.",
+                icon: "warning"
+            });
+        }
     }, [sales.length === 0]);
 
     useEffect(() =>{
@@ -55,7 +65,9 @@ const SalesReport = () =>{
             />
             
            <div className='py-3 px-md-5 '>
-                <button className="btn btn-outline-info border-start-0 border-end-0 rounded-0 col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                <button className="btn btn-outline-info border-start-0 border-end-0 rounded-0 col-12" 
+                    type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" 
+                    aria-controls="collapseExample">
                     Show/Hide sales graph
                 </button>
            </div>

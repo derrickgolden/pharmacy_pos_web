@@ -6,24 +6,28 @@ import PayMethodTable from "../components/reports/PayMethodsTable";
 import { thirtyDaysAgo } from "./SalesReport";
 import { calcSalesPayMethodTotals } from "./calculations/calcSalesPayMethodsTotals";
 import { LineChart, Line, CartesianGrid, XAxis, YAxis, Tooltip } from 'recharts';
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/store";
 
 const PaymentReport = () =>{
     const [salesPayMethods, setSalesPayMethods] = useState([])
     const [sortedSalesByDateSelect, setSortedSalesByDateSelect] = useState<ResultItem>({amtPerMethod: [],transPerMethod: [], sortedSales: []})
+    const activePharmacy = useSelector((state: RootState) => state.activePharmacy);
 
     useEffect(() =>{
-        const url = "pay-method/get-report";
-        const salesPayMethods = getSalesReportApi({url});
-        salesPayMethods.then((data) =>{
-            console.log(data);
-            const sortedSalesByDate = calcSalesPayMethodTotals({data, date: {
-                startDate:  thirtyDaysAgo, endDate: new Date(),
-            }, keyType: "payment_methods" });
-            console.log(sortedSalesByDate);
-
-            setSortedSalesByDateSelect(sortedSalesByDate);
-            setSalesPayMethods(data);
-        })
+        if(activePharmacy.pharmacy){
+            const url = "pay-method/get-report";
+            const pharmacy_id = activePharmacy.pharmacy?.pharmacy_id;
+            const salesPayMethods = getSalesReportApi({url, pharmacy_id});
+            salesPayMethods.then((data) =>{
+                const sortedSalesByDate = calcSalesPayMethodTotals({data, date: {
+                    startDate:  thirtyDaysAgo, endDate: new Date(),
+                }, keyType: "payment_methods" });
+    
+                setSortedSalesByDateSelect(sortedSalesByDate);
+                setSalesPayMethods(data);
+            })
+        }
     }, []);
 
     const handleRegenerateGraph = (date: SelectedDate) =>{

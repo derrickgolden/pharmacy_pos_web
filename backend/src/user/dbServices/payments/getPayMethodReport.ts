@@ -21,9 +21,10 @@ export const getPayMethodsReport = async ( pharmacy_id: number): Promise<univers
                 sales s
             JOIN
                 sale_payments sp ON s.sale_id = sp.sale_id
+            WHERE pharmacy_id = ?
             GROUP BY
                 s.sale_id, s.sale_date, s.total_price;
-        `);
+        `, [pharmacy_id]);
 
         connection.release();
 

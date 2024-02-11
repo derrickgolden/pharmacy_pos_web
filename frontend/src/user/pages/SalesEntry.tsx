@@ -253,7 +253,7 @@ const SalesEntry = () =>{
     return(
       <>
         <header className="header dropdown px-3 col-12" id="header"
-        style={{height: "2.5rem"}}>
+        style={{height: "3rem"}}>
           <div className="d-flex justify-content-between align-items-center col-12  h-100">
             {
               showInventoryOrders !== "inventory" && entryStep === "ordersentry" && (

@@ -8,7 +8,6 @@ const router = express.Router();
 router.post('/add-medicine', async(req: Request, res: Response) =>{
     const body = req.body;
     const img_file = req.file;
-    // console.log(body);
     
     try {
         const response:universalResponse = await addMedicine(body, img_file)
@@ -22,10 +21,11 @@ router.post('/add-medicine', async(req: Request, res: Response) =>{
     }
 });
 
-router.get('/get-medicine', async(req: Request, res: Response) =>{
+router.post('/get-medicine', async(req: Request, res: Response) =>{
+    const body = req.body;
 
     try {
-        const response:universalResponse = await getMedicineList()
+        const response:universalResponse = await getMedicineList(body)
         response.success ? 
             res.status(200).json(response):
             res.status(302).json(response)

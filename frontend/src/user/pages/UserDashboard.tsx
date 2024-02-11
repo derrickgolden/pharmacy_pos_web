@@ -20,10 +20,11 @@ import { BottomSummaryCardProps } from "../components/userDashboard/types";
 const UserDashboard: React.FC = () =>{
     const dispatch = useDispatch();
 
-    const pharmacyListDetails = useSelector((state: RootState) => state.pharmacyListDetailsList) 
+    const pharmacyListDetails = useSelector((state: RootState) => state.pharmacyListDetailsList);
+    const activePharmacy = useSelector((state: RootState) => state.activePharmacy); 
 
     const [ lowerDashboardData, setLowerDashboardData ] = useState<SetStateAction<BottomSummaryCardProps>>();
-    const [ upperDashboardData, setUpperDashboardData] = useState<details[]>();
+    const [ upperDashboardData, setUpperDashboardData ] = useState<details[]>();
     
     useEffect(() =>{
         let lowStockMedicine: {}[] = [];
@@ -31,58 +32,62 @@ const UserDashboard: React.FC = () =>{
         let medicineAvailable: {}[] = [];
         let medicineShortage: {}[] = [];
         
-        const stock = getStockDetailsApi()
-        stock?.then(data =>{
-            // console.log(data);
-            data?.map((details: {containers: number, warning_limit: number, units_per_container: number}) =>{                
-                if(details.containers <= details.warning_limit && details.containers > 0){
-                    lowStockMedicine.push(details);
-                }else if(details.containers > details.warning_limit){
-                    enoughStockMedicine.push(details);
-                }
-                details.containers > 0 && details.units_per_container > 0 ? medicineAvailable.push(details) : medicineShortage.push(details);
-            })
+        if(activePharmacy.pharmacy){
+            const pharmacy_id = activePharmacy.pharmacy.pharmacy_id;
             
-            setUpperDashboardData([
-                {icon:<MdInventory size={32}/>, status: "Good", totals: enoughStockMedicine.length, caption: "Inventory Status", forCssDispaly: "success", footerCaption: "View detailed report", btnType: "inventory", data: enoughStockMedicine}, 
-                {icon:<IoIosWarning size={32}/>, status: "Good", totals: lowStockMedicine.length, caption: "Low Stock Warning", forCssDispaly: "warning", footerCaption: "View detailed report", btnType: "warning", data: lowStockMedicine},
-                {icon:<RiMedicineBottleLine size={32}/>, status: "Good", totals: medicineAvailable.length, caption: "Medicine Available", forCssDispaly: "info", footerCaption: "Visit inventory", btnType: "available", data: medicineAvailable},
-                {icon:<IoIosWarning size={32}/>, status: "Good", totals: medicineShortage.length, caption: "Medicines Shortage", forCssDispaly: "danger", footerCaption: "Resolve now", btnType: "shortage", data: medicineShortage}
-            ])
-        })
-        
-        if(pharmacyListDetails.length > 0){
-            const filterNull = false;
-            const medicineList = getMedicineGroupList(filterNull);
-            medicineList.then((data) =>{
+            const stock = getStockDetailsApi(pharmacy_id);
+            stock?.then(data =>{
                 // console.log(data);
-                const totalMedicine = data.length;
-                let totalGroup = 0;
-                data.map((details: {medicines: []}) =>{
-                    totalGroup += details.medicines.length;
+                data?.map((details: {containers: number, warning_limit: number, units_per_container: number}) =>{                
+                    if(details.containers <= details.warning_limit && details.containers > 0){
+                        lowStockMedicine.push(details);
+                    }else if(details.containers > details.warning_limit){
+                        enoughStockMedicine.push(details);
+                    }
+                    details.containers > 0 && details.units_per_container > 0 ? medicineAvailable.push(details) : medicineShortage.push(details);
                 })
                 
-                setLowerDashboardData((data: BottomSummaryCardProps) => ({...data,
-                    inventory: {title: "Inventory", side_title_link: "/user/inventory/medicine-group", side_title_link_caption: "Go to Configuration", left_totals: totalMedicine, left_totals_caption: "Total no of Medicines", right_totals: totalGroup, right_totals_caption: "Medicine Groups", display_date_picker: false}
-                }))
+                setUpperDashboardData([
+                    {icon:<MdInventory size={32}/>, status: "Good", totals: enoughStockMedicine.length, caption: "Inventory Status", forCssDispaly: "success", footerCaption: "View detailed report", btnType: "inventory", data: enoughStockMedicine}, 
+                    {icon:<IoIosWarning size={32}/>, status: "Good", totals: lowStockMedicine.length, caption: "Low Stock Warning", forCssDispaly: "warning", footerCaption: "View detailed report", btnType: "warning", data: lowStockMedicine},
+                    {icon:<RiMedicineBottleLine size={32}/>, status: "Good", totals: medicineAvailable.length, caption: "Medicine Available", forCssDispaly: "info", footerCaption: "Visit inventory", btnType: "available", data: medicineAvailable},
+                    {icon:<IoIosWarning size={32}/>, status: "Good", totals: medicineShortage.length, caption: "Medicines Shortage", forCssDispaly: "danger", footerCaption: "Resolve now", btnType: "shortage", data: medicineShortage}
+                ])
             })
             
-            const url = "sales/get-sales"
-            const salesReport = getSalesReportApi({url});
-            salesReport.then((data) =>{
-
-                const invoices = data.length;
-                let medicinesSold = 0;
-                data.map((details: {sales_items: []}) =>{
-                    medicinesSold += details.sales_items.length
+            if(pharmacyListDetails.length > 0){
+                const filterNull = false;
+                const medicineList = getMedicineGroupList(filterNull, pharmacy_id);
+                medicineList.then((data) =>{
+                    // console.log(data);
+                    const totalMedicine = data.length;
+                    let totalGroup = 0;
+                    data.map((details: {medicines: []}) =>{
+                        totalGroup += details.medicines.length;
+                    })
+                    
+                    setLowerDashboardData((data: BottomSummaryCardProps) => ({...data,
+                        inventory: {title: "Inventory", side_title_link: "/user/inventory/medicine-group", side_title_link_caption: "Go to Configuration", left_totals: totalMedicine, left_totals_caption: "Total no of Medicines", right_totals: totalGroup, right_totals_caption: "Medicine Groups", display_date_picker: false}
+                    }))
                 })
                 
-                setLowerDashboardData((data: BottomSummaryCardProps )  => ({...data,
-                    quickReport: {title: "Quick Report", side_title_link: "#", side_title_link_caption: "Date", left_totals: medicinesSold, left_totals_caption: "Qty of Medicines Solid", right_totals: invoices, right_totals_caption: "Invoices Generated", display_date_picker: true},
-                }))
-
-                dispatch(setSalesReportList(data));
-            })
+                const url = "sales/get-sales"
+                const salesReport = getSalesReportApi({url, pharmacy_id});
+                salesReport.then((data) =>{
+    
+                    const invoices = data.length;
+                    let medicinesSold = 0;
+                    data.map((details: {sales_items: []}) =>{
+                        medicinesSold += details.sales_items.length
+                    })
+                    
+                    setLowerDashboardData((data: BottomSummaryCardProps )  => ({...data,
+                        quickReport: {title: "Quick Report", side_title_link: "#", side_title_link_caption: "Date", left_totals: medicinesSold, left_totals_caption: "Qty of Medicines Solid", right_totals: invoices, right_totals_caption: "Invoices Generated", display_date_picker: true},
+                    }))
+    
+                    dispatch(setSalesReportList(data));
+                })
+            }
         }
     }, [pharmacyListDetails])
    

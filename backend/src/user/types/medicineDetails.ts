@@ -35,3 +35,7 @@ export interface updateMedicineDetailsProps{
     medicine_name: string,
     group_id: number,
 }
+
+export interface GetMedicineListProps{
+    pharmacy_id: number;
+}
