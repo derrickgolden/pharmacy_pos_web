@@ -39,13 +39,12 @@ const SalesReport = () =>{
                 icon: "warning"
             });
         }
-    }, [sales.length === 0]);
+    }, [sales.length === 0, activePharmacy]);
 
     useEffect(() =>{
         const sortedSalesByDate = calculateTotalSales({data: sales, date: selectedDate, keyType: "sales_items" })
         setSortedSalesByDateSelect(sortedSalesByDate);
-        // console.log(sales);
-    }, [sales])
+    }, [sales, activePharmacy])
 
     const handleRegenerateGraph = (date: SelectedDate) =>{
         if(date.endDate === null){
@@ -97,7 +96,10 @@ const SalesReport = () =>{
             </div>
             </div>
         </div>
-        <SalesTable salesData={sortedSalesByDateSelect?.sortedSales} />
+        <SalesTable 
+            salesData={sortedSalesByDateSelect?.sortedSales} 
+            activePharmacy = {activePharmacy}    
+        />
         </div>
     )
 }

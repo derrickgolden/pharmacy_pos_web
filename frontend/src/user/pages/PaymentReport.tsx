@@ -10,8 +10,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../redux/store";
 
 const PaymentReport = () =>{
-    const [salesPayMethods, setSalesPayMethods] = useState([])
-    const [sortedSalesByDateSelect, setSortedSalesByDateSelect] = useState<ResultItem>({amtPerMethod: [],transPerMethod: [], sortedSales: []})
+    const [salesPayMethods, setSalesPayMethods] = useState([]);
+    const [sortedSalesByDateSelect, setSortedSalesByDateSelect] = useState<ResultItem>({
+        amtPerMethod: [], transPerMethod: [], sortedSales: []
+    });
     const activePharmacy = useSelector((state: RootState) => state.activePharmacy);
 
     useEffect(() =>{
@@ -28,7 +30,7 @@ const PaymentReport = () =>{
                 setSalesPayMethods(data);
             })
         }
-    }, []);
+    }, [activePharmacy]);
 
     const handleRegenerateGraph = (date: SelectedDate) =>{
         if(date.endDate === null){
@@ -46,7 +48,8 @@ const PaymentReport = () =>{
                     dataType = { "Payments" }
                 />
                 <div className='py-3 px-md-5 '>
-                    <button className="btn btn-outline-info border-start-0 border-end-0 rounded-0 col-12" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    <button className="btn btn-outline-info border-start-0 border-end-0 rounded-0 col-12" 
+                    type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         Show/Hide Payment Methods Graph
                     </button>
             </div>
@@ -78,7 +81,10 @@ const PaymentReport = () =>{
                     </div>
                 </div>
             </div>
-            <PayMethodTable salesData={sortedSalesByDateSelect?.sortedSales} />
+            <PayMethodTable 
+                salesData={sortedSalesByDateSelect?.sortedSales} 
+                activePharmacy = {activePharmacy}
+            />
         </div>
     )
 }

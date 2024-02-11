@@ -18,10 +18,7 @@ interface Column {
 const GroupList = ({onHandleActionDetails}) =>{
     const [search, setSearch] = useState('group_name');
     const [searchType, setSearchType] = useState('group_name');
-    const [apistate, setApiState] = useState([])
-    {/* data table column name */ }
-    const [rerendarApi, setRerendarApi] = useState(false)
-
+    
     const dispatch = useDispatch();
     const groupList = useSelector((state: RootState) => state.groupList);
     const activePharmacy = useSelector((state: RootState) => state.activePharmacy);
@@ -59,21 +56,10 @@ const GroupList = ({onHandleActionDetails}) =>{
         if(pharmacy_id){
             const apiRes = getMedicineGroupList(filterNull, pharmacy_id);
             apiRes.then(data =>{
-                if(data.length){
-                    dispatch(setGroupList(data))
-                    // setGroupList(data);
-                    setRerendarApi(true)
-                }
+                dispatch(setGroupList(data))
             })   
         }
-    }, [groupList.length === 0]);
-
-    {/* data receve from store */ }
-    useEffect(() => {
-        setApiState(groupList)
-        // setApiCol(columns)
-        console.log("render from transactions")
-    }, [rerendarApi])
+    }, [groupList.length === 0, activePharmacy]);
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSearch(e.target.value);
@@ -97,12 +83,10 @@ const GroupList = ({onHandleActionDetails}) =>{
                                 </select> */}
                             </div>
                             <div className="card-body">
-                                {apistate.length ? 
-                                <DataTableComponent search={ searchType }
-                                     apidata={groupList} columns={columns} 
-                                />  :
-                                activePharmacy.pharmacy? 
-                                    <h2>No data to show at the moment.</h2> :
+                                {activePharmacy.pharmacy ?  
+                                    <DataTableComponent search={ searchType }
+                                        apidata={groupList} columns={columns} 
+                                    />  :
                                     <h2>Select a pharmacy first.</h2>
                                 }           
                             </div>

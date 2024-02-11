@@ -1,5 +1,6 @@
 import React from 'react';
 import DataTable from 'react-data-table-component';
+import { Pharmacy } from '../../../redux/activePharmacy';
 
 interface salesItemProps{
     medicine_id: number,
@@ -16,11 +17,11 @@ export interface salesProps{
     cashier: {cashier_f_name: string, cashier_l_name: string, cashier_id: number},
 }
 export interface salesDataProps{
-    salesData: salesProps[]
+    salesData: salesProps[];
+    activePharmacy: PharmacyState;
 }
 
-const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => {
-    // console.log(salesData);
+const SalesTable: React.FC<salesDataProps> = ({ salesData, activePharmacy }: salesDataProps) => {
     
     // Define columns for the main DataTable
   const columns = [
@@ -71,7 +72,7 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => 
                     />
                 </div>
                     :
-                    <h1>Loading data...</h1>
+                    <h1>No data to show</h1>
                     }  
                 </div>
             </div>
@@ -93,7 +94,7 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => 
                     </select> */}
                 </div>
                 <div className="card-body">
-                    {mappedData.length ? <div className="table-responsive ">
+                    {activePharmacy?.pharmacy? <div className="table-responsive ">
                         <DataTable
                         columns={columns}
                         data={mappedData}
@@ -106,7 +107,7 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData }: salesDataProps) => 
                         />
                     </div>
                     :
-                    <h1>Loading data...</h1>
+                    <h1>Select a pharmacy first</h1>
                     }  
                 </div>
             </div>

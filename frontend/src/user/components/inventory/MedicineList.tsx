@@ -75,7 +75,7 @@ const MedicineList: React.FC<MedicineListProps> = ({onHandleActionDetails}) =>{
                 dispatch(setMedicineList(data));
             })
         }
-    }, [medicineList.length === 0, apiCall])
+    }, [medicineList.length === 0, apiCall, activePharmacy])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSearch(e.target.value);

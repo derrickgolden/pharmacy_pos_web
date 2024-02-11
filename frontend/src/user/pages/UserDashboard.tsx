@@ -89,7 +89,7 @@ const UserDashboard: React.FC = () =>{
                 })
             }
         }
-    }, [pharmacyListDetails])
+    }, [pharmacyListDetails, activePharmacy])
    
     return(
         <div  className='body2 bg-white' style={{paddingTop: "2rem"}}>

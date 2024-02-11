@@ -1,7 +1,7 @@
 
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-interface Pharmacy {
+export interface Pharmacy {
     pharmacy_id: number;
     user_id: number;
     pharmacy_name: string;
@@ -13,7 +13,7 @@ interface Pharmacy {
     reg_date: string; // This assumes the date is a string in ISO format (e.g., "2024-02-09T09:44:34.000Z")
 }
 
-interface PharmacyState {
+export interface PharmacyState {
     pharmacy: Pharmacy | null;
     loading: boolean;
     error: string | null;

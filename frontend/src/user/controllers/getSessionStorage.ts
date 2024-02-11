@@ -1,7 +1,19 @@
 export const getSessionStorage = () => {
     const userPharm: {
         user: { available: boolean; user?: {} };
-        localPharm: { available: boolean; localPharm?: {} };
+        localPharm: { available: boolean; 
+            localPharm?: {
+                pharmacy_id: number;
+                user_id: number;
+                pharmacy_name: string;
+                location: string;
+                pharmacy_email: string;
+                pharmacy_tel: string;
+                logo_path: string | null;
+                extra_info: string;
+                reg_date: string;
+            } 
+        };
     } = { user: { available: false }, localPharm: { available: false } };
 
     const getuser = sessionStorage.getItem("user");
@@ -13,6 +25,7 @@ export const getSessionStorage = () => {
     }
 
     const getlocalPharm = sessionStorage.getItem("activepharmacy");
+    console.log("getlocalPharm ", getlocalPharm )
     
     if (getlocalPharm !== null && getlocalPharm !== "undefined") {
         const localPharm = JSON.parse(getlocalPharm);

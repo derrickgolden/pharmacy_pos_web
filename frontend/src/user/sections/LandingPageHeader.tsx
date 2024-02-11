@@ -4,8 +4,7 @@ import Swal from 'sweetalert2'
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faChevronLeft, faChevronDown, faFileInvoice,
-            faGear, faGaugeHigh, faBars,faX
+import { faChevronLeft, faChevronDown, faFileInvoice, faGear, faBars,faX
     } from '@fortawesome/free-solid-svg-icons'
 import { MdDashboard, MdInventory, MdPayments, MdPointOfSale } from "react-icons/md";
 import { TbReportMoney } from "react-icons/tb";
@@ -35,7 +34,7 @@ export default function LandingPageHeader() {
     const [activeLink, setActiveLink] = useState("dashboard")
     const [headerNavManu, setheaderNavManu] = useState(true)
     const [toggleProfile, setToggleProfile] = useState(false)
-    // const [activePharmacy, dispatch(setActivePharmacy] = useState()
+    
     const activePharmacy = useSelector((state: RootState) => state.activePharmacy); 
     const pharmacyListDetails = useSelector((state: RootState) => state.pharmacyListDetailsList) 
 
@@ -44,12 +43,12 @@ export default function LandingPageHeader() {
 
     const userPharm = getSessionStorage();
     const { user } = userPharm;
-    // console.log(activePharmacy);
     
     useEffect(() =>{
         const medicineList = getPharmacyDetailsApi()
         medicineList.then(data =>{
             if(!activePharmacy.pharmacy) {
+                sessionStorage.setItem("activepharmacy", JSON.stringify(data[0]));
                 dispatch(setActivePharmacy({pharmacy: data[0]}));
             }
             dispatch(setPharmacyListDetails(data));
@@ -124,9 +123,10 @@ export default function LandingPageHeader() {
                         {
                         pharmacyListDetails.map((data, i) =>(
                             <li key={i} onClick={() => {
-                            dispatch(setActivePharmacy({pharmacy: data}));
-                            toggleProfileClick();
-                        }
+                                sessionStorage.setItem("activepharmacy", JSON.stringify(data));
+                                dispatch(setActivePharmacy({pharmacy: data}));
+                                toggleProfileClick();
+                            }
                             }>
                                 <Link onClick={()=>toggleProfileClick()} className="dropdown-item" to="#">
                                     {data?.pharmacy_name}

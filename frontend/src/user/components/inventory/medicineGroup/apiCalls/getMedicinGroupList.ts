@@ -1,7 +1,6 @@
 import axios from "axios";
 import { server_baseurl } from "../../../../../baseUrl";
 import Swal from "sweetalert2";
-import { getSessionStorage } from "../../../../controllers/getSessionStorage";
 
 interface handleAddGroupProps{
     groupDetails: {group_name: string, description: string}
@@ -37,7 +36,7 @@ export const getMedicineGroupList = async(filterNull: boolean, pharmacy_id: numb
     return await axios.request(config)
     .then((response) => {
         if(response.data.success){
-            console.log(response);
+            // console.log(response);
             
             return(response.data.details)
         }else{

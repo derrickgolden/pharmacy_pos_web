@@ -10,7 +10,8 @@ export const registerSales = async (saleDetails: RegisterSalesProp, user_id: num
     const totalPrice = saleDetails.totalPrice;
     const moneyTrans = saleDetails.moneyTrans;
     const updateStock = saleDetails.updateStock;
-
+    const pharmacy_id = saleDetails.pharmacy_id;
+console.log("pharma_id:", pharmacy_id)
     const sale_date = new Date()
 
     try {
@@ -19,9 +20,9 @@ export const registerSales = async (saleDetails: RegisterSalesProp, user_id: num
         await connection.beginTransaction();
             const {customerGave, change} = moneyTrans;
             var [res] = await connection.query(`
-                INSERT INTO sales (sale_date, total_price, change_amount, cashier)
-                VALUES (?, ?, ?, ?)
-            `, [sale_date, totalPrice, change, user_id]);
+                INSERT INTO sales (sale_date, total_price, change_amount, cashier, pharmacy_id)
+                VALUES (?, ?, ?, ?, ?)
+            `, [sale_date, totalPrice, change, user_id, pharmacy_id]);
 
             const sale_id = res.insertId;
 
@@ -51,7 +52,6 @@ export const registerSales = async (saleDetails: RegisterSalesProp, user_id: num
                 `, [remainingContainers, remainingUnits, medicine_id]);
             })
                 
-
         await connection.commit();
 
         connection.release();

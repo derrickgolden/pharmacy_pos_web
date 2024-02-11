@@ -48,6 +48,7 @@ const SalesEntry = () =>{
     const userPharm = getSessionStorage();
     const { localPharm: pharm } = userPharm.localPharm;
     const { user } = userPharm.user;
+    console.log(userPharm);
 
     const PoeCalcHandles = {
         handleDigitClick: (digit: number) => {
@@ -238,8 +239,8 @@ const SalesEntry = () =>{
 
     const handleVilidateClick = (customerGave: number, change: {}) =>{
       const moneyTrans = {...change, customerGave: customerGave || totalPrice};
-      console.log(updateStock);
-      regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, setEntryStep, setSaleRes})
+      const pharmacy_id = pharm?.pharmacy_id;
+      regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, setEntryStep, setSaleRes, pharmacy_id })
     };
     
     const handleStartNewOrderClick = () =>{
