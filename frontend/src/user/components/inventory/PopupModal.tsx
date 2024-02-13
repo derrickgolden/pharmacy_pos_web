@@ -18,7 +18,7 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
     const dispatch = useDispatch()
 
     const [btnType, setBtnType] = useState<string> (btn_type)
-    console.log(btnType);
+
     // open modal in status
     const [add_data_modal_Show, set_update_data_modal_Show] = useState(false);
     

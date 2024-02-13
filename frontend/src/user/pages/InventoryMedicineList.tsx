@@ -1,5 +1,5 @@
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 import MedicineDetails from "../components/inventory/MedicineDetails";
 import MedicineList from "../components/inventory/MedicineList";

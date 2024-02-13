@@ -20,7 +20,7 @@ const PagesHeader: React.FC<PagesHeaderProps> = ({setShowDetails, btnInfo }) =>{
         }else if(btnInfo.details === "group"){
             setTotals(groupList.length)
         }
-    }, [btnInfo])
+    }, [ groupList, medicineList])
     const handleButtonClick =() =>{
         setShowDetails(btnInfo.navigate)
     }

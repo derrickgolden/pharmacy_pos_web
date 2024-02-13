@@ -25,7 +25,6 @@ export const getSessionStorage = () => {
     }
 
     const getlocalPharm = sessionStorage.getItem("activepharmacy");
-    console.log("getlocalPharm ", getlocalPharm )
     
     if (getlocalPharm !== null && getlocalPharm !== "undefined") {
         const localPharm = JSON.parse(getlocalPharm);

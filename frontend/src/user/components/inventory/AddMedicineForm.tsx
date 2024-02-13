@@ -5,7 +5,6 @@ import { addMedicineApi } from "./apiCalls/addMedicineApi";
 import { getMedicineGroupList } from "./medicineGroup/apiCalls/getMedicinGroupList";
 import { setGroupList } from "../../../redux/groupList";
 import PricingDetailsCard from "./PricingDetailsCard";
-import { server_baseurl } from "../../../baseUrl";
 
 interface AddMedicineFormProps{
     onHandleAddMedicineForm: ({}) => void;
@@ -18,6 +17,8 @@ export interface GroupListProps{
 
 const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
     const groupList: GroupListProps[] = useSelector((state: RootState) => state.groupList)
+    const activePharmacy = useSelector((state: RootState) => state.activePharmacy);
+
     const dispatch = useDispatch();
 
     const [medicineDetails, setMedicineDetails] = useState({
@@ -29,12 +30,15 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
 
     useEffect(() =>{
         const filterNull = false;
-        const apiRes = getMedicineGroupList(filterNull)
-        apiRes.then(data =>{
-            if(data.length){
-                dispatch(setGroupList(data))
-            }
-        })       
+        if(activePharmacy.pharmacy){
+            const pharmacy_id = activePharmacy.pharmacy?.pharmacy_id
+            const apiRes = getMedicineGroupList(filterNull, pharmacy_id);
+            apiRes.then(data =>{
+                if(data.length){
+                    dispatch(setGroupList(data))
+                }
+            })       
+        }
     }, [groupList.length === 0]);
 
     const handleFormInput = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) =>{
@@ -53,7 +57,9 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
     const handleAddMedicineSubmit: React.FormEventHandler<HTMLFormElement> = (e) =>{
         e.preventDefault()
         console.log(medicineDetails)
-        const [group] = groupList.filter(group => group.group_name === medicineDetails.group_name)
+        const [group] = groupList.filter(group => 
+            group.group_name.trim() === medicineDetails.group_name.trim()
+        )
         console.log(groupList)
         const newMedicineDetails = {...medicineDetails, group_id: group.group_id}
 
@@ -64,7 +70,7 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
 
     return(
         <div className="px-3 px-md-5">
-            <form onSubmit={handleAddMedicineSubmit} enctype="multipart/form-data"
+            <form onSubmit={handleAddMedicineSubmit} encType="multipart/form-data"
             className="col-sm-10"> 
                 <div className="d-flex flex-wrap justify-content-between align-items-center ">
                     <div className="form-group mb-3 col-10 col-sm-5">

@@ -49,7 +49,6 @@ export const addMedicineApi = ({addMedicineDetails, setShowDetails}: handleAddGr
     formData.append('medicine_code', medicine_code);
     formData.append('medicine_name', medicine_name);
     formData.append('group_name', group_name);
-    formData.append('stock_qty', stock_qty.toString()); // Convert to string if necessary
     formData.append('side_effect', side_effect);
     formData.append('group_id', group_id.toString()); // Convert to string if necessary
     formData.append('instructions', instructions);

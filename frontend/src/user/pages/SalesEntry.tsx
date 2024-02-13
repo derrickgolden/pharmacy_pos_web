@@ -258,8 +258,8 @@ const SalesEntry = () =>{
         <header className="header dropdown px-3 col-12" id="header"
         style={{height: "3rem"}}>
             
-            <nav className="navbar navbar-expand-md navbar-light h-100 w-100"
-            style={{backgroundColor: "#f2f2f3"}}>
+            <nav className="navbar navbar-expand-md navbar-light w-100 py-0"
+            style={{backgroundColor: "#f2f2f3", height: "2rem"}}>
               <div className="container-fluid"  style={{backgroundColor: "#f2f2f3"}}>
                 <div>
                   {
