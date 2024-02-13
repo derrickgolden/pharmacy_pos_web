@@ -85,7 +85,7 @@ const ForgotPassword: React.FC = () =>{
                     </div>
                 </div>
                 <div className="row justify-content-center  ">
-                    <div className="col-lg-6 text-center bg-white my-5 p-5 rounded">
+                    <div className="col-11 col-lg-6 text-center bg-white my-5 px-3 px-sm-5 py-5 rounded">
                         <div className="form-box d-flex flex-column gap-2">
                             <div className="icon-area">
                                 <img src={forgot_password_illus} alt="image"/>

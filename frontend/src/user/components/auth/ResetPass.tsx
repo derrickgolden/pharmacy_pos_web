@@ -97,7 +97,7 @@ const ResetPassword: React.FC = () =>{
                             <img src={forgot_pwd_2_illus} alt="image"/>
                         </div>
                     </div>
-                    <div className="col-lg-6 z-1 text-center d-flex align-items-center bg-white rounded my-5 p-5">
+                    <div className="col-11 col-lg-6 z-1 text-center d-flex align-items-center bg-white rounded my-5 px-3 px-sm-5 py-5">
                         <div className="form-box d-flex flex-column gap-2">
                             <div className="icon-area">
                                 <img src={forgot_password_illus} alt="image"/>

@@ -22,8 +22,9 @@ router.post('/update', async (req, res) => {
 });
 router.post('/stock-details', async (req, res) => {
     const { user_id } = req.user;
+    const { pharmacy_id } = req.body;
     try {
-        const response = await (0, stock_1.getStockDetails)(user_id);
+        const response = await (0, stock_1.getStockDetails)(user_id, pharmacy_id);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

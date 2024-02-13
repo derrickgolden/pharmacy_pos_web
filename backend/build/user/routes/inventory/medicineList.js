@@ -9,7 +9,6 @@ const router = express_1.default.Router();
 router.post('/add-medicine', async (req, res) => {
     const body = req.body;
     const img_file = req.file;
-    // console.log(body);
     try {
         const response = await (0, medicineList_1.addMedicine)(body, img_file);
         response.success ?
@@ -21,9 +20,10 @@ router.post('/add-medicine', async (req, res) => {
         res.status(302).json({ success: false, msg: "sever side error", err: error.message });
     }
 });
-router.get('/get-medicine', async (req, res) => {
+router.post('/get-medicine', async (req, res) => {
+    const body = req.body;
     try {
-        const response = await (0, medicineList_1.getMedicineList)();
+        const response = await (0, medicineList_1.getMedicineList)(body);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

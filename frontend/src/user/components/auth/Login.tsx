@@ -81,17 +81,17 @@ const Login: React.FC = () =>{
     return(
         <section className="container-fluid col-12 d-flex justify-content-center auth-bd pt-5"
         style={{minHeight: "100vh"}}>
-            <div className="row col-sm-8 ">
+            <div className="row col-11 col-sm-8 ">
                 <div className="col-12 p-0">
                     <div className="bg-overlay pb-5">
                         <div className="container">
                             <div className="row align-items-center">
-                                <div className="col-sm-5 col">
+                                {/* <div className="col-sm-5 col">
                                     <Link className="back-home text-white" to="/">
                                         <img src={left_arrow} alt="image" className="mr-2"/>
                                         Back to Easy Tech
                                     </Link>
-                                </div>
+                                </div> */}
                                 <div className="col-sm-5 col">
                                     <Link to="/">
                                         <img src={logo} alt="image" className="img-fluid"/>
@@ -100,13 +100,13 @@ const Login: React.FC = () =>{
                             </div>
                         </div>
                         <div className="row justify-content-center ">
-                            <div className="col-lg-6 text-center bg-white p-5 m-5"
+                            <div className="col-lg-6 text-center bg-white px-3 px-sm-5 py-5 m-5"
                             style={{borderRadius: "1rem"}}
                             >
-                                <div className="form-box p-4" >
+                                <div className="form-box " >
                                     <h4>Log in to Easy Tech</h4>
                                     <p className="dont-acc text-dark">Don't have an account? 
-                                        <Link to={`/user/signup`} className="text-info">Register</Link>
+                                        <Link to={`/user/signup`} className="text-info">&nbsp; Register</Link>
                                     </p>
                                     <div className=" bg-white p-10 rounded" id="myTabContent" style={{ height: "100%" }}>
                                         <div className="tab-pane fade p-10 show active" id="admin" role="tabpanel" aria-labelledby="admin-tab">                                

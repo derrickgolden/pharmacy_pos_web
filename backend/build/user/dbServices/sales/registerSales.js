@@ -8,15 +8,17 @@ const registerSales = async (saleDetails, user_id) => {
     const totalPrice = saleDetails.totalPrice;
     const moneyTrans = saleDetails.moneyTrans;
     const updateStock = saleDetails.updateStock;
+    const pharmacy_id = saleDetails.pharmacy_id;
+    console.log("pharma_id:", pharmacy_id);
     const sale_date = new Date();
     try {
         const connection = await pool.getConnection();
         await connection.beginTransaction();
         const { customerGave, change } = moneyTrans;
         var [res] = await connection.query(`
-                INSERT INTO sales (sale_date, total_price, change_amount, cashier)
-                VALUES (?, ?, ?, ?)
-            `, [sale_date, totalPrice, change, user_id]);
+                INSERT INTO sales (sale_date, total_price, change_amount, cashier, pharmacy_id)
+                VALUES (?, ?, ?, ?, ?)
+            `, [sale_date, totalPrice, change, user_id, pharmacy_id]);
         const sale_id = res.insertId;
         orderDetails.map(async (details) => {
             const { medicine_id, units, sub_total } = details;

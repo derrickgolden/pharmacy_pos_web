@@ -7,10 +7,10 @@ const express_1 = __importDefault(require("express"));
 const medicineGroup_1 = require("../../dbServices/inventory/medicineGroup");
 const router = express_1.default.Router();
 router.post('/add-group', async (req, res) => {
-    const { group_name, description } = req.body;
+    const { group_name, description, pharmacy_id } = req.body;
     const token = req.header('Authorization');
     try {
-        const response = await (0, medicineGroup_1.addMedicineGroup)({ group_name, description });
+        const response = await (0, medicineGroup_1.addMedicineGroup)({ group_name, description, pharmacy_id });
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);
@@ -21,9 +21,9 @@ router.post('/add-group', async (req, res) => {
     }
 });
 router.post('/get-groups', async (req, res) => {
-    const { filterNull } = req.body || false;
+    const { filterNull, pharmacy_id } = req.body || false;
     try {
-        const response = await (0, medicineGroup_1.getMedicineGroups)(filterNull);
+        const response = await (0, medicineGroup_1.getMedicineGroups)(filterNull, pharmacy_id);
         response.success ?
             res.status(200).json(response) :
             res.status(302).json(response);

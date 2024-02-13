@@ -2,14 +2,15 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateStockDetails = exports.getStockDetails = void 0;
 const { pool } = require("../../mysqlSetup");
-const getStockDetails = async (user_id) => {
+const getStockDetails = async (user_id, pharmacy_id) => {
     try {
         const connection = await pool.getConnection();
         var [res] = await connection.query(`
                 SELECT medicine_list.medicine_name, stock.*
                 FROM medicine_list
-                JOIN stock ON medicine_list.medicine_id = stock.medicine_id;
-            `, [user_id]);
+                JOIN stock ON medicine_list.medicine_id = stock.medicine_id
+                WHERE medicine_list.pharmacy_id = ?;
+            `, [pharmacy_id]);
         connection.release();
         return {
             success: true,

@@ -123,7 +123,7 @@ const Signup = () =>{
                             {/* <img src={register_illus} alt="image"/> */}
                         </div>
                     </div>
-                    <div className="col-lg-6 col-md-7 z-1 text-center bg-white p-5 my-5 rounded">
+                    <div className="col-11 col-lg-6 col-md-7 z-1 text-center bg-white px-3 px-sm-5 py-5 my-5 rounded">
                         <div className="form-box">
                             <h4>Register with Easy Tech</h4>
                             <p className="alr-acc dont-acc">Already have an account? 

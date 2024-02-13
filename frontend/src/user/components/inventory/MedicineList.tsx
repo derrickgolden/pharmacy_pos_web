@@ -115,12 +115,12 @@ const MedicineList: React.FC<MedicineListProps> = ({onHandleActionDetails}) =>{
                                 </select>
                             </div>
                             <div className="card-body">
-                                {medicineList.length ? 
+                                {activePharmacy.pharmacy ? 
                                  <DataTableComponent search={ searchType }
                                       apidata={medicineList} columns={columns} 
                                  />
                                 :
-                                <h2>No data to show at the moment</h2>
+                                <h2>Select a pharmacy first</h2>
                                 }  
                             </div>
                         </div>

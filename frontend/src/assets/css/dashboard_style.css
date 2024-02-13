@@ -112,15 +112,15 @@
     background-color: #e6e9e9;
   }
   .sales-entry-container{
-    height: calc(100vh - 3rem) !important;
+    height: calc(100dvh - 3rem) !important;
   }
   .inventory-select{
-    height: calc(100vh - 5.8rem);
+    height: calc(100dvh - 5.8rem);
     background-color: #808080;
     overflow-y: auto;
   }
   .order-cards{
-    height: calc(100vh - 15rem);
+    height: calc(100dvh - 15rem);
   }
 
   @media (max-width: 768px) {
@@ -128,7 +128,7 @@
       height: calc(100vh - 15rem);
     } */
     .inventory-select{
-      height: calc(100vh - 14rem);
+      height: calc(100dvh - 14rem);
     }
   }
   .inventory-select::-webkit-scrollbar {
@@ -167,17 +167,17 @@
   }
  
 .print-receipt{
-  height: calc(100vh - 3rem);
+  height: calc(100dvh - 3rem);
 }
 
 @media (min-width: 768px) {
   .print-receipt{
-    height: calc(82vh);
+    height: calc(82dvh);
   }
 }
 
 .center-receipt{
-  height: calc(50vh - 3rem);
+  height: calc(50dvh - 3rem);
 }
 .receipt{
   overflow-y: auto;

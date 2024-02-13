@@ -32,12 +32,6 @@ const SalesReport = () =>{
             salesReport.then((data) =>{
                 dispatch(setSalesReportList(data));
             })
-        }else{
-            Swal.fire({
-                title: "",
-                text: "Select pharmacy before analyzing report.",
-                icon: "warning"
-            });
         }
     }, [sales.length === 0, activePharmacy]);
 

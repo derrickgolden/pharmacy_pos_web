@@ -37,7 +37,6 @@ const UserDashboard: React.FC = () =>{
             
             const stock = getStockDetailsApi(pharmacy_id);
             stock?.then(data =>{
-                // console.log(data);
                 data?.map((details: {containers: number, warning_limit: number, units_per_container: number}) =>{                
                     if(details.containers <= details.warning_limit && details.containers > 0){
                         lowStockMedicine.push(details);
@@ -59,11 +58,12 @@ const UserDashboard: React.FC = () =>{
                 const filterNull = false;
                 const medicineList = getMedicineGroupList(filterNull, pharmacy_id);
                 medicineList.then((data) =>{
-                    // console.log(data);
-                    const totalMedicine = data.length;
-                    let totalGroup = 0;
+                    let totalMedicine = 0;
+                    const totalGroup = data.length;
                     data.map((details: {medicines: []}) =>{
-                        totalGroup += details.medicines.length;
+                        if(details?.medicines[0].medicine_id !== null){
+                            totalMedicine += details.medicines.length;
+                        }
                     })
                     
                     setLowerDashboardData((data: BottomSummaryCardProps) => ({...data,
@@ -74,7 +74,7 @@ const UserDashboard: React.FC = () =>{
                 const url = "sales/get-sales"
                 const salesReport = getSalesReportApi({url, pharmacy_id});
                 salesReport.then((data) =>{
-    
+
                     const invoices = data.length;
                     let medicinesSold = 0;
                     data.map((details: {sales_items: []}) =>{
@@ -84,7 +84,6 @@ const UserDashboard: React.FC = () =>{
                     setLowerDashboardData((data: BottomSummaryCardProps )  => ({...data,
                         quickReport: {title: "Quick Report", side_title_link: "#", side_title_link_caption: "Date", left_totals: medicinesSold, left_totals_caption: "Qty of Medicines Solid", right_totals: invoices, right_totals_caption: "Invoices Generated", display_date_picker: true},
                     }))
-    
                     dispatch(setSalesReportList(data));
                 })
             }
@@ -93,8 +92,8 @@ const UserDashboard: React.FC = () =>{
    
     return(
         <div  className='body2 bg-white' style={{paddingTop: "2rem"}}>
-            <section className="upper-section px-5 bg-light py-5 mb-5">
-                <div className="d-flex justify-content-between align-items-center">
+            <section className="upper-section px-0 px-sm-5 bg-light py-5 mb-5">
+                <div className="d-flex justify-content-between align-items-center px-5 px-sm-0">
                     <div>
                         <h3 className="font-family-poppins font-weight-700 font-size-24 line-height-24 text-dark">
                             Dashboard

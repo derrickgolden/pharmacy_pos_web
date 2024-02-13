@@ -59,9 +59,7 @@ export default function LandingPageHeader() {
         setHeaderToggle(!headerToggle)
         setheaderNavManu(!headerNavManu)
     }
-    const toggleProfileClick = () =>{
-        console.log(toggleProfile);
-        
+    const toggleProfileClick = () =>{        
         setToggleProfile(!toggleProfile);
     }
 

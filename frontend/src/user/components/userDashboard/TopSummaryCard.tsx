@@ -19,7 +19,7 @@ const TopSummaryCard: React.FC<TopSummaryCardProps> = ({ data }) =>{
     }
     return(
         <div className={`${customCardStyle[data?.forCssDispaly]?.border} p-0 card bg-light mb-4
-        text-center col-10 col-sm-5 col-lg-2 bg-primary-light border border-1 rounded-4`} 
+        text-center col-5 col-sm-5 col-lg-2 bg-primary-light border border-1 rounded-4`} 
         style={{ boxSizing: 'border-box' }}>
             <div className={`${customCardStyle[data?.forCssDispaly]?.border} card-body 
             bg-white border rounded-top`}>

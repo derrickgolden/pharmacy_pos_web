@@ -21,7 +21,7 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
     const dispatch = useDispatch();
 
     const [medicineDetails, setMedicineDetails] = useState({
-        medicine_code: '', medicine_name: "", group_name: "", stock_qty: 0, 
+        medicine_code: '', medicine_name: "", group_name: "", 
         instructions: "", side_effect: "", group_id: null
     })
     const [pricingDetails, setPricingDetails] = useState({});
@@ -52,34 +52,34 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
 
     const handleAddMedicineSubmit: React.FormEventHandler<HTMLFormElement> = (e) =>{
         e.preventDefault()
-
+        console.log(medicineDetails)
         const [group] = groupList.filter(group => group.group_name === medicineDetails.group_name)
+        console.log(groupList)
         const newMedicineDetails = {...medicineDetails, group_id: group.group_id}
 
         const addMedicineDetails = {newMedicineDetails, pricingDetails};
-        console.log(newMedicineDetails);
         
         const res = addMedicineApi({addMedicineDetails, setShowDetails})
     }
 
     return(
-        <div className="px-1 px-md-5">
+        <div className="px-3 px-md-5">
             <form onSubmit={handleAddMedicineSubmit} enctype="multipart/form-data"
             className="col-sm-10"> 
                 <div className="d-flex flex-wrap justify-content-between align-items-center ">
-                    <div className="form-group mb-3 col-sm-5">
+                    <div className="form-group mb-3 col-10 col-sm-5">
                         <label htmlFor="exampleFormControlInput1">Medicine Name</label>
                         <input onChange={handleFormInput} value={medicineDetails.medicine_name}
                         type="text" className="form-control" id="medicinename" name="medicine_name"
                          placeholder="Peneciline" required/>
                     </div>
-                    <div className="form-group mb-3 col-sm-5">
+                    <div className="form-group mb-3 col-10 col-sm-5">
                         <label htmlFor="exampleFormControlInput1">Medicine code(optional)</label>
                         <input onChange={handleFormInput} value={medicineDetails.medicine_code}
                         type="text" className="form-control" id="medicineid" placeholder="1576382"
                         name="medicine_code" />
                     </div>
-                    <div className="form-group mb-3 col-sm-5">
+                    <div className="form-group mb-3 col-10 col-sm-5">
                         <label htmlFor="exampleFormControlSelect1">Medicine Group</label>
                         <select onChange={handleFormInput} value={medicineDetails.group_name}
                         className="form-control" id="exampleFormControlSelect1" name="group_name">
@@ -88,12 +88,6 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
                                 <option key={i} >{group.group_name}</option>
                             ))}
                         </select>
-                    </div>
-                    <div className="form-group mb-3 col-sm-5">
-                        <label htmlFor="exampleFormControlInput1">Number of containers(Qty)</label>
-                        <input onChange={handleFormInput} value={medicineDetails.stock_qty}
-                        type="number" className="form-control" id="quantity" placeholder="30"
-                        name="stock_qty" />
                     </div>
                     {/* <div className="form-group mb-3 col-sm-5">
                         <label htmlFor="exampleFormControlInput1">Medicine Image</label>

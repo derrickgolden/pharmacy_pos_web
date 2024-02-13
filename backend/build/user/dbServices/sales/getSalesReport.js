@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getSalesReport = void 0;
 const { pool } = require("../../../mysqlSetup");
 const getSalesReport = async (pharmacy_id) => {
+    console.log(pharmacy_id);
     try {
         const connection = await pool.getConnection();
         var [res] = await connection.query(`
@@ -33,10 +34,11 @@ const getSalesReport = async (pharmacy_id) => {
                 sales_items si ON s.sale_id = si.sale_id
             JOIN
                 medicine_list ml ON si.medicine_id = ml.medicine_id -- Join with medicine_list table
+            WHERE s.pharmacy_id = ?
             GROUP BY
                 s.sale_id, s.sale_date, s.total_price;
 
-            `);
+            `, [pharmacy_id]);
         connection.release();
         return {
             success: true,

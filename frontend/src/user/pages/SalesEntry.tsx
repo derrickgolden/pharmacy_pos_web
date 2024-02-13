@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faBars, faX } from '@fortawesome/free-solid-svg-icons'
 import InventorySelect from "../sections/pointOfEntry/InventorySelect";
 import OrderDisplay from "../sections/pointOfEntry/OrderDisplay";
 import PosEntry from "../sections/pointOfEntry/POEcalc";
@@ -6,7 +8,7 @@ import ValidateOrderNavbar from "../components/pointOfEntry/ValidateOrderNavbar"
 import ValidateOrders from "../sections/pointOfEntry/ValidateOrders";
 import PrintReceipt from "../sections/pointOfEntry/PrintReceipt";
 import { regiterSalesApi } from "./apiCalls/registerSales";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpdatingStock";
 import { Medicine } from "../components/inventory/types";
@@ -255,19 +257,40 @@ const SalesEntry = () =>{
       <>
         <header className="header dropdown px-3 col-12" id="header"
         style={{height: "3rem"}}>
-          <div className="d-flex justify-content-between align-items-center col-12  h-100">
-            {
-              showInventoryOrders !== "inventory" && entryStep === "ordersentry" && (
-                <button type="button" onClick={() => setShowInventoryOrders("inventory")}
-                  className="btn btn-outline-link d-md-none">Inventory <FaAnglesRight />
+            
+            <nav className="navbar navbar-expand-md navbar-light h-100 w-100"
+            style={{backgroundColor: "#f2f2f3"}}>
+              <div className="container-fluid"  style={{backgroundColor: "#f2f2f3"}}>
+                <div>
+                  {
+                    showInventoryOrders !== "inventory" && entryStep === "ordersentry" && (
+                      <button type="button" onClick={() => setShowInventoryOrders("inventory")}
+                        className="btn btn-outline-link d-md-none">Inventory <FaAnglesRight />
+                      </button>
+                    )
+                  }
+                </div>
+                <button className="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <FontAwesomeIcon icon={faBars} />
                 </button>
-              )
-            }
-            <button type="button" onClick={() => navigate('/user/dashboard', {replace: true})}
-            className="btn btn-outline-danger">End Session</button>
-            <h3>{pharm?.pharmacy_name}</h3>
-            <h5>{user?.first_name}</h5>
-          </div>
+                <div className=" p-2 collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul className="d-flex justify-content-between w-100 navbar-nav me-auto mb-2 mb-lg-0"
+                  >
+                    <li className="nav-item">
+                      <Link className="nav-link active" aria-current="page" to="#">{pharm?.pharmacy_name}</Link>
+                    </li>
+                    <li className="nav-item">
+                      <Link className="nav-link active" aria-current="page" to="#">{user?.first_name}</Link>
+                    </li>
+                    <li className="nav-item">
+                    <button type="button" onClick={() => navigate('/user/dashboard', {replace: true})}
+                      className="btn btn-outline-danger">End Session</button>
+                    </li>
+                  </ul>
+                  
+                </div>
+              </div>
+            </nav>
         </header>
         {
           entryStep === "ordersentry" && 
