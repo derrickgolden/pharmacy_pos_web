@@ -6,9 +6,9 @@ import { RootState } from "../../../redux/store";
 
 const Receipt =({componentRef, saleRes, medicineDetails, orderDetails, totalPrice}) =>{
     const userPharm = getSessionStorage();
-    const activePharmacy = useSelector((state: RootState) => state.activePharmacy); 
-    const { localPharm: pharm } = userPharm.localPharm;
+    const { localPharm: activePharmacy } = userPharm.localPharm;
     const { user } = userPharm.user;
+
     return(
         <div className="d-flex justify-content-center h-100 m-auto "
             style={{backgroundColor: "#a8a8a8"}}>
@@ -16,15 +16,15 @@ const Receipt =({componentRef, saleRes, medicineDetails, orderDetails, totalPric
                 className="col-11 my-2 bg-white p-2 receipt " >
                     <header className="d-flex flex-column text-center mb-2">
                         <div>
-                            <img src={`${server_baseurl}/${activePharmacy?.pharmacy.logo_path}`} alt="logo" 
+                            <img src={`${server_baseurl}/${activePharmacy?.logo_path}`} alt="logo" 
                             style={{width: "40px", height:"30px"}}/>
-                            <span>{activePharmacy?.pharmacy.pharmacy_name}</span>
+                            <span>{activePharmacy?.pharmacy_name}</span>
                         </div>
                         <span className=" col-10 m-auto">
-                            {activePharmacy?.pharmacy.pharmacy_email}
+                            {activePharmacy?.pharmacy_email}
                         </span>
                         <span className="border-bottom col-10 m-auto pb-2 mb-2">
-                            {activePharmacy?.pharmacy.pharmacy_tel}
+                            {activePharmacy?.pharmacy_tel}
                         </span>
                         <span>Served by {user.last_name} {user.first_name}</span>
                         <span><b>{saleRes.sale_id}</b></span>
@@ -57,7 +57,8 @@ const Receipt =({componentRef, saleRes, medicineDetails, orderDetails, totalPric
                         </div>
                         <div className="d-flex pl-4 justify-content-between">
                             {calculateVAT(totalPrice, 16).map((data, i) =>(
-                                <p className='d-flex flex-column'> 
+                                <p className='d-flex flex-column'
+                                key = {i}> 
                                     <span>{data.label}</span> <span>{data.value}</span>
                                 </p>
                             ))}

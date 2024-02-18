@@ -1,6 +1,6 @@
 const ChangeDisplay = ({payMethods, totalPrice, change}) =>{
     return(
-        <div className='border' style={{height: "20vh"}}>
+        <div className='border' style={{height: "22vh"}}>
         {!payMethods.length && (
           <div className='d-flex flex-column justify-content-center text-center h-100'>
             <h1 className='text-primary'>{totalPrice} Ksh</h1>

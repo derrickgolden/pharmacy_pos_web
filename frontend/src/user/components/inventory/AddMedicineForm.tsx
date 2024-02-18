@@ -56,16 +56,17 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
 
     const handleAddMedicineSubmit: React.FormEventHandler<HTMLFormElement> = (e) =>{
         e.preventDefault()
-        console.log(medicineDetails)
+
         const [group] = groupList.filter(group => 
             group.group_name.trim() === medicineDetails.group_name.trim()
         )
-        console.log(groupList)
+
         const newMedicineDetails = {...medicineDetails, group_id: group.group_id}
 
         const addMedicineDetails = {newMedicineDetails, pricingDetails};
+        const pharmacy_id = activePharmacy.pharmacy?.pharmacy_id;
         
-        const res = addMedicineApi({addMedicineDetails, setShowDetails})
+        addMedicineApi({addMedicineDetails, setShowDetails, pharmacy_id})
     }
 
     return(

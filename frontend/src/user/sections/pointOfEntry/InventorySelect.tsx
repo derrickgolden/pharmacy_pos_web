@@ -8,6 +8,7 @@ import { setGroupList } from "../../../redux/groupList";
 import { OrderDetail } from "../../pages/SalesEntry";
 import OrdersCard from "../../components/pointOfEntry/OrdersCard";
 import { FaOpencart } from "react-icons/fa";
+import { getSessionStorage } from "../../controllers/getSessionStorage";
 
 interface InventorySelectProps {
     handleNewOrderSelect: (newOrder: OrderDetail) =>void
@@ -20,8 +21,10 @@ const InventorySelect: React.FC<InventorySelectProps> = ({
 
     const dispatch = useDispatch()
     const medicineGroup = useSelector((state: RootState) => state.groupList);
-    const activePharmacy = useSelector((state: RootState) => state.activePharmacy);   
 
+    const userPharm = getSessionStorage();
+    const { localPharm } = userPharm;
+    
     useEffect(()=>{
         const groupNames: string[] = medicineGroup.map((group) => {
             return group.group_name
@@ -30,16 +33,15 @@ const InventorySelect: React.FC<InventorySelectProps> = ({
     }, [medicineGroup])
 
     useEffect(()=>{
-        if(activePharmacy.pharmacy){
+        if(localPharm.available){
             const filterNull = true;
-            const pharmacy_id = activePharmacy.pharmacy?.pharmacy_id;
+            const pharmacy_id = localPharm.localPharm?.pharmacy_id;
             const res = getMedicineGroupList(filterNull, pharmacy_id);
             res.then((data) =>{        
                 dispatch(setGroupList(data));
             })
         }
     },[medicineGroup.length === 0])
-    // console.log(orderDetails)
     
     return(
         <div className="col-12 px-0">

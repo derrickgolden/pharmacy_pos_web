@@ -17,8 +17,8 @@ export interface medicineDetailsProp{
 export interface medicineDetailsProps{
     price: number,
     unit_of_mesurement: string, 
-    package_size: number
-    
+    package_size: number,
+    pharmacy_id: number,
     medicine_code: string, 
     medicine_name: string, 
     stock_qty: number, 

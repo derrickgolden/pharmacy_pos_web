@@ -4,8 +4,7 @@ import { LiaFileInvoiceSolid } from "react-icons/lia";
 
 const CustomerInvoice = () =>{
     return(
-        <div className="d-none d-md-flex flex-column col-3" 
-        style={{height: "80vh"}}>
+        <div className="d-none d-md-flex flex-column col-3" >
             <button className='btn border flex-row-1 py-3'>
                 <h5><RxAvatar /> Customer</h5>
             </button>

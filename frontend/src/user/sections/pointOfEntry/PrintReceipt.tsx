@@ -9,11 +9,11 @@ import { useReactToPrint } from 'react-to-print';
 import Receipt from '../../components/pointOfEntry/Receipt';
 
 const PrintReceipt = (
-    {orderDetails, handleStartNewOrderClick, medicineDetails, totalPrice, saleRes, payMethods}) =>{
+    { orderDetails, handleStartNewOrderClick, medicineDetails, totalPrice, saleRes }) =>{
     const componentRef = useRef<HTMLDivElement | null>(null);
 
-    const user = JSON.parse(sessionStorage.getItem("user"));
-    const pharm = JSON.parse(sessionStorage.getItem("activepharmacy"))
+    // const user = JSON.parse(sessionStorage.getItem("user"));
+    // const pharm = JSON.parse(sessionStorage.getItem("activepharmacy"))
 
     const event = new KeyboardEvent('keydown', {
         key: 'p',

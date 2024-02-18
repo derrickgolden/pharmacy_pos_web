@@ -5,7 +5,7 @@ const { pool } = require("../../../mysqlSetup");
 
 export const addMedicine = async (medicineDetails: medicineDetailsProps, img_file: Express.Multer.File ): Promise<universalResponse> => {
     
-    const {medicine_code, medicine_name, stock_qty, 
+    const {medicine_code, medicine_name, stock_qty, pharmacy_id,
     instructions, side_effect, group_id, price, unit_of_mesurement, package_size} = medicineDetails;
 
     const path = img_file?.path || null
@@ -17,24 +17,22 @@ export const addMedicine = async (medicineDetails: medicineDetailsProps, img_fil
 
             var [res] = await connection.query(`
                 INSERT INTO medicine_list (medicine_code, medicine_name, 
-                    instructions, side_effect, group_id, img_path)
-                VALUES (?, ?, ?, ?, ?, ?)
-            `, [medicine_code, medicine_name, 
-                instructions, side_effect, group_id, path]);
+                    instructions, side_effect, group_id, img_path, pharmacy_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `, [medicine_code, medicine_name, instructions, side_effect, group_id, path, pharmacy_id]);
                 
-                const medicine_id = res.insertId;
-                console.log("medicine_id: ", medicine_id);
+            const medicine_id = res.insertId;
                 
-                var [pricing_res] = await connection.query(`
+            var [pricing_res] = await connection.query(`
                 INSERT INTO pricing (medicine_id, price, unit_of_measurement )
                 VALUES (?, ?, ?)
-                `, [medicine_id, price, unit_of_mesurement]);
-                console.log("pricing_id: ", pricing_res.insertId);
+            `, [medicine_id, price, unit_of_mesurement]);
 
-                var [stock_res] = await connection.query(`
-                    INSERT INTO stock (medicine_id, containers, units_per_container, open_container_units, warning_limit)
-                    VALUES (?, ?, ?, ?, ?)
-                `, [medicine_id, stock_qty, package_size, 0, 20]);
+            var [stock_res] = await connection.query(`
+                INSERT INTO stock (medicine_id, containers, units_per_container, 
+                    open_container_units, warning_limit)
+                VALUES (?, ?, ?, ?, ?)
+            `, [medicine_id, stock_qty, package_size, 0, 20]);
 
         await connection.commit();
 
@@ -62,7 +60,7 @@ export const getMedicineList = async ( details: GetMedicineListProps ): Promise<
     try {
         const connection: RowDataPacket = await pool.getConnection();
 
-            var [res] = await connection.query(`
+        var [res] = await connection.query(`
             SELECT
                 ml.medicine_id,
                 ml.medicine_code,
@@ -115,7 +113,6 @@ export const deleteMedicine = async (medicine_id: number ): Promise<universalRes
             `, [medicine_id]);
 
         connection.release();
-console.log(res);
 
         return {
             success: true,

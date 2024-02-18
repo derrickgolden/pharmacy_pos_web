@@ -88,7 +88,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
     }
 
     return(
-        <div className="col-12 col-md-3 d-flex flex-column" style={{height: "80vh"}}>
+        <div className="col-12 col-md-3 d-flex flex-column" >
             {
                 currentWidth < 768 && 
                 <ChangeDisplay 
@@ -97,10 +97,10 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
                     change = {change}
                 />
             }
-            <div className="py-2">
+            <div className="p-2">
                 <h3>Payment Method</h3>
             </div>
-            <div className="ordersCard" style={{height: "60vh"}}>
+            <div className="ordersCard" style={{height: "60dvh"}}>
                 {
                     payments.map((payment, i)=>(
                         <button  key={i} onClick={() =>  handlePaymentMethod(payment)}
@@ -110,7 +110,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
                         </button>
                     ))
                 }
-                <div className="d-flex mt-2">
+                <div className="px-2 mt-2">
                     <h4>Summary</h4>
                 </div>
                 {
@@ -141,7 +141,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
                     handleVilidateClick(customerGave, change)
                 } } 
                 disabled={!change.remaining && payMethods.length && isValidateEnabled ? false : true}
-                className="btn btn-warning flex-grow-1 font-weight-bold"> 
+                className="btn btn-warning rounded-none flex-grow-1 font-weight-bold"> 
                     <FaAngleRight size={24}/> 
                     <p style={{fontSize: "24px"}}>Validate</p>
                 </button>

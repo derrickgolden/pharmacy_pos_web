@@ -28,7 +28,9 @@ export const getSessionStorage = () => {
     
     if (getlocalPharm !== null && getlocalPharm !== "undefined") {
         const localPharm = JSON.parse(getlocalPharm);
-        userPharm.localPharm = { available: true, localPharm };
+        userPharm.localPharm = { 
+            available: true, 
+            localPharm: {...localPharm, pharmacy_id: localPharm.pharmacy_id as number } };
     } else {
         userPharm.localPharm = { available: false };
     }

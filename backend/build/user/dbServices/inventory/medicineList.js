@@ -3,28 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteMedicine = exports.getMedicineList = exports.addMedicine = void 0;
 const { pool } = require("../../../mysqlSetup");
 const addMedicine = async (medicineDetails, img_file) => {
-    const { medicine_code, medicine_name, stock_qty, instructions, side_effect, group_id, price, unit_of_mesurement, package_size } = medicineDetails;
+    const { medicine_code, medicine_name, stock_qty, pharmacy_id, instructions, side_effect, group_id, price, unit_of_mesurement, package_size } = medicineDetails;
     const path = img_file?.path || null;
     try {
         const connection = await pool.getConnection();
         await connection.beginTransaction();
         var [res] = await connection.query(`
                 INSERT INTO medicine_list (medicine_code, medicine_name, 
-                    instructions, side_effect, group_id, img_path)
-                VALUES (?, ?, ?, ?, ?, ?)
-            `, [medicine_code, medicine_name,
-            instructions, side_effect, group_id, path]);
+                    instructions, side_effect, group_id, img_path, pharmacy_id)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
+            `, [medicine_code, medicine_name, instructions, side_effect, group_id, path, pharmacy_id]);
         const medicine_id = res.insertId;
-        console.log("medicine_id: ", medicine_id);
         var [pricing_res] = await connection.query(`
                 INSERT INTO pricing (medicine_id, price, unit_of_measurement )
                 VALUES (?, ?, ?)
-                `, [medicine_id, price, unit_of_mesurement]);
-        console.log("pricing_id: ", pricing_res.insertId);
+            `, [medicine_id, price, unit_of_mesurement]);
         var [stock_res] = await connection.query(`
-                    INSERT INTO stock (medicine_id, containers, units_per_container, open_container_units, warning_limit)
-                    VALUES (?, ?, ?, ?, ?)
-                `, [medicine_id, stock_qty, package_size, 0, 20]);
+                INSERT INTO stock (medicine_id, containers, units_per_container, 
+                    open_container_units, warning_limit)
+                VALUES (?, ?, ?, ?, ?)
+            `, [medicine_id, stock_qty, package_size, 0, 20]);
         await connection.commit();
         connection.release();
         return {
@@ -98,7 +96,6 @@ const deleteMedicine = async (medicine_id) => {
                 WHERE medicine_id = ?;
             `, [medicine_id]);
         connection.release();
-        console.log(res);
         return {
             success: true,
             msg: `Medicine deleted`,

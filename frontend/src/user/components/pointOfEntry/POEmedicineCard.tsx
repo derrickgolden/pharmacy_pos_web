@@ -1,6 +1,5 @@
 import { FaInfoCircle } from "react-icons/fa";
 import { desk, pharmacy } from "../../../assets/images"
-import { server_baseurl } from "../../../baseUrl";
 interface POEmedicineCardProps {
     handleNewOrderSelect: () =>void
 }

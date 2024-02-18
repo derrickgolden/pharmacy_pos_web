@@ -12,11 +12,6 @@ const customCardStyle: Record<string, { border: string; text: string; bg: string
 const TopSummaryCard: React.FC<TopSummaryCardProps> = ({ data }) =>{
     const navigate = useNavigate()
 
-    const handleButtonClick =() =>{
-        console.log(data);
-        
-        if(data.btnType === "inventory") navigate("/user/inventory")
-    }
     return(
         <div className={`${customCardStyle[data?.forCssDispaly]?.border} p-0 card bg-light mb-4
         text-center col-5 col-sm-5 col-lg-2 bg-primary-light border border-1 rounded-4`} 

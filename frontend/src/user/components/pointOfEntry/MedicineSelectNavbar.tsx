@@ -10,10 +10,10 @@ const MedicineSelectNavbar =({groupNames, setShowGroup, setSearchMedicine}) =>{
           <span className="navbar-toggler-icon"></span>
         </button> */}
 
-        <div className=" bg-light collapse navbar-collapse col-6 h-100" id="navbarNavDropdown" >
+        <div className="px-2 bg-light collapse navbar-collapse col-6 h-100" id="navbarNavDropdown" >
           <ul className="flex justify-content-between navbar-nav col-12">
               <Link onClick={() => setShowGroup("All")}
-              className="navbar-brand pl-2" to="#">&nbsp; All</Link>
+              className="navbar-brand" to="#">&nbsp; All</Link>
               <li className="nav-item dropdown">
                   <Link className="nav-link dropdown-toggle" to="#" role="button" data-toggle="dropdown" aria-expanded="false">
                     Select Group
@@ -28,7 +28,7 @@ const MedicineSelectNavbar =({groupNames, setShowGroup, setSearchMedicine}) =>{
                   ))}
                 </ul>
               </li>
-            <form className="form-inline my-2 my-lg-0">
+            <form className="form-inline my-2 my-lg-0 col-4">
               <input onChange={(e) =>setSearchMedicine(e.target.value)}
               className="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" />
             </form>

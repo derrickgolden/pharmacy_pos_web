@@ -25,19 +25,23 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
     const [update_modal_data, setUpdate_modal_data] = useState<Medicine>()
 
     const [newStock, setNewStock] = useState<number>()
-    const [totalStock, setTotalStock] = useState<number>(select_data?.stock_qty)
+    const [totalStock, setTotalStock] = useState<number>()
     const [editDetails, setEditDetails] = useState<{warning_limit: number, medicine_name: string}>()
 
+    const stock = select_data?.stock_qty || select_data?.containers || 0;
+ 
     useEffect(() => {
+
         setUpdate_modal_data({
             group_name: select_data?.group_name, 
             medicine_id: select_data?.medicine_id,
             medicine_name: select_data?.medicine_name,
-            medicine_quantity: select_data?.stock_qty
+            medicine_quantity: stock
         })
 
         setNewStock(undefined);
-        setTotalStock(select_data?.stock_qty);
+        
+        setTotalStock(stock);
         setEditDetails({medicine_name: select_data?.medicine_name, warning_limit: select_data?.warning_limit })
         setBtnType(btn_type)
     }, [select_data])
@@ -45,18 +49,15 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
     // status model show and filter select value 
     useEffect(() => {
         set_update_data_modal_Show(open_update_data_modal.modal_open)
-        // setModal_status_data(row.status.toLowerCase());
     }, [open_update_data_modal])
 
-    // console.log(add_data_modal_Show)
     const handleClose = () => {
         set_update_data_modal_Show(false);
     }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        console.log(select_data);
         const value = e.target.value;
-        const total_stock = Number(value) + Number(select_data?.stock_qty);
+        const total_stock = Number(value) + Number(stock);
         setNewStock(Number(value));
         setTotalStock(total_stock);
     }

@@ -17,10 +17,11 @@ interface handleAddGroupProps{
         pricingDetails:{
             price: number, unit_of_mesurement: number, package_size: number
         }
-    }
-    setShowDetails: (component: string) =>void
+    };
+    setShowDetails: (component: string) =>void;
+    pharmacy_id : number;
 }
-export const addMedicineApi = ({addMedicineDetails, setShowDetails}: handleAddGroupProps) =>{
+export const addMedicineApi = ({addMedicineDetails, setShowDetails, pharmacy_id}: handleAddGroupProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
 
@@ -37,7 +38,7 @@ export const addMedicineApi = ({addMedicineDetails, setShowDetails}: handleAddGr
 
     const formData = new FormData();
 
-    const {medicine_code, medicine_name, group_name, stock_qty, img_path, side_effect, group_id, instructions} = addMedicineDetails.newMedicineDetails
+    const {medicine_code, medicine_name, group_name, img_path, side_effect, group_id, instructions} = addMedicineDetails.newMedicineDetails
     const {price, unit_of_mesurement, package_size} = addMedicineDetails.pricingDetails
     // Append newMedicineDetails
     // formData.append('newMedicineDetails', addMedicineDetails.newMedicineDetails);
@@ -58,7 +59,8 @@ export const addMedicineApi = ({addMedicineDetails, setShowDetails}: handleAddGr
     formData.append('package_size', package_size.toString());
     formData.append('unit_of_mesurement', unit_of_mesurement.toString());
 
-    formData.append('logo', img_path)
+    formData.append('logo', img_path);
+    formData.append('pharmacy_id', pharmacy_id.toString());
     
     let config = {
         method: 'post',

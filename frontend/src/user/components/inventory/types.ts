@@ -20,6 +20,8 @@ export interface Medicine {
     group_name: string;
     stock_qty: number;
     action: string;
+    containers: number;
+    warning_limit: number;
   }
 
 export interface MedicineDetailsProps{

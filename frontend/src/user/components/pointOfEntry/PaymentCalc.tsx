@@ -27,7 +27,7 @@ const PaymentCalc = ({ totalPrice, payMethods, PaymentCalcHandles, change }) => 
         totalPrice = {totalPrice} 
         change = {change}
       />
-      <div className='d-flex flex-grow-1 'style={{height: "60vh"}} >
+      <div className='d-flex flex-grow-1 'style={{height: "60dvh"}} >
         <div className='d-flex flex-column col-9 ' >
           <div className='d-flex flex-grow-1'>{renderDigitButtons([1, 2, 3])}</div>
           <div className='d-flex flex-grow-1'>{renderDigitButtons([4, 5, 6])}</div>

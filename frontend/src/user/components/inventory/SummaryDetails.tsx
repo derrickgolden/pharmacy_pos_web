@@ -1,17 +1,11 @@
 
 import DataTableComponent from "../sharedComponents/DataTableComponent";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Medicine, MedicineListProps } from "./types";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../redux/store";
-import { getMedicineListApi } from "./apiCalls/getMedicineListApi";
-import { setMedicineList } from "../../../redux/medicineList";
-import Update_stock_modal from "./PopupModal"
-import Edit_medicine_details from "./PopupModal"
 
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBan, faCheck, faCircleInfo, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import Update_stock_modal from "./PopupModal"
+
 import { MdBrowserUpdated } from "react-icons/md";
 
 export interface StockDetails{
@@ -26,18 +20,20 @@ export interface StockDetails{
 }
 const SummaryDetails = () =>{
     const navigate = useNavigate()
+    if(useLocation().state === null){
+        return navigate("/user/dashboard")
+    }
+
     const { data, caption, color } = useLocation().state;
-  console.log(data);
 
     const [search, setSearch] = useState('medicine_name');
     const [searchType, setSearchType] = useState('medicine_name');
     const [selectData, setSelectData] = useState<Medicine>();
+    const [isScrollable, setIsScrollable] = useState(false);
+    const componentRef = useRef(null);
 
     // open modal
     const [open_update_modal, setOpen_update_modal] = useState({ render: true, modal_open: false })
-
-    const dispatch = useDispatch();
-    const apiCall = useSelector((state: RootState) => state.callApi)
 
     const columns = [
         {
@@ -84,9 +80,14 @@ const SummaryDetails = () =>{
         },  
     ]
 
-    const onHandleActionDetails = (row: StockDetails) =>{
+    useEffect(() =>{
+        if (componentRef.current) {
+            const { clientHeight, scrollHeight, offsetHeight } = componentRef.current;
+            setIsScrollable(scrollHeight > clientHeight || offsetHeight > clientHeight);
+            // console.log(clientHeight, scrollHeight, offsetHeight)
+        }
+    }, [data]);
 
-    }
     const handleSearchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSearch(e.target.value);
         setSearchType(e.target.value); // Prop to set the search type in the parent component
@@ -103,7 +104,7 @@ const SummaryDetails = () =>{
                 select_data={selectData} open_update_data_modal={open_update_modal}
                 btn_type = "update" 
             />
-            <div className="container-fluid px-5" >
+            <div ref={componentRef} className="container-fluid px-5" >
                 <div className="pt-3">
                     <button type="button" onClick={() => navigate("/user/dashboard")}
                     className='btn btn-secondary'>Back to Dashboard</button>
@@ -120,21 +121,22 @@ const SummaryDetails = () =>{
                                 </select>
                             </div>
                             <div className="card-body">
-                                {data.length ? 
+                                {
                                  <DataTableComponent search={ searchType }
                                       apidata={data} columns={columns} 
                                  />
-                                :
-                                <h1>Loading data...</h1>
                                 }  
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="pt-2">
-                    <button type="button" onClick={() => navigate("/user/dashboard")}
-                    className="btn btn-secondary">Back to Dashboard</button>
-                </div>
+                {
+                    isScrollable && 
+                    <div className="pt-2">
+                        <button type="button" onClick={() => navigate("/user/dashboard")}
+                        className="btn btn-secondary">Back to Dashboard</button>
+                    </div>
+                }
             </div>
         </div>
     )

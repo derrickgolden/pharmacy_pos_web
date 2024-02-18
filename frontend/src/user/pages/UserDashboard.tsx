@@ -45,6 +45,8 @@ const UserDashboard: React.FC = () =>{
                     }
                     details.containers > 0 && details.units_per_container > 0 ? medicineAvailable.push(details) : medicineShortage.push(details);
                 })
+            console.log(pharmacy_id);
+            console.log(data);
                 
                 setUpperDashboardData([
                     {icon:<MdInventory size={32}/>, status: "Good", totals: enoughStockMedicine.length, caption: "Inventory Status", forCssDispaly: "success", footerCaption: "View detailed report", btnType: "inventory", data: enoughStockMedicine}, 
@@ -110,7 +112,7 @@ const UserDashboard: React.FC = () =>{
                         key ={i}
                         data= {data}
                     />
-                   )) : <h2>No data to show</h2> }
+                   )) : <h2>No data to display</h2> }
                 </div>
             </section>
             <section className="lower-section bg-white d-flex flex-row flex-wrap justify-content-around">
@@ -119,7 +121,7 @@ const UserDashboard: React.FC = () =>{
                         key ={i}
                         data= {value}
                     />
-                )) : <h2>No data to show</h2>}
+                )) : <h2>No data to display</h2>}
             </section>
         </div>
     )

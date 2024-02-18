@@ -50,7 +50,6 @@ const SalesEntry = () =>{
     const userPharm = getSessionStorage();
     const { localPharm: pharm } = userPharm.localPharm;
     const { user } = userPharm.user;
-    console.log(userPharm);
 
     const PoeCalcHandles = {
         handleDigitClick: (digit: number) => {
@@ -252,14 +251,11 @@ const SalesEntry = () =>{
       setUpdateStock([]);
       setEntryStep("ordersentry");
     };
-
+   
     return(
-      <>
-        <header className="header dropdown px-3 col-12" id="header"
-        style={{height: "3rem"}}>
-            
-            <nav className="navbar navbar-expand-md navbar-light w-100 py-0"
-            style={{backgroundColor: "#f2f2f3", height: "2rem"}}>
+      <>            
+          <nav className="navbar navbar-expand-sm z-30 navbar-light w-100 py-0"
+            style={{backgroundColor: "#f2f2f3", height: "3rem", zIndex: "10"}}>
               <div className="container-fluid"  style={{backgroundColor: "#f2f2f3"}}>
                 <div>
                   {
@@ -273,8 +269,8 @@ const SalesEntry = () =>{
                 <button className="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                   <FontAwesomeIcon icon={faBars} />
                 </button>
-                <div className=" p-2 collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul className="d-flex justify-content-between w-100 navbar-nav me-auto mb-2 mb-lg-0"
+                <div className=" p-4 p-sm-0 collapse navbar-collapse" id="navbarSupportedContent">
+                  <ul className="d-flex justify-content-between w-100 navbar-nav me-auto mb-lg-0"
                   >
                     <li className="nav-item">
                       <Link className="nav-link active" aria-current="page" to="#">{pharm?.pharmacy_name}</Link>
@@ -283,21 +279,20 @@ const SalesEntry = () =>{
                       <Link className="nav-link active" aria-current="page" to="#">{user?.first_name}</Link>
                     </li>
                     <li className="nav-item">
-                    <button type="button" onClick={() => navigate('/user/dashboard', {replace: true})}
+                    <button  type="button" onClick={() => navigate('/user/dashboard', {replace: true})}
                       className="btn btn-outline-danger">End Session</button>
                     </li>
                   </ul>
                   
                 </div>
               </div>
-            </nav>
-        </header>
+          </nav>
         {
           entryStep === "ordersentry" && 
           <div className="sales-entry-container d-flex flex-column flex-md-row col-12" 
-            style={{paddingTop: "3rem"}}>
+            >
               <div className={`${showInventoryOrders === "orders" ? "" : "d-none "} d-md-flex 
-              flex-column col-12 justify-content-between sales-entry-container col-md-5 p-0 grow-1`} >
+              flex-column col-12 justify-content-between col-md-5 p-0 grow-1`} >
                   <OrderDisplay 
                       newOrders = {medicineDetails}
                       activeCard = {activeCard}
@@ -323,7 +318,7 @@ const SalesEntry = () =>{
         }
         {
           entryStep === "validateorder" && 
-          <div style={{paddingTop: "3rem"}}>
+          <div>
             <ValidateOrderNavbar 
               setEntryStep = {setEntryStep}
               totalPrice = {totalPrice}
@@ -339,7 +334,7 @@ const SalesEntry = () =>{
         }
         {
           entryStep === "receipt" &&
-          <div style={{paddingTop: "3rem"}}>
+          <div >
             <div className="d-none d-md-block">
               <ValidateOrderNavbar 
                 setEntryStep = {setEntryStep}
