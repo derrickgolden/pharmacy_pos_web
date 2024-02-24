@@ -1,6 +1,16 @@
 export const getSessionStorage = () => {
     const userPharm: {
-        user: { available: boolean; user?: {} };
+        user: { available: boolean; 
+            user?: {
+                user_id: number;
+                first_name: string;
+                last_name: string;
+                email: string;
+                remember_me: boolean;
+                country: string;
+                picture: string | null;
+                added_by: number;
+            } };
         localPharm: { available: boolean; 
             localPharm?: {
                 pharmacy_id: number;

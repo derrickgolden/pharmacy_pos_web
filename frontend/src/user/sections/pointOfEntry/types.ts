@@ -1,3 +1,5 @@
+import { OrderDetail } from "../../pages/SalesEntry";
+
 export interface PoeCalcHandles {
     handleDigitClick: (digit: number) => void;
     handleQuantityIncByOne: () => void;
@@ -10,3 +12,10 @@ export interface PoeCalcHandles {
     handlePayment: () => void;
     handleCustomer: () => void;
   }
+
+export interface CommonSalesEntryProps{
+  activeCard: number; 
+  totalPrice?: number;
+  orderDetails: OrderDetail[];
+  handleEditOrder: (order: OrderDetail) => void;
+}

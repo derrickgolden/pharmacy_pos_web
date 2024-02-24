@@ -1,13 +1,23 @@
 import { FaRegNoteSticky } from "react-icons/fa6";
+import { CommonSalesEntryProps } from "../../sections/pointOfEntry/types";
+import { OrderDetail } from "../../pages/SalesEntry";
 
-const OrdersCard: React.FC<{key: number, 
-    order:{medicine_name: string, price: number}}> = ({ order, activeCard, handleEditOrder, orderDetails}) =>{
+interface OrdersCardProps extends CommonSalesEntryProps{
+    order: OrderDetail;
+}
 
-        // console.log(orderDetails)
-        if(orderDetails){
-            var [orderDetail] = orderDetails?.filter(orderDetail =>
-                orderDetail.medicine_id === order.medicine_id);
-        }       
+const OrdersCard: React.FC< OrdersCardProps > = (
+    { order, activeCard, handleEditOrder, orderDetails}) =>{
+
+    // Initialize orderDetail as undefined
+    let orderDetail: OrderDetail | undefined;
+
+    // Check if orderDetails is defined and filter orderDetail accordingly
+    if (orderDetails) {
+        orderDetail = orderDetails.find(orderDetail =>
+            orderDetail.medicine_id === order.medicine_id
+        );
+    }      
         
     return(
         <div onClick={() => handleEditOrder(order)}

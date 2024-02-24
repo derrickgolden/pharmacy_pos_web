@@ -86,6 +86,11 @@
 
   /* point of entry */
 
+  .dropdown-menu.dropdown-menu-right{
+    right: 0 !important;
+    left: auto !important;
+  }
+  
   .empty-cart{
     background-color: #a0a0a0;
   }

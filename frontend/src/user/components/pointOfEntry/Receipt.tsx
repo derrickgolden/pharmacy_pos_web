@@ -1,8 +1,7 @@
-import { useSelector } from "react-redux";
 import { server_baseurl } from "../../../baseUrl";
 import { getSessionStorage } from "../../controllers/getSessionStorage";
 import OrdersCard from "./OrdersCard";
-import { RootState } from "../../../redux/store";
+import calculateVAT from "../../controllers/calculations/calculateVAT";
 
 const Receipt =({componentRef, saleRes, medicineDetails, orderDetails, totalPrice}) =>{
     const userPharm = getSessionStorage();
@@ -77,21 +76,3 @@ const Receipt =({componentRef, saleRes, medicineDetails, orderDetails, totalPric
 }
 
 export default Receipt;
-
-
-interface VatDetail {
-    label: string;
-    value: number;
-  }
-function calculateVAT(amount: number, vatPercentage: number): VatDetail[] {
-    const vat = +(amount * vatPercentage / 100).toFixed(2);
-    const exVAT = +(amount - vat).toFixed(2);
-    const total = amount;
-  
-    return [
-        { label: 'VAT%', value: vatPercentage },
-        { label: 'VAT', value: vat },
-        { label: 'ExVAT', value: exVAT },
-        { label: 'Total', value: total },
-      ];
-  }

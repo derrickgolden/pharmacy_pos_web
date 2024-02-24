@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { FaOpencart } from "react-icons/fa";
 import OrdersCard from "../../components/pointOfEntry/OrdersCard";
+import calculateVAT from "../../controllers/calculations/calculateVAT";
+import { CommonSalesEntryProps } from "./types";
 
-const OrderDisplay = ({newOrders, activeCard, handleEditOrder, orderDetails, totalPrice}) =>{
-    const scrollRef = useRef(null);
-// console.log(newOrders);
+const OrderDisplay: React.FC<CommonSalesEntryProps> = ({newOrders, activeCard, handleEditOrder, orderDetails, totalPrice}) =>{
+    const scrollRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         // Scroll to the bottom when the component renders
@@ -43,7 +44,9 @@ const OrderDisplay = ({newOrders, activeCard, handleEditOrder, orderDetails, tot
                             </span>
                             <p className="mb-0 text-poppins-regular"> 
                                 Taxes: 
-                                <span className="">&nbsp; 228.38 &nbsp;</span> 
+                                <span className="">&nbsp; {
+                                    calculateVAT(totalPrice, 16)[1].value
+                                } &nbsp;</span> 
                                  Ksh
                             </p>                          
                         </div>

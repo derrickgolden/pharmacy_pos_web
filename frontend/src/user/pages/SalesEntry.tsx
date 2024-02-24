@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faX } from '@fortawesome/free-solid-svg-icons'
+import { faBars } from '@fortawesome/free-solid-svg-icons'
 import InventorySelect from "../sections/pointOfEntry/InventorySelect";
 import OrderDisplay from "../sections/pointOfEntry/OrderDisplay";
 import PosEntry from "../sections/pointOfEntry/POEcalc";
@@ -14,9 +14,11 @@ import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpda
 import { Medicine } from "../components/inventory/types";
 import { getSessionStorage } from "../controllers/getSessionStorage";
 import { FaAnglesRight } from "react-icons/fa6";
+import ListOfOrders from "../sections/pointOfEntry/LIstOfOrders";
 
 export interface OrderDetail {
   medicine_id: number;
+  medicine_name: string;
   units: number;
   sub_total: number;
   price: number;
@@ -25,11 +27,16 @@ export interface OrderDetail {
   open_container_units: number;
   customer_note: string;
 }
+const date = new Date().toDateString();
+
 const SalesEntry = () =>{
 
     const [medicineDetails, setSelectedMedicine] = useState([])
     const [activeCard, setActiveCard] = useState(0)
     const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
+    const [ordersList, setOrdersList] = useState({
+      [date]: { orderDetails, activeOrder: true, status: "In Progress" },
+    })
     const [totalPrice, setTotalPrice] = useState(0)
     const [entryStep, setEntryStep] = useState("ordersentry");
     const [payMethods, setPayMethods] = useState<string[]>([])
@@ -38,13 +45,20 @@ const SalesEntry = () =>{
     const [isDigitClicked, setIsDigitClicked] = useState(false);
     const [showInventoryOrders, setShowInventoryOrders] = useState("inventory")
 
-    const navigate = useNavigate()
+    console.log(ordersList)
 
     useEffect(() =>{
       const newTotalPrice = orderDetails.reduce((total, item) => {
         return total + Number(item.sub_total);
       }, 0);
-        setTotalPrice(newTotalPrice)
+        setTotalPrice(newTotalPrice);
+
+        setOrdersList(obj => {
+          Object.keys(obj).map((key, i) =>{
+            obj[key].orderDetails = orderDetails;
+          })
+          return obj;
+        })
     },[orderDetails])
 
     const userPharm = getSessionStorage();
@@ -53,7 +67,6 @@ const SalesEntry = () =>{
 
     const PoeCalcHandles = {
         handleDigitClick: (digit: number) => {
-          console.log(`Digit ${digit} clicked`);
           setOrderDetails((arr) => {
               return arr.map((orderDetail) => {
                 if (orderDetail.medicine_id === activeCard && orderDetail.units >= 0) {
@@ -187,9 +200,7 @@ const SalesEntry = () =>{
           });
         },
       
-        handlePayment: () => {
-          console.log(totalPrice);
-          
+        handlePayment: () => {          
           if(totalPrice > 0){
             setEntryStep("validateorder")
           }
@@ -254,7 +265,7 @@ const SalesEntry = () =>{
    
     return(
       <>            
-          <nav className="navbar navbar-expand-sm z-30 navbar-light w-100 py-0"
+          <nav className="navbar navbar-expand z-30 navbar-light w-100 py-0"
             style={{backgroundColor: "#f2f2f3", height: "3rem", zIndex: "10"}}>
               <div className="container-fluid"  style={{backgroundColor: "#f2f2f3"}}>
                 <div>
@@ -265,25 +276,30 @@ const SalesEntry = () =>{
                       </button>
                     )
                   }
+                  <h2 className="d-none d-md-block">{pharm?.pharmacy_name}</h2>
                 </div>
-                <button className="navbar-toggler shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                  <FontAwesomeIcon icon={faBars} />
-                </button>
-                <div className=" p-4 p-sm-0 collapse navbar-collapse" id="navbarSupportedContent">
-                  <ul className="d-flex justify-content-between w-100 navbar-nav me-auto mb-lg-0"
-                  >
-                    <li className="nav-item">
-                      <Link className="nav-link active" aria-current="page" to="#">{pharm?.pharmacy_name}</Link>
-                    </li>
-                    <li className="nav-item">
-                      <Link className="nav-link active" aria-current="page" to="#">{user?.first_name}</Link>
-                    </li>
-                    <li className="nav-item">
-                    <button  type="button" onClick={() => navigate('/user/dashboard', {replace: true})}
-                      className="btn btn-outline-danger">End Session</button>
-                    </li>
-                  </ul>
-                  
+                <div className="d-flex gap-2">
+                  <h3>
+                    <span className="bg-info px-2 rounded text-white">
+                      {user?.first_name.slice(0,1)}
+                    </span>{user?.first_name}
+                  </h3>
+                  <div className="dropdown">
+                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                      <FontAwesomeIcon icon={faBars} />
+                    </button>
+                    <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton1">
+                      <li>
+                        <Link onClick={() => setEntryStep("ordersList")}
+                        className="dropdown-item" to="#"> Orders &nbsp;
+                          <span className="bg-info px-1 rounded-circle text-white">{
+                            Object.keys(ordersList).length
+                          }</span>
+                        </Link>
+                      </li>
+                      <li><Link className="dropdown-item" to="/user/dashboard">End Session</Link></li>
+                    </ul>
+                  </div>
                 </div>
               </div>
           </nav>
@@ -351,6 +367,15 @@ const SalesEntry = () =>{
               payMethods = {payMethods}
             />
           </div>
+        }
+        {
+          entryStep === "ordersList" && 
+          <ListOfOrders 
+            ordersList = {ordersList}
+            activeCard = {activeCard}
+            totalPrice = {totalPrice}
+            setEntryStep = {setEntryStep}
+          />
         }
       </>
     )
