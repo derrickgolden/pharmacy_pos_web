@@ -25,3 +25,11 @@ export interface lowerDashboardData{
     display_date_picker: boolean;
     freq_bought_item?: string;
 }
+
+export interface SaleRes {
+    sale_id: number;
+    sale_date: string;
+    change: number;
+    remaining: number;
+    customerGave: { [key: string]: number };
+}

@@ -4,7 +4,7 @@ import OrdersCard from "../../components/pointOfEntry/OrdersCard";
 import calculateVAT from "../../controllers/calculations/calculateVAT";
 import { CommonSalesEntryProps } from "./types";
 
-const OrderDisplay: React.FC<CommonSalesEntryProps> = ({newOrders, activeCard, handleEditOrder, orderDetails, totalPrice}) =>{
+const OrderDisplay: React.FC<CommonSalesEntryProps> = ({ activeCard, handleEditOrder, orderDetails, totalPrice}) =>{
     const scrollRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -13,10 +13,12 @@ const OrderDisplay: React.FC<CommonSalesEntryProps> = ({newOrders, activeCard, h
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [activeCard]);
+
+    console.log(orderDetails);
     
     return(
         <div className=" position-relative col-12 px-0 mx-0 order-cards"  >
-            {newOrders.length === 0 ?(
+            {orderDetails.length === 0 ?(
                 <div className="d-flex flex-column justify-content-center align-items-center 
                 flex-grow-1 empty-cart" style={{height: "100%"}}>
                     <FaOpencart size={50} />
@@ -26,7 +28,7 @@ const OrderDisplay: React.FC<CommonSalesEntryProps> = ({newOrders, activeCard, h
                 <div className="d-flex flex-column justify-content-between h-100 ">
                     <div ref={scrollRef}
                     className={`d-flex flex-column ordersCard border-3 flex-grow-1 px-1`}>
-                        {newOrders.map((order,i) =>(
+                        {orderDetails.map((order,i) =>(
                             <OrdersCard 
                                 key={i}
                                 order={order}
@@ -45,7 +47,9 @@ const OrderDisplay: React.FC<CommonSalesEntryProps> = ({newOrders, activeCard, h
                             <p className="mb-0 text-poppins-regular"> 
                                 Taxes: 
                                 <span className="">&nbsp; {
-                                    calculateVAT(totalPrice, 16)[1].value
+                                    totalPrice ? 
+                                        calculateVAT(totalPrice, 16)[1].value
+                                    : null
                                 } &nbsp;</span> 
                                  Ksh
                             </p>                          

@@ -2,8 +2,16 @@ import { server_baseurl } from "../../../baseUrl";
 import { getSessionStorage } from "../../controllers/getSessionStorage";
 import OrdersCard from "./OrdersCard";
 import calculateVAT from "../../controllers/calculations/calculateVAT";
+import { OrderDetail } from "../../pages/SalesEntry";
+import { SaleRes } from "../../pages/types";
 
-const Receipt =({componentRef, saleRes, medicineDetails, orderDetails, totalPrice}) =>{
+interface ReceiptProps{
+    orderDetails: OrderDetail[]; 
+    totalPrice: number; 
+    componentRef: React.MutableRefObject<HTMLDivElement | null>;
+    saleRes: SaleRes;
+}
+const Receipt:React.FC<ReceiptProps> =({componentRef, saleRes, orderDetails, totalPrice}) =>{
     const userPharm = getSessionStorage();
     const { localPharm: activePharmacy } = userPharm.localPharm;
     const { user } = userPharm.user;
@@ -25,15 +33,17 @@ const Receipt =({componentRef, saleRes, medicineDetails, orderDetails, totalPric
                         <span className="border-bottom col-10 m-auto pb-2 mb-2">
                             {activePharmacy?.pharmacy_tel}
                         </span>
-                        <span>Served by {user.last_name} {user.first_name}</span>
+                        <span>Served by {user?.last_name} {user?.first_name}</span>
                         <span><b>{saleRes.sale_id}</b></span>
                     </header>
                     <div className={`d-flex flex-column border-3 flex-grow-1`}>
-                            {medicineDetails.map((order, i) =>(
+                            {orderDetails.map((order, i) =>(
                                 <OrdersCard 
                                     key={i}
                                     order={order}
-                                    orderDetails = {orderDetails } 
+                                    orderDetails = {orderDetails }
+                                    activeCard = {0} 
+                                    handleEditOrder = {() => {}}
                                 />
                             ))}
                         <div className="d-flex col-8 py-4 pl-4 justify-content-between"

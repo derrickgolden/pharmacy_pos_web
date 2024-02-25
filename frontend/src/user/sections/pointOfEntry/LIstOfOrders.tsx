@@ -2,23 +2,29 @@ import { useEffect, useRef } from "react";
 import OrdersCard from "../../components/pointOfEntry/OrdersCard";
 import calculateVAT from "../../controllers/calculations/calculateVAT";
 import { OrderDetail } from "../../pages/SalesEntry";
-import { CommonSalesEntryProps } from "./types";
 import { FaAngleLeft } from "react-icons/fa";
 import OrderDisplay from "./OrderDisplay";
+import { FaDeleteLeft } from "react-icons/fa6";
 
-interface ListOfOrdersProps extends CommonSalesEntryProps{
-    ordersList: {
-        [x: string]: {
-            orderDetails: OrderDetail[];
-            activeOrder: boolean;
-            status: string;
-        };
-    };
+export interface Order{
+    date: string;
+    orderDetails: OrderDetail[];
+    activeOrder: boolean;
+    status: string;
+    totalPrice: number;
+}
+interface ListOfOrdersProps {
+    ordersList: Order[];
+    activeCard: number; 
+    totalPrice: number;
     setEntryStep: (step: string) => void;
+    handleNewCustomerOrder: ({date}: {date: string}) => void;
+    handleDeleteCustomerOrder: (order: Order) => void;
 }
 
 const ListOfOrders: React.FC<ListOfOrdersProps> = (
-    {ordersList, activeCard, totalPrice, setEntryStep }) =>{
+    {ordersList, activeCard, totalPrice, setEntryStep, handleNewCustomerOrder, handleDeleteCustomerOrder }) =>{
+
     const scrollRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -34,21 +40,52 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = (
     return(
         <div className="d-flex">
             <div className="col-8">
-                <div className="d-flex">
+                <div className="d-flex py-1 px-2" style={{height: "3rem"}}>
                     <button onClick={() => setEntryStep("ordersentry")}
                         className="navbar-brand pl-2 btn btn-outline-secondary">
                             &nbsp;<FaAngleLeft /> Back
                     </button>
+                    <button onClick={() => handleNewCustomerOrder({date: new Date().toLocaleString()})}
+                        className="navbar-brand pl-2 btn btn-warning">
+                            New Order
+                    </button>
+                </div>
+                <div>
+                    <table className="table">
+                        <thead>
+                            <tr>
+                            <th scope="col">Date</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Status</th>
+                            <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                ordersList.map((order, i) =>(
+                                    <tr key={i} className="">
+                                        <td>{order.date}</td>
+                                        <td>{order.totalPrice} Ksh</td>
+                                        <td>{order.status}</td>
+                                        <td onClick={() => handleDeleteCustomerOrder(order)}>
+                                        <button className=" btn btn-secondary btn-sm ms-1"  >
+                                            <FaDeleteLeft />
+                                        </button>
+                                        </td>
+                                    </tr>
+                                ))
+                            }
+                        </tbody>
+                    </table>
                 </div>
             </div>
             <div>
-                {Object.keys(ordersList).map((key, i) =>{
-                    return ordersList[key].activeOrder === true ?
-                        <OrderDisplay 
-                            newOrders = {ordersList[key].orderDetails}
+                {ordersList.map((order, i) =>{
+                    return order.activeOrder === true ?
+                        <OrderDisplay key={i}
                             activeCard = {activeCard}
                             handleEditOrder = {handleEditOrder}
-                            orderDetails = {ordersList[key].orderDetails}
+                            orderDetails = {order.orderDetails}
                             totalPrice = {totalPrice}
                         /> : null
                     })

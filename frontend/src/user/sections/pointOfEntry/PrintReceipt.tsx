@@ -1,4 +1,3 @@
-
 import { useRef } from 'react';
 
 import { FaAngleRight, FaPrint } from "react-icons/fa";
@@ -7,13 +6,20 @@ import { IoIosSend } from "react-icons/io";
 import { useReactToPrint } from 'react-to-print';
 
 import Receipt from '../../components/pointOfEntry/Receipt';
+import { OrderDetail } from '../../pages/SalesEntry';
+import { SaleRes } from '../../pages/types';
 
-const PrintReceipt = (
-    { orderDetails, handleStartNewOrderClick, medicineDetails, totalPrice, saleRes }) =>{
+interface PrintReceiptProps{
+    orderDetails: OrderDetail[], 
+    totalPrice: number; 
+    saleRes: SaleRes;
+    handleStartNewOrderClick: () => void;
+}
+
+const PrintReceipt: React.FC<PrintReceiptProps> = (
+    { orderDetails, handleStartNewOrderClick, totalPrice, saleRes }) =>{
+
     const componentRef = useRef<HTMLDivElement | null>(null);
-
-    // const user = JSON.parse(sessionStorage.getItem("user"));
-    // const pharm = JSON.parse(sessionStorage.getItem("activepharmacy"))
 
     const event = new KeyboardEvent('keydown', {
         key: 'p',
@@ -54,7 +60,6 @@ const PrintReceipt = (
                     <Receipt 
                         componentRef={componentRef} 
                         saleRes ={saleRes} 
-                        medicineDetails ={medicineDetails} 
                         orderDetails ={orderDetails} 
                         totalPrice ={totalPrice}
                     />
@@ -70,7 +75,6 @@ const PrintReceipt = (
                 <Receipt 
                     componentRef={componentRef} 
                     saleRes ={saleRes} 
-                    medicineDetails ={medicineDetails} 
                     orderDetails ={orderDetails} 
                     totalPrice ={totalPrice}
                 />

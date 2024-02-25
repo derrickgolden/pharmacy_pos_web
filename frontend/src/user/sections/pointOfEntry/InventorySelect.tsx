@@ -9,18 +9,24 @@ import { OrderDetail } from "../../pages/SalesEntry";
 import OrdersCard from "../../components/pointOfEntry/OrdersCard";
 import { FaOpencart } from "react-icons/fa";
 import { getSessionStorage } from "../../controllers/getSessionStorage";
+import { MedicineDetails } from "./types";
 
 interface InventorySelectProps {
-    handleNewOrderSelect: (newOrder: OrderDetail) =>void
+    handleNewOrderSelect: (newOrder: MedicineDetails) =>void;
+    orderDetails: OrderDetail[];
+    handleEditOrder: (order: OrderDetail) => void;
+    handlePayment: () => void;
+    setShowInventoryOrders: (orders: string) => void;
 }
 const InventorySelect: React.FC<InventorySelectProps> = ({
     handleNewOrderSelect, handleEditOrder, orderDetails, handlePayment, setShowInventoryOrders }) =>{
-    const [groupNames, setGroupNames] = useState([])
+    const [groupNames, setGroupNames] = useState<string[]>([])
     const [showGroup, setShowGroup] = useState("All")
     const [searchMedicine, setSearchMedicine] = useState("")
 
     const dispatch = useDispatch()
     const medicineGroup = useSelector((state: RootState) => state.groupList);
+    console.log(medicineGroup)
 
     const userPharm = getSessionStorage();
     const { localPharm } = userPharm;
@@ -36,10 +42,12 @@ const InventorySelect: React.FC<InventorySelectProps> = ({
         if(localPharm.available){
             const filterNull = true;
             const pharmacy_id = localPharm.localPharm?.pharmacy_id;
-            const res = getMedicineGroupList(filterNull, pharmacy_id);
-            res.then((data) =>{        
-                dispatch(setGroupList(data));
-            })
+            if(pharmacy_id !== undefined){
+                const res = getMedicineGroupList(filterNull, pharmacy_id);
+                res.then((data) =>{        
+                    dispatch(setGroupList(data));
+                })
+            }
         }
     },[medicineGroup.length === 0])
     

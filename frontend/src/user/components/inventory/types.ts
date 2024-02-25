@@ -17,6 +17,7 @@ export interface DetailCardProps{
 export interface Medicine {
     medicine_id: number;
     medicine_name: string;
+    img_path: string | null;
     group_name: string;
     stock_qty: number;
     action: string;

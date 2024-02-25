@@ -19,3 +19,18 @@ export interface CommonSalesEntryProps{
   orderDetails: OrderDetail[];
   handleEditOrder: (order: OrderDetail) => void;
 }
+
+export interface MedicineDetails {
+  price: number;
+  img_path: string | null;
+  stock_qty: number;
+  pricing_id: number;
+  medicine_id: number;
+  side_effect: string;
+  instructions: string;
+  package_size: number;
+  medicine_code: string;
+  medicine_name: string;
+  unit_of_measurement: string;
+  open_container_units: number;
+}

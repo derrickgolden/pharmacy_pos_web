@@ -14,7 +14,10 @@ import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpda
 import { Medicine } from "../components/inventory/types";
 import { getSessionStorage } from "../controllers/getSessionStorage";
 import { FaAnglesRight } from "react-icons/fa6";
-import ListOfOrders from "../sections/pointOfEntry/LIstOfOrders";
+import ListOfOrders, { Order } from "../sections/pointOfEntry/LIstOfOrders";
+import { MedicineDetails } from "../sections/pointOfEntry/types";
+import { SaleRes } from "./types";
+import { calcTotalPrice } from "./calculations/calcTotalPrice";
 
 export interface OrderDetail {
   medicine_id: number;
@@ -27,20 +30,19 @@ export interface OrderDetail {
   open_container_units: number;
   customer_note: string;
 }
-const date = new Date().toDateString();
 
 const SalesEntry = () =>{
 
-    const [medicineDetails, setSelectedMedicine] = useState([])
+    const [medicineDetails, setSelectedMedicine] = useState<Medicine[]>([])
     const [activeCard, setActiveCard] = useState(0)
     const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
-    const [ordersList, setOrdersList] = useState({
-      [date]: { orderDetails, activeOrder: true, status: "In Progress" },
-    })
+    const [ordersList, setOrdersList] = useState([{ date: new Date().toLocaleString(), 
+       orderDetails, activeOrder: true, status: "In Progress" , totalPrice: 0
+    }])
     const [totalPrice, setTotalPrice] = useState(0)
     const [entryStep, setEntryStep] = useState("ordersentry");
     const [payMethods, setPayMethods] = useState<string[]>([])
-    const [saleRes, setSaleRes] = useState({});
+    const [saleRes, setSaleRes] = useState<SaleRes>();
     const [updateStock, setUpdateStock] = useState<UpdateStockProps[]>([]);
     const [isDigitClicked, setIsDigitClicked] = useState(false);
     const [showInventoryOrders, setShowInventoryOrders] = useState("inventory")
@@ -48,18 +50,24 @@ const SalesEntry = () =>{
     console.log(ordersList)
 
     useEffect(() =>{
-      const newTotalPrice = orderDetails.reduce((total, item) => {
-        return total + Number(item.sub_total);
+      const newTotalPrice = ordersList.reduce((totalPrice, orders) =>{
+        if(orders.activeOrder){
+          return totalPrice + orders.orderDetails.reduce((total, item) => {
+            return total + Number(item.sub_total);
+          }, 0) 
+        }else return totalPrice 
       }, 0);
-        setTotalPrice(newTotalPrice);
 
-        setOrdersList(obj => {
-          Object.keys(obj).map((key, i) =>{
-            obj[key].orderDetails = orderDetails;
-          })
-          return obj;
-        })
-    },[orderDetails])
+      setTotalPrice(newTotalPrice);
+
+      setOrdersList(arr => {
+        const updatedArr = [...arr]; // Create a copy of the original array
+        if (updatedArr.length > 0) {
+            updatedArr[updatedArr.length - 1].activeOrder = true; // Update the activeOrder property of the last element
+        }
+        return updatedArr; // Set the state with the updated array
+      });
+    },[ordersList])
 
     const userPharm = getSessionStorage();
     const { localPharm: pharm } = userPharm.localPharm;
@@ -67,45 +75,54 @@ const SalesEntry = () =>{
 
     const PoeCalcHandles = {
         handleDigitClick: (digit: number) => {
-          setOrderDetails((arr) => {
-              return arr.map((orderDetail) => {
-                if (orderDetail.medicine_id === activeCard && orderDetail.units >= 0) {
-                  let newUnits;
-                  if(isDigitClicked){
-                    const newUnitsAsString = orderDetail.units.toString() + digit.toString();
-                    newUnits = parseInt(newUnitsAsString, 10);
-                  }else{
-                    newUnits = digit;
-                    setIsDigitClicked(true);
+          setOrdersList((arr) => {
+            return arr.map((order) =>{
+              if(order.activeOrder){
+                const newDetails =  order.orderDetails.map(orderDetail => {
+                  if (orderDetail.medicine_id === activeCard && orderDetail.units >= 0) {
+                    let newUnits;
+                    if(isDigitClicked){
+                      const newUnitsAsString = orderDetail.units.toString() + digit.toString();
+                      newUnits = parseInt(newUnitsAsString, 10);
+                    }else{
+                      newUnits = digit;
+                      setIsDigitClicked(true);
+                    }
+  
+                    return handleUpdatingStock(orderDetail, setUpdateStock, activeCard, newUnits);
                   }
-
-                  const newStockDetails = handleUpdatingStock(orderDetail, setUpdateStock, activeCard, newUnits);
-                  return newStockDetails;
-                } else {
                   return orderDetail
-                }
-              })
+                })
+
+                const totalPrice = calcTotalPrice(newDetails);
+                return {...order, orderDetails: newDetails, totalPrice }
+              }else{
+                return order;
+              }
             })
+          })
         },
       
         handleQuantityIncByOne: () => {
           // Your logic for handling quantity increment by one          
-          setOrderDetails((arr) => {            
-            if (arr.length > 0) {
-              const newOrders = arr.map(medicine => {
-                if (medicine.medicine_id === activeCard) {
-                  const newUnits = medicine.units + 1;
-                  const newOrderDEtails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits);
-                  return newOrderDEtails;
-
-                } else {
-                  return medicine;
-                }
-              });
-              return newOrders;
-            }else{
-              return arr;
-            }
+          setOrdersList((arr) => {
+            return arr.map(order =>{
+              if(order.activeOrder){
+                const newOrders = order.orderDetails.map(medicine => {
+                  if (medicine.medicine_id === activeCard) {
+                    const newUnits = medicine.units + 1;
+                    const newOrderDEtails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits);
+                    return newOrderDEtails;
+    
+                  } else {
+                    return medicine;
+                  }
+                });
+                const totalPrice = calcTotalPrice(newOrders);
+                return {...order, orderDetails: newOrders, totalPrice};
+              }
+              return order
+            })            
           });
         },
       
@@ -126,32 +143,36 @@ const SalesEntry = () =>{
       
         handleDecreaseNcancelOrder: () => {
           // Your logic for setting to Decrement and cancel order
-          // console.log(orderDetails);
           
-          setOrderDetails((arr) => {
-            const [orderDetail] = arr.filter(orderDetail => orderDetail?.medicine_id === activeCard);
-            
-            if(orderDetail?.units > 0){
-              return arr.map((orderDetail) => {
-                if (orderDetail.medicine_id === activeCard && orderDetail.units > 0) {
-                  const unitsString = orderDetail.units.toString();
-
-                  const newUnits = Math.max(parseInt(unitsString.slice(0, -1), 10) || 0, 0);
+          setOrdersList((arr) => {
+            return arr.map(order =>{
+              if(order.activeOrder){
+                const [orderDetail] = order.orderDetails.filter(order=> order.medicine_id === activeCard);
+                if(orderDetail?.units > 0){
+                  return order.orderDetails.map((orderDetail) => {
+                    if (orderDetail.medicine_id === activeCard && orderDetail.units > 0) {
+                      const unitsString = orderDetail.units.toString();
+    
+                      const newUnits = Math.max(parseInt(unitsString.slice(0, -1), 10) || 0, 0);
+                      
+                      const newStockDetails = handleUpdatingStock(orderDetail, setUpdateStock, activeCard, newUnits);
+                      return { ...order, orderDetails: newStockDetails };
+    
+                    } else {
+                      return order;
+                    }
+                  })
+                }else{
+                  setSelectedMedicine((arr) =>(arr.filter(medicine => medicine.medicine_id !== activeCard)))
+                  setActiveCard(medicineDetails[(medicineDetails.length-2)]?.medicine_id);
+                  setUpdateStock((stockArr) =>stockArr.filter(stock => stock?.medicine_id !== activeCard));
                   
-                  const newStockDetails = handleUpdatingStock(orderDetail, setUpdateStock, activeCard, newUnits);
-                  return newStockDetails;
-
-                } else {
-                  return orderDetail
+                  const newOrderDetails =  order.orderDetails.filter(orderDetail => orderDetail?.medicine_id !== activeCard);
+                  return { ...order, orderDetails: newOrderDetails };
                 }
-              })
-            }else{
-              setSelectedMedicine((arr) =>(arr.filter(medicine => medicine.medicine_id !== activeCard)))
-              setActiveCard(medicineDetails[(medicineDetails.length-2)]?.medicine_id);
-              setUpdateStock((stockArr) =>stockArr.filter(stock => stock?.medicine_id !== activeCard));
-              
-              return arr.filter(orderDetail => orderDetail?.medicine_id !== activeCard);
-            }
+              }
+            })
+            
           });
           
         },
@@ -211,40 +232,44 @@ const SalesEntry = () =>{
         }
     };
             
-    const handleNewOrderSelect = ( newOrder: OrderDetail ) => {
-
-          setSelectedMedicine((arr) => {
-            if (arr.some(medicine => medicine.medicine_id === newOrder.medicine_id)) {
-              return arr;
-            } else {
-              return [...arr, newOrder];
-            }
-          });
-          setOrderDetails((arr) => {
-            if (arr.some(medicine => medicine.medicine_id === newOrder.medicine_id)) {
-              const newOrders = arr.map(medicine => {
-                if (medicine.medicine_id === newOrder.medicine_id) {
-                  const newUnits = medicine.units + 1;
-                  const newUpdateDetails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits)
-                  return newUpdateDetails;
-                } else {
-                  return medicine;
+    const handleNewOrderSelect = ( newOrder: MedicineDetails ) => {
+          setOrdersList((arr) => {
+            return arr.map(order => {
+              if(order.activeOrder){
+                const existingMedicine = order.orderDetails.find(medicine => medicine.medicine_id === newOrder.medicine_id);
+                if (existingMedicine) {
+                  const newOrders = order?.orderDetails.map(medicine => {
+                    if (medicine.medicine_id === newOrder.medicine_id) {
+                      const newUnits = medicine.units + 1;
+                      const newUpdateDetails = handleUpdatingStock(medicine, setUpdateStock, activeCard, newUnits)
+                      return newUpdateDetails;
+                    } else {
+                      return medicine;
+                    }
+                  });
+                  
+                  const totalPrice = calcTotalPrice(newOrders);
+                  return { ...order, orderDetails: newOrders, totalPrice };
+                }else{
+                  // calculate Remaining stock; 
+                  const newUnits = 1; 
+                  const useActiveCard = false;
+                  const orderDetail = {...newOrder, units: 1, sub_total: 0, customer_note: ""}
+                  const newUpdateDetails = handleUpdatingStock(orderDetail, setUpdateStock, activeCard, newUnits, useActiveCard)
+                  const updatedOrderDetails = [...order.orderDetails, newUpdateDetails];
+                    const totalPrice = calcTotalPrice(updatedOrderDetails);
+                    return { ...order, orderDetails: updatedOrderDetails, totalPrice };
                 }
-              });
-              return newOrders;
-            }else{
-              // calculate Remaining stock; 
-              const newUnits = 1; 
-              const useActiveCard = false;
-              const newUpdateDetails = handleUpdatingStock(newOrder, setUpdateStock, activeCard, newUnits, useActiveCard)
-              return [...arr, newUpdateDetails]; 
-            }
+              }else{
+                return order;
+              }
+            })
           });
           setActiveCard(newOrder.medicine_id);
           isDigitClicked? setIsDigitClicked(false) :null;
     };
         
-    const handleEditOrder = (order: Medicine) =>{
+    const handleEditOrder = (order: OrderDetail) =>{
       setActiveCard(order.medicine_id);
       setIsDigitClicked(false);
     };
@@ -252,8 +277,34 @@ const SalesEntry = () =>{
     const handleVilidateClick = (customerGave: number, change: {}) =>{
       const moneyTrans = {...change, customerGave: customerGave || totalPrice};
       const pharmacy_id = pharm?.pharmacy_id;
-      regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, setEntryStep, setSaleRes, pharmacy_id })
+      if(pharmacy_id !== undefined){
+        regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id })
+      }
     };
+
+    const handleNewCustomerOrder = ({date}: {date: string}) =>{
+      setOrdersList((arr) =>{
+        if(arr.find(arr => arr.date === date)) return arr;
+        
+        arr.map((obj) =>{
+          obj.activeOrder = false;
+        })
+        // console.log(arr)
+        return [...arr, { date, orderDetails:[], activeOrder: true, status: "In Progress", totalPrice: 0 }]
+      })
+    }
+
+    const handleDeleteCustomerOrder = (order: Order) =>{
+      setOrdersList((orders) => {
+        const updatedArr = orders.filter(obj => obj.date !== order.date);
+
+        if (updatedArr.length > 0) {
+            updatedArr[updatedArr.length - 1].activeOrder = true;
+        }
+
+        return updatedArr;
+      }); 
+    }
     
     const handleStartNewOrderClick = () =>{
       setOrderDetails([]);
@@ -293,7 +344,7 @@ const SalesEntry = () =>{
                         <Link onClick={() => setEntryStep("ordersList")}
                         className="dropdown-item" to="#"> Orders &nbsp;
                           <span className="bg-info px-1 rounded-circle text-white">{
-                            Object.keys(ordersList).length
+                            ordersList.length
                           }</span>
                         </Link>
                       </li>
@@ -309,26 +360,35 @@ const SalesEntry = () =>{
             >
               <div className={`${showInventoryOrders === "orders" ? "" : "d-none "} d-md-flex 
               flex-column col-12 justify-content-between col-md-5 p-0 grow-1`} >
-                  <OrderDisplay 
-                      newOrders = {medicineDetails}
-                      activeCard = {activeCard}
-                      handleEditOrder = {handleEditOrder}
-                      orderDetails = {orderDetails}
-                      totalPrice = {totalPrice}
-                  />
+                {
+                  ordersList.map((order, i) =>{
+                    return order.activeOrder ? 
+                      <OrderDisplay 
+                          activeCard = {activeCard}
+                          handleEditOrder = {handleEditOrder}
+                          orderDetails = {order.orderDetails}
+                          totalPrice = {totalPrice}
+                      /> : null
+                  })
+                }
                   <PosEntry 
                       PoeCalcHandles= {PoeCalcHandles}
                   />
               </div>
               <div className={`${showInventoryOrders === "inventory" ? "" : "d-none"} 
               col-md-7 px-0 d-md-flex`} >
-                  <InventorySelect 
-                      handleNewOrderSelect = {handleNewOrderSelect}
-                      handleEditOrder = {handleEditOrder}
-                      orderDetails = {orderDetails}
-                      handlePayment= {PoeCalcHandles.handlePayment}
-                      setShowInventoryOrders = {setShowInventoryOrders}
-                  />
+                {
+                  ordersList.map((order, i) =>{
+                    return order.activeOrder ? 
+                      <InventorySelect 
+                          handleNewOrderSelect = {handleNewOrderSelect}
+                          handleEditOrder = {handleEditOrder}
+                          orderDetails = {order.orderDetails}
+                          handlePayment= {PoeCalcHandles.handlePayment}
+                          setShowInventoryOrders = {setShowInventoryOrders}
+                      /> : null
+                  })
+                }
               </div>
           </div>
         }
@@ -358,14 +418,17 @@ const SalesEntry = () =>{
                 step = {{step: "receipt"}}
               />
             </div>
-            <PrintReceipt 
-              orderDetails ={orderDetails}
-              medicineDetails ={medicineDetails}
-              handleStartNewOrderClick = {handleStartNewOrderClick}
-              totalPrice = {totalPrice}
-              saleRes = {saleRes}
-              payMethods = {payMethods}
-            />
+            {
+              ordersList.map((order, i) =>{
+                return order.activeOrder && saleRes !== undefined ? 
+                  <PrintReceipt 
+                    orderDetails ={order.orderDetails}
+                    handleStartNewOrderClick = {handleStartNewOrderClick}
+                    totalPrice = {totalPrice}
+                    saleRes = {saleRes}
+                  /> : null
+              })
+            }
           </div>
         }
         {
@@ -375,6 +438,8 @@ const SalesEntry = () =>{
             activeCard = {activeCard}
             totalPrice = {totalPrice}
             setEntryStep = {setEntryStep}
+            handleNewCustomerOrder = {handleNewCustomerOrder}
+            handleDeleteCustomerOrder = {handleDeleteCustomerOrder}
           />
         }
       </>

@@ -2,6 +2,7 @@ import axios from "axios";
 import { server_baseurl } from "../../../baseUrl";
 import Swal from "sweetalert2";
 import { OrderDetail } from "../SalesEntry";
+import { SaleRes } from "../types";
 
 interface handleAddGroupProps{
     orderDetails: OrderDetail[];
@@ -10,7 +11,7 @@ interface handleAddGroupProps{
     updateStock: {}[];
     payMethods: string[];
     setEntryStep: (step: string) =>void;
-    setSaleRes: (saleId: number) =>void;
+    setSaleRes: (saleRes: SaleRes) =>void;
     pharmacy_id: number;
 }
 export const regiterSalesApi = ({
