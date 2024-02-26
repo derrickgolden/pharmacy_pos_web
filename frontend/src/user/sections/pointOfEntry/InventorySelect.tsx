@@ -26,7 +26,6 @@ const InventorySelect: React.FC<InventorySelectProps> = ({
 
     const dispatch = useDispatch()
     const medicineGroup = useSelector((state: RootState) => state.groupList);
-    console.log(medicineGroup)
 
     const userPharm = getSessionStorage();
     const { localPharm } = userPharm;

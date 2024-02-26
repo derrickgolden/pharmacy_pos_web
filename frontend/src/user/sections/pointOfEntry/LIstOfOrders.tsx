@@ -1,6 +1,4 @@
 import { useEffect, useRef } from "react";
-import OrdersCard from "../../components/pointOfEntry/OrdersCard";
-import calculateVAT from "../../controllers/calculations/calculateVAT";
 import { OrderDetail } from "../../pages/SalesEntry";
 import { FaAngleLeft } from "react-icons/fa";
 import OrderDisplay from "./OrderDisplay";
@@ -17,13 +15,14 @@ interface ListOfOrdersProps {
     ordersList: Order[];
     activeCard: number; 
     totalPrice: number;
-    setEntryStep: (step: string) => void;
+    setEntryStep: React.Dispatch<React.SetStateAction<string>>;
     handleNewCustomerOrder: ({date}: {date: string}) => void;
-    handleDeleteCustomerOrder: (order: Order) => void;
+    handleDeleteCustomerOrder: (e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, order: Order) => void;
+    setOrdersList:  React.Dispatch<React.SetStateAction<Order[]>>
 }
 
-const ListOfOrders: React.FC<ListOfOrdersProps> = (
-    {ordersList, activeCard, totalPrice, setEntryStep, handleNewCustomerOrder, handleDeleteCustomerOrder }) =>{
+const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, totalPrice, 
+    setEntryStep, handleNewCustomerOrder, handleDeleteCustomerOrder, setOrdersList }) =>{
 
     const scrollRef = useRef<HTMLDivElement | null>(null);
 
@@ -33,6 +32,13 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = (
             scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
     }, [activeCard]);
+
+    const handleChangeActiveOrder = (order: Order) =>{
+        // setOrdersList((arr) => {
+        //     return arr.map(prevOrder => ({ ...prevOrder, activeOrder: prevOrder.date === order.date }));
+        // });
+        // setEntryStep("ordersentry");
+    }
 
     const handleEditOrder = (order: OrderDetail) =>{
 
@@ -63,11 +69,12 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = (
                         <tbody>
                             {
                                 ordersList.map((order, i) =>(
-                                    <tr key={i} className="">
+                                    <tr key={i} onClick={() => handleChangeActiveOrder(order)}
+                                    className="">
                                         <td>{order.date}</td>
                                         <td>{order.totalPrice} Ksh</td>
                                         <td>{order.status}</td>
-                                        <td onClick={() => handleDeleteCustomerOrder(order)}>
+                                        <td onClick={(e) => handleDeleteCustomerOrder(e, order)}>
                                         <button className=" btn btn-secondary btn-sm ms-1"  >
                                             <FaDeleteLeft />
                                         </button>
@@ -91,38 +98,6 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = (
                     })
                 }
             </div>
-            {/* <div className="d-flex flex-column justify-content-between h-100 col-4">
-                    <div ref={scrollRef}
-                    className={`d-flex flex-column ordersCard border-3 flex-grow-1 px-1`}>
-                        {Object.keys(ordersList).map((key, i) =>{
-                            return ordersList[key].activeOrder === true ?
-                            <OrdersCard 
-                                key={i}
-                                order={ordersList[key].orderDetails[0]}
-                                activeCard = {activeCard}
-                                handleEditOrder = {handleEditOrder}
-                                orderDetails ={ordersList[key].orderDetails}
-                            /> : null
-                        })}
-                    </div>
-                    <div className={`d-flex justify-content-end py-1 order-display col-12
-                   justify-self-end w-100 bg-light`}>
-                        <div>
-                            <span className="text-poppins-bold">
-                                Total: {totalPrice} Ksh
-                            </span>
-                            <p className="mb-0 text-poppins-regular"> 
-                                Taxes: 
-                                <span className="">&nbsp; {
-                                    totalPrice ? 
-                                        calculateVAT(totalPrice, 16)[1].value
-                                    : null
-                                } &nbsp;</span> 
-                                 Ksh
-                            </p>                          
-                        </div>
-                    </div>
-                </div> */}
         </div>
     )
 }

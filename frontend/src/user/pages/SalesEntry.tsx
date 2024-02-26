@@ -8,10 +8,9 @@ import ValidateOrderNavbar from "../components/pointOfEntry/ValidateOrderNavbar"
 import ValidateOrders from "../sections/pointOfEntry/ValidateOrders";
 import PrintReceipt from "../sections/pointOfEntry/PrintReceipt";
 import { regiterSalesApi } from "./apiCalls/registerSales";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpdatingStock";
-import { Medicine } from "../components/inventory/types";
 import { getSessionStorage } from "../controllers/getSessionStorage";
 import { FaAnglesRight } from "react-icons/fa6";
 import ListOfOrders, { Order } from "../sections/pointOfEntry/LIstOfOrders";
@@ -32,8 +31,6 @@ export interface OrderDetail {
 }
 
 const SalesEntry = () =>{
-
-    const [medicineDetails, setSelectedMedicine] = useState<Medicine[]>([])
     const [activeCard, setActiveCard] = useState(0)
     const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
     const [ordersList, setOrdersList] = useState([{ date: new Date().toLocaleString(), 
@@ -59,14 +56,6 @@ const SalesEntry = () =>{
       }, 0);
 
       setTotalPrice(newTotalPrice);
-
-      setOrdersList(arr => {
-        const updatedArr = [...arr]; // Create a copy of the original array
-        if (updatedArr.length > 0) {
-            updatedArr[updatedArr.length - 1].activeOrder = true; // Update the activeOrder property of the last element
-        }
-        return updatedArr; // Set the state with the updated array
-      });
     },[ordersList])
 
     const userPharm = getSessionStorage();
@@ -143,38 +132,36 @@ const SalesEntry = () =>{
       
         handleDecreaseNcancelOrder: () => {
           // Your logic for setting to Decrement and cancel order
-          
           setOrdersList((arr) => {
             return arr.map(order =>{
               if(order.activeOrder){
                 const [orderDetail] = order.orderDetails.filter(order=> order.medicine_id === activeCard);
+                console.log(orderDetail)
                 if(orderDetail?.units > 0){
-                  return order.orderDetails.map((orderDetail) => {
+                  const newDetails = order.orderDetails.map(orderDetail => {
                     if (orderDetail.medicine_id === activeCard && orderDetail.units > 0) {
                       const unitsString = orderDetail.units.toString();
     
                       const newUnits = Math.max(parseInt(unitsString.slice(0, -1), 10) || 0, 0);
                       
                       const newStockDetails = handleUpdatingStock(orderDetail, setUpdateStock, activeCard, newUnits);
-                      return { ...order, orderDetails: newStockDetails };
-    
+                      return newStockDetails;
                     } else {
-                      return order;
+                      return orderDetail;
                     }
                   })
+                  return { ...order, orderDetails: newDetails };
                 }else{
-                  setSelectedMedicine((arr) =>(arr.filter(medicine => medicine.medicine_id !== activeCard)))
-                  setActiveCard(medicineDetails[(medicineDetails.length-2)]?.medicine_id);
+                  setActiveCard(order.orderDetails[(order.orderDetails.length-2)]?.medicine_id);
                   setUpdateStock((stockArr) =>stockArr.filter(stock => stock?.medicine_id !== activeCard));
                   
                   const newOrderDetails =  order.orderDetails.filter(orderDetail => orderDetail?.medicine_id !== activeCard);
                   return { ...order, orderDetails: newOrderDetails };
                 }
               }
-            })
-            
+              return order;
+            })  
           });
-          
         },
       
         handleRefund: () => {
@@ -184,12 +171,17 @@ const SalesEntry = () =>{
       
         handleCustomerNote: async() => {
           // Your logic for handling customer note
-          let note; 
-          orderDetails.map((orderDetail) =>{
-            if(orderDetail.medicine_id === activeCard){
-              note = orderDetail.customer_note;
+          let note;
+          ordersList.map(order =>{
+            if(order.activeOrder){
+              order.orderDetails.map(orderDetail => {
+                if(orderDetail.medicine_id === activeCard){
+                  note = orderDetail.customer_note;
+                }
+              });
             }
-          })
+          }) 
+
           const { value: text } = await Swal.fire({
             input: "textarea",
             inputLabel: "Customer Note",
@@ -204,20 +196,25 @@ const SalesEntry = () =>{
             showCancelButton: true,
             returnInputValueOnDeny:true
           });
-          setOrderDetails((arr) => {
-              const newOrders = arr.map(orderDetail => {
-                if (orderDetail?.medicine_id === activeCard) {
-                  if (text) {
-                    orderDetail.customer_note = text;
-                  }else{
-                    orderDetail.customer_note = "";
+          setOrdersList((arr) => {
+            return arr.map(order =>{
+              if(order.activeOrder){
+                const newOrders = order.orderDetails.map(orderDetail => {
+                  if (orderDetail?.medicine_id === activeCard) {
+                    if (text) {
+                      orderDetail.customer_note = text;
+                    }else{
+                      orderDetail.customer_note = "";
+                    }
+                    return orderDetail;
+                  } else {
+                    return orderDetail;
                   }
-                  return orderDetail;
-                } else {
-                  return orderDetail;
-                }
-              });
-              return newOrders;
+                });
+                return {...order, orderDetails: newOrders};
+              }
+              return order
+            })
           });
         },
       
@@ -277,8 +274,9 @@ const SalesEntry = () =>{
     const handleVilidateClick = (customerGave: number, change: {}) =>{
       const moneyTrans = {...change, customerGave: customerGave || totalPrice};
       const pharmacy_id = pharm?.pharmacy_id;
+      const [activeOrder] = ordersList.filter(order => order.activeOrder)
       if(pharmacy_id !== undefined){
-        regiterSalesApi({orderDetails, totalPrice, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id })
+        regiterSalesApi({orderDetails: activeOrder.orderDetails, totalPrice, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id })
       }
     };
 
@@ -289,26 +287,32 @@ const SalesEntry = () =>{
         arr.map((obj) =>{
           obj.activeOrder = false;
         })
-        // console.log(arr)
         return [...arr, { date, orderDetails:[], activeOrder: true, status: "In Progress", totalPrice: 0 }]
       })
+      setEntryStep("ordersentry");
     }
 
-    const handleDeleteCustomerOrder = (order: Order) =>{
+    const handleDeleteCustomerOrder = (event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, order: Order) =>{
+      event.stopPropagation();
+
       setOrdersList((orders) => {
         const updatedArr = orders.filter(obj => obj.date !== order.date);
-
+    
         if (updatedArr.length > 0) {
-            updatedArr[updatedArr.length - 1].activeOrder = true;
+          const lastOrder = { ...updatedArr[updatedArr.length - 1], activeOrder: true };
+          return [...updatedArr.slice(0, -1), lastOrder];
         }
-
-        return updatedArr;
-      }); 
+        return [{ date: new Date().toLocaleString(), orderDetails:[], activeOrder: true, status: "In Progress", totalPrice: 0 }];
+      });
     }
     
     const handleStartNewOrderClick = () =>{
-      setOrderDetails([]);
-      setSelectedMedicine([]);
+      setOrdersList(arr =>{
+        const removeOrder = arr.filter(order => !order.activeOrder);
+        return [...removeOrder, { date: new Date().toLocaleString(), 
+          orderDetails: [], activeOrder: true, status: "In Progress" , totalPrice: 0
+        }]
+      })
       setPayMethods([]);
       setUpdateStock([]);
       setEntryStep("ordersentry");
@@ -435,6 +439,7 @@ const SalesEntry = () =>{
           entryStep === "ordersList" && 
           <ListOfOrders 
             ordersList = {ordersList}
+            setOrdersList = {setOrdersList}
             activeCard = {activeCard}
             totalPrice = {totalPrice}
             setEntryStep = {setEntryStep}
