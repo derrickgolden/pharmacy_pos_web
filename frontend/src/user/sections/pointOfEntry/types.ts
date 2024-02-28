@@ -18,6 +18,7 @@ export interface CommonSalesEntryProps{
   totalPrice?: number;
   orderDetails: OrderDetail[];
   handleEditOrder: (order: OrderDetail) => void;
+  window?: string;
 }
 
 export interface MedicineDetails {
@@ -33,4 +34,12 @@ export interface MedicineDetails {
   medicine_name: string;
   unit_of_measurement: string;
   open_container_units: number;
+}
+
+export interface Order{
+  date: string;
+  orderDetails: OrderDetail[];
+  activeOrder: boolean;
+  status: string;
+  totalPrice: number;
 }

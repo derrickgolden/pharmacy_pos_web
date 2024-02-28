@@ -13,8 +13,8 @@ import Swal from "sweetalert2";
 import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpdatingStock";
 import { getSessionStorage } from "../controllers/getSessionStorage";
 import { FaAnglesRight } from "react-icons/fa6";
-import ListOfOrders, { Order } from "../sections/pointOfEntry/LIstOfOrders";
-import { MedicineDetails } from "../sections/pointOfEntry/types";
+import ListOfOrders from "../sections/pointOfEntry/LIstOfOrders";
+import { MedicineDetails, Order } from "../sections/pointOfEntry/types";
 import { SaleRes } from "./types";
 import { calcTotalPrice } from "./calculations/calcTotalPrice";
 
@@ -32,9 +32,8 @@ export interface OrderDetail {
 
 const SalesEntry = () =>{
     const [activeCard, setActiveCard] = useState(0)
-    const [orderDetails, setOrderDetails] = useState<OrderDetail[]>([])
-    const [ordersList, setOrdersList] = useState([{ date: new Date().toLocaleString(), 
-       orderDetails, activeOrder: true, status: "In Progress" , totalPrice: 0
+    const [ordersList, setOrdersList] = useState<Order[]>([{ date: new Date().toLocaleString(), 
+      orderDetails: [], activeOrder: true, status: "In Progress" , totalPrice: 0
     }])
     const [totalPrice, setTotalPrice] = useState(0)
     const [entryStep, setEntryStep] = useState("ordersentry");

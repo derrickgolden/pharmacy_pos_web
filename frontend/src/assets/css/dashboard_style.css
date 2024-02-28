@@ -128,6 +128,16 @@
     height: calc(100dvh - 15rem);
   }
 
+  .orders-display{
+    height: calc(100dvh - 9rem );
+    background-color: #808080;
+    overflow-y: auto;
+  }
+  .orders-display::-webkit-scrollbar {
+    width: 8px !important; /* adjust the width as needed */
+    overflow-y: auto;
+  }
+
   @media (max-width: 768px) {
     /* .order-cards{
       height: calc(100vh - 15rem);

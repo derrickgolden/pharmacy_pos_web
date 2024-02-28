@@ -4,7 +4,8 @@ import OrdersCard from "../../components/pointOfEntry/OrdersCard";
 import calculateVAT from "../../controllers/calculations/calculateVAT";
 import { CommonSalesEntryProps } from "./types";
 
-const OrderDisplay: React.FC<CommonSalesEntryProps> = ({ activeCard, handleEditOrder, orderDetails, totalPrice}) =>{
+const OrderDisplay: React.FC<CommonSalesEntryProps> = ({ 
+    activeCard, handleEditOrder, orderDetails, totalPrice, window }) =>{
     const scrollRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -14,10 +15,10 @@ const OrderDisplay: React.FC<CommonSalesEntryProps> = ({ activeCard, handleEditO
         }
     }, [activeCard]);
 
-    console.log(orderDetails);
+    // console.log(orderDetails);
     
     return(
-        <div className=" position-relative col-12 px-0 mx-0 order-cards"  >
+        <div className={`${window === "orders"? "h-100" : " "} position-relative col-12 px-0 mx-0 order-cards `}  >
             {orderDetails.length === 0 ?(
                 <div className="d-flex flex-column justify-content-center align-items-center 
                 flex-grow-1 empty-cart" style={{height: "100%"}}>
