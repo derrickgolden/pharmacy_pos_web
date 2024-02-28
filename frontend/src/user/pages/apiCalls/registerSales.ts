@@ -3,10 +3,13 @@ import { server_baseurl } from "../../../baseUrl";
 import Swal from "sweetalert2";
 import { OrderDetail } from "../SalesEntry";
 import { SaleRes } from "../types";
+import { Order } from "../../sections/pointOfEntry/types";
+import { Dispatch, SetStateAction } from "react";
 
 interface handleAddGroupProps{
     orderDetails: OrderDetail[];
     totalPrice : number;
+    setOrdersList: Dispatch<SetStateAction<Order[]>>;
     moneyTrans: {};
     updateStock: {}[];
     payMethods: string[];
@@ -15,7 +18,7 @@ interface handleAddGroupProps{
     pharmacy_id: number;
 }
 export const regiterSalesApi = ({
-    orderDetails, totalPrice, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id
+    orderDetails, totalPrice, setOrdersList, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id
 }: handleAddGroupProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
@@ -49,6 +52,9 @@ export const regiterSalesApi = ({
         if(response.data.success){
             setSaleRes(response.data.details[0]);
             setEntryStep("receipt");
+            setOrdersList(arr =>{
+                return arr.map(order => order.activeOrder? {...order, status: "receipt"} : order)
+            })
         }else{
             Swal.fire({
                 title: "Failed",

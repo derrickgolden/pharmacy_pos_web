@@ -45,8 +45,6 @@ const UserDashboard: React.FC = () =>{
                     }
                     details.containers > 0 && details.units_per_container > 0 ? medicineAvailable.push(details) : medicineShortage.push(details);
                 })
-            console.log(pharmacy_id);
-            console.log(data);
                 
                 setUpperDashboardData([
                     {icon:<MdInventory size={32}/>, status: "Good", totals: enoughStockMedicine.length, caption: "Inventory Status", forCssDispaly: "success", footerCaption: "View detailed report", btnType: "inventory", data: enoughStockMedicine}, 
@@ -62,7 +60,7 @@ const UserDashboard: React.FC = () =>{
                 medicineList.then((data) =>{
                     let totalMedicine = 0;
                     const totalGroup = data.length;
-                    data.map((details: {medicines: []}) =>{
+                    data.map((details) =>{
                         if(details?.medicines[0].medicine_id !== null){
                             totalMedicine += details.medicines.length;
                         }

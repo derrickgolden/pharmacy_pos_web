@@ -33,17 +33,15 @@ export interface OrderDetail {
 const SalesEntry = () =>{
     const [activeCard, setActiveCard] = useState(0)
     const [ordersList, setOrdersList] = useState<Order[]>([{ date: new Date().toLocaleString(), 
-      orderDetails: [], activeOrder: true, status: "In Progress" , totalPrice: 0
+      orderDetails: [], activeOrder: true, status: "inProgress" , totalPrice: 0
     }])
     const [totalPrice, setTotalPrice] = useState(0)
-    const [entryStep, setEntryStep] = useState("ordersentry");
+    const [entryStep, setEntryStep] = useState("inProgress");
     const [payMethods, setPayMethods] = useState<string[]>([])
     const [saleRes, setSaleRes] = useState<SaleRes>();
     const [updateStock, setUpdateStock] = useState<UpdateStockProps[]>([]);
     const [isDigitClicked, setIsDigitClicked] = useState(false);
     const [showInventoryOrders, setShowInventoryOrders] = useState("inventory")
-
-    console.log(ordersList)
 
     useEffect(() =>{
       const newTotalPrice = ordersList.reduce((totalPrice, orders) =>{
@@ -219,7 +217,10 @@ const SalesEntry = () =>{
       
         handlePayment: () => {          
           if(totalPrice > 0){
-            setEntryStep("validateorder")
+            setEntryStep("payment")
+            setOrdersList(arr =>{
+              return arr.map(order => order.activeOrder? {...order, status: "payment"} : order)
+            })
           }
         },
 
@@ -270,13 +271,16 @@ const SalesEntry = () =>{
       setIsDigitClicked(false);
     };
 
-    const handleVilidateClick = (customerGave: number, change: {}) =>{
+    const handleVilidateClick = (customerGave: {[key: string]: number}, change: {}) =>{
       const moneyTrans = {...change, customerGave: customerGave || totalPrice};
       const pharmacy_id = pharm?.pharmacy_id;
-      const [activeOrder] = ordersList.filter(order => order.activeOrder)
+      const [activeOrder] = ordersList.filter(order => order.activeOrder);
       if(pharmacy_id !== undefined){
-        regiterSalesApi({orderDetails: activeOrder.orderDetails, totalPrice, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id })
-      }
+        regiterSalesApi({
+          orderDetails: activeOrder.orderDetails, totalPrice, setOrdersList,
+          moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id 
+        });
+      };
     };
 
     const handleNewCustomerOrder = ({date}: {date: string}) =>{
@@ -286,9 +290,9 @@ const SalesEntry = () =>{
         arr.map((obj) =>{
           obj.activeOrder = false;
         })
-        return [...arr, { date, orderDetails:[], activeOrder: true, status: "In Progress", totalPrice: 0 }]
+        return [...arr, { date, orderDetails:[], activeOrder: true, status: "inProgress", totalPrice: 0 }]
       })
-      setEntryStep("ordersentry");
+      setEntryStep("inProgress");
     }
 
     const handleDeleteCustomerOrder = (event: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>, order: Order) =>{
@@ -301,7 +305,9 @@ const SalesEntry = () =>{
           const lastOrder = { ...updatedArr[updatedArr.length - 1], activeOrder: true };
           return [...updatedArr.slice(0, -1), lastOrder];
         }
-        return [{ date: new Date().toLocaleString(), orderDetails:[], activeOrder: true, status: "In Progress", totalPrice: 0 }];
+        
+        return [{ date: new Date().toLocaleString(), orderDetails:[], activeOrder: true, 
+          status: "inProgress", totalPrice: 0 }];
       });
     }
     
@@ -309,12 +315,12 @@ const SalesEntry = () =>{
       setOrdersList(arr =>{
         const removeOrder = arr.filter(order => !order.activeOrder);
         return [...removeOrder, { date: new Date().toLocaleString(), 
-          orderDetails: [], activeOrder: true, status: "In Progress" , totalPrice: 0
+          orderDetails: [], activeOrder: true, status: "inProgress" , totalPrice: 0
         }]
       })
       setPayMethods([]);
       setUpdateStock([]);
-      setEntryStep("ordersentry");
+      setEntryStep("inProgress");
     };
    
     return(
@@ -358,7 +364,7 @@ const SalesEntry = () =>{
               </div>
           </nav>
         {
-          entryStep === "ordersentry" && 
+          entryStep === "inProgress" && 
           <div className="sales-entry-container d-flex flex-column flex-md-row col-12" 
             >
               <div className={`${showInventoryOrders === "orders" ? "" : "d-none "} d-md-flex 
@@ -396,12 +402,12 @@ const SalesEntry = () =>{
           </div>
         }
         {
-          entryStep === "validateorder" && 
+          entryStep === "payment" && 
           <div>
             <ValidateOrderNavbar 
               setEntryStep = {setEntryStep}
               totalPrice = {totalPrice}
-              step = {{step: "validate"}}
+              step = {{step: "payment"}}
             />
             <ValidateOrders 
               handleVilidateClick = {handleVilidateClick}

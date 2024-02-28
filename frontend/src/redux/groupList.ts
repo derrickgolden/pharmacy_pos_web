@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { MedicineDetails } from '../user/sections/pointOfEntry/types';
 
-interface Group {
+export interface Group {
   group_id: number;
   group_name: string;
   description: string;

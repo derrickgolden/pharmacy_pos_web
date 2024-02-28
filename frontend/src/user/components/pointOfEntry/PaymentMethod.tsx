@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { BsCashCoin } from "react-icons/bs";
 import { FaAngleRight, FaRegCreditCard } from "react-icons/fa";
 import { MdAccountBalanceWallet, MdCancel } from "react-icons/md";
@@ -13,17 +13,23 @@ const payments = [
     {icon:<FaRegCreditCard size={24}/>, method_name: "Bank", method: "bank", payment_method_id: 3},
     {icon:<MdAccountBalanceWallet size={24}/>, method_name: "Customer Account", method: "customer_acc", payment_method_id: 2},
 ]
+
 interface PaymentMethodProps{
-    handleVilidateClick: (customerGave: number, change: {}) =>void;
+    handleVilidateClick: (customerGave: {[key: string]: number}, change: {}) =>void;
     setPayMethods: React.Dispatch<React.SetStateAction<string[]>>;
     totalPrice: number;
     payMethods: string[];
     activePayMethod: string;
-    customerGave: {};
+    customerGave: {[key: string]: number};
     change: {remaining: number };
     setCustomeGave: React.Dispatch<React.SetStateAction<PaymentObject>>;
     setActivePayMethod: React.Dispatch<React.SetStateAction<string>>;
     setChange: React.Dispatch<React.SetStateAction<{ remaining: number; change: number; }>>;
+    PaymentCalcHandles: {
+        handleDigitClick: (digit: number) => void;
+        handleDeleteDigit: () => void;
+        handleSetToQuantityChange: (digit: number) => void;
+    }
 }
 interface PaymentProps{
     icon: JSX.Element;
@@ -31,10 +37,11 @@ interface PaymentProps{
     method: string;
     payment_method_id: number;
 }
-const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPayMethods, totalPrice,
-    payMethods, activePayMethod, customerGave, change, setCustomeGave, setActivePayMethod, setChange, 
-    PaymentCalcHandles }) =>{
-      
+
+const PaymentMethod: React.FC<PaymentMethodProps> = ({
+    handleVilidateClick, setPayMethods, totalPrice, payMethods, activePayMethod, customerGave, 
+    change, setCustomeGave, setActivePayMethod, setChange, PaymentCalcHandles }) =>{
+
     const [ isValidateEnabled, setIsvalidateEnabled ] = useState(true)
     const currentWidth = window.innerWidth;
 
@@ -71,7 +78,6 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
     const handleChangeAmount = async(method: string) =>{
 
         setActivePayMethod(method)
-        // setStartNewEntry(true);
         if(method === activePayMethod && currentWidth < 768){
             await Swal.fire({
                 title: "Enter new amount",
@@ -128,8 +134,7 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
                                     </h6>
                                 </div>
                             </div>
-                                    <MdCancel size={24} 
-                                    onClick={() => handleRemovePayment(method)} />
+                            <MdCancel size={24} onClick={() => handleRemovePayment(method)} />
                         </div>
                     ))
                 }
@@ -151,27 +156,3 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({handleVilidateClick, setPa
 }
 
 export default PaymentMethod;
-
-// <!-- Button trigger modal -->
-// <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-//   Launch demo modal
-// </button>
-
-// <!-- Modal -->
-// <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-//   <div class="modal-dialog">
-//     <div class="modal-content">
-//       <div class="modal-header">
-//         <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-//         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-//       </div>
-//       <div class="modal-body">
-//         ...
-//       </div>
-//       <div class="modal-footer">
-//         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-//         <button type="button" class="btn btn-primary">Save changes</button>
-//       </div>
-//     </div>
-//   </div>
-// </div>

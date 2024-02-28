@@ -11,12 +11,11 @@ const ValidateOrderNavbar: React.FC<ValidateOrderNavbarProps> = ({ setEntryStep,
         <nav className="d-flex justify-content-between navbar navbar-light bg-light px-3">
             <div>
                 {
-                    step.step ===  "validate" && (
-
-                <button onClick={() => setEntryStep("ordersentry")}
-                    className="navbar-brand pl-2 btn btn-outline-secondary">
-                        &nbsp;<FaAngleLeft /> Back
-                </button>
+                step.step ===  "payment" && (
+                    <button onClick={() => setEntryStep("inProgress")}
+                        className="navbar-brand pl-2 btn btn-outline-secondary">
+                            &nbsp;<FaAngleLeft /> Back
+                    </button>
                     )
                 }
             </div>

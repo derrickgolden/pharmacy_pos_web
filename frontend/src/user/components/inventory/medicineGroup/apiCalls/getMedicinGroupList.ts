@@ -1,12 +1,11 @@
 import axios from "axios";
 import { server_baseurl } from "../../../../../baseUrl";
 import Swal from "sweetalert2";
+import { Group } from "../../../../../redux/groupList";
 
-interface handleAddGroupProps{
-    groupDetails: {group_name: string, description: string}
-    setShowDetails: (component: string) =>void
-}
-export const getMedicineGroupList = async(filterNull: boolean, pharmacy_id: number) =>{
+export const getMedicineGroupList = async(
+        filterNull: boolean, pharmacy_id: number
+    ): Promise<Group[] | []> =>{
 
     const tokenString = sessionStorage.getItem("userToken");
 
@@ -18,7 +17,7 @@ export const getMedicineGroupList = async(filterNull: boolean, pharmacy_id: numb
             text: "Try to login Again then add the group.",
             icon: "warning"
         });
-        return
+        return []
     }
     
     const data = JSON.stringify({ filterNull, pharmacy_id });
@@ -35,9 +34,8 @@ export const getMedicineGroupList = async(filterNull: boolean, pharmacy_id: numb
 
     return await axios.request(config)
     .then((response) => {
-        if(response.data.success){
-            // console.log(response);
-            
+        if(response.data.success){ 
+            console.log(response.data.details)           
             return(response.data.details)
         }else{
             Swal.fire({

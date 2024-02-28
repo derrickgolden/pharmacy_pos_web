@@ -5,7 +5,7 @@ import PaymentMethod from "../../components/pointOfEntry/PaymentMethod";
 import { calcAndSetChange } from "../../controllers/calculations/calcAndSetChange";
 
 interface ValidateOrdersProps{
-    handleVilidateClick: (customerGave: number, change: {}) => void;
+    handleVilidateClick: (customerGave: {[key: string]: number}, change: {}) => void;
     totalPrice: number;
     setPayMethods: Dispatch<SetStateAction<string[]>>;
     payMethods: string[]
@@ -76,7 +76,6 @@ const ValidateOrders: React.FC<ValidateOrdersProps> = (
             setStartNewEntry(false);
             
         }
-
     }
     return(
         <div className="d-flex " style={{height: "82dvh"}}>

@@ -1,7 +1,7 @@
 
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 
-interface UserDetails {
+export interface UserDetails {
   user_id: string;
   first_name: string;
   last_name: string;
@@ -13,7 +13,7 @@ interface UserDetailsState {
   last_name: string;
 }
 
-const initialState: UserDetailsState = {
+const initialState: UserDetails = {
   user_id: "",
   first_name: "",
   last_name: "",

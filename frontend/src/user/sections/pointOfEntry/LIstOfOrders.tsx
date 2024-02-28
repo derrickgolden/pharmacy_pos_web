@@ -30,19 +30,33 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, tota
 
     const handleChangeActiveOrder = (order: Order) =>{
         setOrdersList((arr) => {
-            return arr.map(prevOrder => ({ ...prevOrder, activeOrder: prevOrder.date === order.date }));
+            return arr.map(prevOrder =>{
+                if(prevOrder.date === order.date ){
+                    setEntryStep(order.status);
+                    return({ ...prevOrder, activeOrder: true });   
+                }else{
+                    return({ ...prevOrder, activeOrder: false });
+                }
+            }); 
         });
-        setEntryStep("ordersentry");
+    };
+
+    const handleEntryStep = () =>{
+        ordersList.map(orders =>{
+            if(orders.activeOrder){
+                setEntryStep(orders.status);
+            }
+        })
     }
 
     const handleEditOrder = (order: OrderDetail) =>{
-
     }
+
     return(
         <div className="d-flex sales-entry-container" >
             <div className="col-12 col-sm-6 col-md-7 bg-light h-100 ">
                 <div className="d-flex py-1 px-2 gap-4 bg-secondary" style={{height: "3rem"}}>
-                    <button onClick={() => setEntryStep("ordersentry")}
+                    <button onClick={() => handleEntryStep()}
                         className="navbar-brand pl-2 btn btn-light">
                             &nbsp;<FaAngleLeft /> Back
                     </button>
@@ -85,7 +99,7 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, tota
                                     className={`${i === 1? "table-active" : " "}`}>
                                         <td>{order.date}</td>
                                         <td>{order.totalPrice} Ksh</td>
-                                        <td>{order.status}</td>
+                                        <td className="text-capitalize">{order.status}</td>
                                         <td onClick={(e) => handleDeleteCustomerOrder(e, order)}>
                                         <button className=" btn btn-secondary btn-sm ms-1"  >
                                             <FaDeleteLeft />
@@ -98,11 +112,11 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, tota
                     </table>
                 </div>
                 <div className="d-flex d-sm-none fixed-bottom">
-                    <button type="button" onClick={() => setEntryStep("ordersentry")}
+                    <button type="button" onClick={() => handleEntryStep()}
                     className="btn col-6 py-3 rounded-0 btn-warning">
                         <h5 className="mb-0"><b>Load Order</b></h5>
                     </button>
-                    <button type="button" onClick={() => setEntryStep("ordersentry")}
+                    <button type="button" onClick={() => handleEntryStep()}
                     className="btn col-6 py-3 rounded-0 btn-info text-center">
                         <h5 className="mb-0"><b>Review</b></h5>
                     </button>

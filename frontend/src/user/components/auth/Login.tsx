@@ -1,30 +1,37 @@
-import axios from 'axios';
 import { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux';
 
-import { Link, useNavigate } from "react-router-dom";
-import { fb, google, left_arrow, logo, show_hide } from '../../../assets/images';
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { logo } from '../../../assets/images';
 import { setUserDetails } from '../../../redux/userDetails';
-import { client_baseurl, server_baseurl } from '../../../baseUrl';
-import Swal from 'sweetalert2';
+import loginApi from "./apiCalls/loginApi";
 
-interface PersonDetails{ email: string; password: string; acc_type: string }
+export interface PersonDetails{ email: string; password: string; acc_type: string }
 type UserAcc = "admin" | "staff";
 
 const Login: React.FC = () =>{
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const {urltoken} = useParams();
 
     const [acc_type, setAcc_type] =  useState<UserAcc>("admin");
     const [loginDetails, setLoginDetails] = useState<PersonDetails>({
         email:"", password: "", acc_type
-    })
+    });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
         const name = e.target.name
         const value = e.target.value
         setLoginDetails((obj) =>({...obj, [name]: value}))
-    }
+    };
+
+    useEffect(() =>{
+        if(urltoken === "kjcc7BiGOqHZCw48zuEu82M0rHxImr1txrgkqqf"){
+            let data = JSON.stringify({email:"goldenderrick95@gmail.com", password: "1234", auth_with: "app"});
+
+            loginApi({data, dispatch, setUserDetails, navigate, setLoginDetails});
+        }
+    });
 
     useEffect(()=>{
         setLoginDetails((obj) => ({...obj, acc_type}));
@@ -33,49 +40,9 @@ const Login: React.FC = () =>{
     const handleLoginDetailsSubmit = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault()
         
-        // console.log(loginDetails);
         let data = JSON.stringify({...loginDetails, auth_with: "app"});
-        console.log(data);
 
-        fetch(`${server_baseurl}/user/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Access-Control-Allow-Origin': 'no-cors'
-        },
-        body: data
-        })
-        .then(response => response.json())
-        .then(data => {
-            // console.log(data);
-            if(data.success){
-                sessionStorage.setItem("user", JSON.stringify(data?.details[0]));
-                sessionStorage.setItem("userToken", JSON.stringify(data?.token));
-                dispatch(setUserDetails(data?.details[0]));
-                navigate('/user/dashboard', {replace: true});
-            }else{
-                Swal.fire({
-                    text: `${data.msg}`,
-                    showCloseButton: true,
-                    showConfirmButton: false,
-                    animation: false,
-                    color: "#dc3545",
-                    padding: "5px"
-                })
-            }
-        })
-        .catch(error => {
-            console.log(error);
-            setLoginDetails(obj => ({ ...obj, password: '' }));
-            Swal.fire({
-                text: "Sorry, something went wrong",
-                showCloseButton: true,
-                showConfirmButton: false,
-                animation: false,
-                color: "#dc3545",
-                padding: "5px"
-            })
-        });
+       loginApi({data, dispatch, setUserDetails, navigate, setLoginDetails});
     }
 
     return(

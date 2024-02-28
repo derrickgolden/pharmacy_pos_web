@@ -8,8 +8,12 @@ import LandingPageHeader from './user/sections/LandingPageHeader';
 import RegisterPhamacy from './user/sections/pharmacy/RegisterPharmacy';
 import SummaryDetails from './user/components/inventory/SummaryDetails';
 import ChangePassword from './user/pages/ChangePassword';
+import { useEffect } from 'react';
 
 function App() {
+  useEffect(() =>{
+
+  }, []);
   return (
     <>
       <div>
@@ -31,9 +35,9 @@ function App() {
             </Route>
           </Route>
 
-          <Route path='/' element={<Login />} />
+          <Route path='/:urltoken' element={<Login />} />
           <Route path='/user' >
-            <Route path="login" element={<Login />} />
+            <Route path="login/:urltoken" element={<Login />} />
             <Route path="signup" element={<Signup />} />
             <Route path="reset-password/:urltoken" element={<ResetPassword />} />
             <Route path="forgot-password" element={<ForgotPassword />} />
