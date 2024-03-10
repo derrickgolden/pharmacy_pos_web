@@ -1,22 +1,17 @@
 import { useEffect, useState } from "react";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars } from '@fortawesome/free-solid-svg-icons'
-import InventorySelect from "../sections/pointOfEntry/InventorySelect";
-import OrderDisplay from "../sections/pointOfEntry/OrderDisplay";
-import PosEntry from "../sections/pointOfEntry/POEcalc";
+
+import { InventorySelect, OrderDisplay, PosEntry, ValidateOrders, PrintReceipt, 
+  ListOfOrders, MedicineDetails, Order } from "../sections";
 import ValidateOrderNavbar from "../components/pointOfEntry/ValidateOrderNavbar";
-import ValidateOrders from "../sections/pointOfEntry/ValidateOrders";
-import PrintReceipt from "../sections/pointOfEntry/PrintReceipt";
-import { regiterSalesApi } from "./apiCalls/registerSales";
-import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
-import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpdatingStock";
+import POSnavbar from "../components/pointOfEntry/POSnavbar";
 import { getSessionStorage } from "../controllers/getSessionStorage";
-import { FaAnglesRight } from "react-icons/fa6";
-import ListOfOrders from "../sections/pointOfEntry/LIstOfOrders";
-import { MedicineDetails, Order } from "../sections/pointOfEntry/types";
-import { SaleRes } from "./types";
+
+import { UpdateStockProps, handleUpdatingStock } from "./calculations/handleUpdatingStock";
 import { calcTotalPrice } from "./calculations/calcTotalPrice";
+import { regiterSalesApi } from "./apiCalls/registerSales";
+import Swal from "sweetalert2";
+
+import { SaleRes } from "./types";
 
 export interface OrderDetail {
   medicine_id: number;
@@ -43,6 +38,26 @@ const SalesEntry = () =>{
     const [isDigitClicked, setIsDigitClicked] = useState(false);
     const [showInventoryOrders, setShowInventoryOrders] = useState("inventory")
 
+    const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+
+    useEffect(() => {
+      const handleOnline = () => {
+        setIsOnline(true);
+      };
+  
+      const handleOffline = () => {
+        setIsOnline(false);
+      };
+  
+      window.addEventListener('online', handleOnline);
+      window.addEventListener('offline', handleOffline);
+
+      return () => {
+        window.removeEventListener('online', handleOnline);
+        window.removeEventListener('offline', handleOffline);
+      };
+    }, []);
+
     useEffect(() =>{
       const newTotalPrice = ordersList.reduce((totalPrice, orders) =>{
         if(orders.activeOrder){
@@ -57,7 +72,6 @@ const SalesEntry = () =>{
 
     const userPharm = getSessionStorage();
     const { localPharm: pharm } = userPharm.localPharm;
-    const { user } = userPharm.user;
 
     const PoeCalcHandles = {
         handleDigitClick: (digit: number) => {
@@ -133,7 +147,6 @@ const SalesEntry = () =>{
             return arr.map(order =>{
               if(order.activeOrder){
                 const [orderDetail] = order.orderDetails.filter(order=> order.medicine_id === activeCard);
-                console.log(orderDetail)
                 if(orderDetail?.units > 0){
                   const newDetails = order.orderDetails.map(orderDetail => {
                     if (orderDetail.medicine_id === activeCard && orderDetail.units > 0) {
@@ -278,7 +291,7 @@ const SalesEntry = () =>{
       if(pharmacy_id !== undefined){
         regiterSalesApi({
           orderDetails: activeOrder.orderDetails, totalPrice, setOrdersList,
-          moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id 
+          moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id, isOnline
         });
       };
     };
@@ -325,44 +338,14 @@ const SalesEntry = () =>{
    
     return(
       <>            
-          <nav className="navbar navbar-expand z-30 navbar-light w-100 py-0"
-            style={{backgroundColor: "#f2f2f3", height: "3rem", zIndex: "10"}}>
-              <div className="container-fluid"  style={{backgroundColor: "#f2f2f3"}}>
-                <div>
-                  {
-                    showInventoryOrders !== "inventory" && entryStep === "ordersentry" && (
-                      <button type="button" onClick={() => setShowInventoryOrders("inventory")}
-                        className="btn btn-outline-link d-md-none">Inventory <FaAnglesRight />
-                      </button>
-                    )
-                  }
-                  <h2 className="d-none d-md-block">{pharm?.pharmacy_name}</h2>
-                </div>
-                <div className="d-flex gap-2">
-                  <h3>
-                    <span className="bg-info px-2 rounded text-white">
-                      {user?.first_name.slice(0,1)}
-                    </span>{user?.first_name}
-                  </h3>
-                  <div className="dropdown">
-                    <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                      <FontAwesomeIcon icon={faBars} />
-                    </button>
-                    <ul className="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton1">
-                      <li>
-                        <Link onClick={() => setEntryStep("ordersList")}
-                        className="dropdown-item" to="#"> Orders &nbsp;
-                          <span className="bg-info px-1 rounded-circle text-white">{
-                            ordersList.length
-                          }</span>
-                        </Link>
-                      </li>
-                      <li><Link className="dropdown-item" to="/user/dashboard">End Session</Link></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-          </nav>
+          <POSnavbar 
+            entryStep={entryStep}
+            isOnline={isOnline}
+            ordersList={ordersList}
+            setEntryStep={setEntryStep}
+            setShowInventoryOrders={setShowInventoryOrders}
+            showInventoryOrders={showInventoryOrders}
+          />
         {
           entryStep === "inProgress" && 
           <div className="sales-entry-container d-flex flex-column flex-md-row col-12" 

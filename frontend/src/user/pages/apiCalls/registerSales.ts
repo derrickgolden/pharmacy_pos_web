@@ -16,9 +16,11 @@ interface handleAddGroupProps{
     setEntryStep: (step: string) =>void;
     setSaleRes: (saleRes: SaleRes) =>void;
     pharmacy_id: number;
+    isOnline: boolean;
 }
 export const regiterSalesApi = ({
-    orderDetails, totalPrice, setOrdersList, moneyTrans, updateStock, payMethods, setEntryStep, setSaleRes, pharmacy_id
+    orderDetails, totalPrice, setOrdersList, moneyTrans, updateStock, payMethods, 
+    setEntryStep, setSaleRes, pharmacy_id, isOnline
 }: handleAddGroupProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
@@ -36,10 +38,14 @@ export const regiterSalesApi = ({
 
     let data = JSON.stringify({orderDetails, totalPrice, moneyTrans, updateStock, payMethods, pharmacy_id});
     
+    // console.log(data);
+    const url = isOnline? `https://pharmabackend.karibuchakula.co.ke/user/sales/register-sales` : 
+                `http://localhost:5020/user/sales/register-sales`
+
     let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: `${server_baseurl}/user/sales/register-sales`,
+        url: url,
         headers: { 
             'Content-Type': 'application/json',
             'Authorization': `${token}`

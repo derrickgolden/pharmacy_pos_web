@@ -8,6 +8,12 @@ import { updateStock } from './apiCalls/updateStock';
 import { editMedicineDetailsApi } from './apiCalls/editMedicineDetails';
 import { setCallApi } from '../../../redux/callApi';
 
+interface update_modal_data_props{
+    medicine_id: number;
+    medicine_name: string;
+    group_name: string;
+    stock_qty: number;
+}
 interface Add_data_modal_Props {
     select_data: Medicine;
     open_update_data_modal: {modal_open: boolean};
@@ -22,13 +28,15 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
     // open modal in status
     const [add_data_modal_Show, set_update_data_modal_Show] = useState(false);
     
-    const [update_modal_data, setUpdate_modal_data] = useState<Medicine>()
+    const [update_modal_data, setUpdate_modal_data] = useState<update_modal_data_props>()
 
     const [newStock, setNewStock] = useState<number>()
-    const [totalStock, setTotalStock] = useState<number>()
-    const [editDetails, setEditDetails] = useState<{warning_limit: number, medicine_name: string}>()
-
+    const [editDetails, setEditDetails] = useState(
+        {medicine_name: select_data?.medicine_name, warning_limit: select_data?.warning_limit}
+    )
+        
     const stock = select_data?.stock_qty || select_data?.containers || 0;
+    const [totalStock, setTotalStock] = useState<number>(stock);
  
     useEffect(() => {
 
@@ -36,13 +44,13 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
             group_name: select_data?.group_name, 
             medicine_id: select_data?.medicine_id,
             medicine_name: select_data?.medicine_name,
-            medicine_quantity: stock
+            stock_qty: stock
         })
 
         setNewStock(undefined);
         
-        setTotalStock(stock);
-        setEditDetails({medicine_name: select_data?.medicine_name, warning_limit: select_data?.warning_limit })
+        // setTotalStock(stock);
+        // setEditDetails({medicine_name: select_data.medicine_name, warning_limit: select_data.warning_limit })
         setBtnType(btn_type)
     }, [select_data])
 
@@ -153,12 +161,12 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
                     <div>
                         <label htmlFor="medicine_name">Edit medicine name:</label>
                         <div className="input-group mb-3">
-                            <input type="text" onChange={handleInputChange} value={editDetails?.medicine_name}
+                            <input type="text" onChange={handleInputChange} value={editDetails.medicine_name}
                             className="form-control" id="medicine_name" aria-describedby="medicine-name" />
                         </div>
                         <label htmlFor="warning_limit">Change warning limit:</label>
                         <div className="input-group mb-3">
-                            <input type="number" onChange={handleInputChange} value={editDetails?.warning_limit}
+                            <input type="number" onChange={handleInputChange} value={editDetails.warning_limit}
                             className="form-control" id="warning_limit" aria-describedby="warning-limit" />
                         </div>
                     </div>

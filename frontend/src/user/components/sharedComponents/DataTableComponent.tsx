@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef } from 'react'
 import DataTable from 'react-data-table-component'
-import { Medicine } from '../inventory/types'
+import { Medicine, StockDetails } from '../inventory/types'
 import { DataTableComponentProps } from './types'
 
 const DataTableComponent: React.FC<DataTableComponentProps> = ({ apidata, columns, search }) =>{
-  const [data, setData] = useState([])
+  const [data, setData] = useState<Medicine[]>(apidata)
   const [datafilter, setFilter] = useState('')
-  const [datafinals, setFinals] = useState([])
+  const [datafinals, setFinals] = useState<Medicine[]>(apidata)
 
+  // console.log(apidata)
   useEffect(() => {
-    let result = data.filter((val: Medicine) => {
+    let result = data?.filter((val ) => {
       console.log(val);
       
       if (search == 'medicine_name') {

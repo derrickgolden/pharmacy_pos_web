@@ -1,30 +1,22 @@
 
 import DataTableComponent from "../sharedComponents/DataTableComponent";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { Medicine, MedicineListProps } from "./types";
+import { Medicine, StockDetails } from "./types";
 
 import Update_stock_modal from "./PopupModal"
 
 import { MdBrowserUpdated } from "react-icons/md";
 
-export interface StockDetails{
-    containers: number;
-    last_stocked: Date;
-    medicine_id: number;
-    medicine_name: string;
-    open_container_units: number;
-    stock_id: number;
-    units_per_container: number;
-    warning_limit: number;
-}
 const SummaryDetails = () =>{
-    const navigate = useNavigate()
+    const navigate = useNavigate();
     if(useLocation().state === null){
-        return navigate("/user/dashboard")
+        navigate("/user/dashboard");
+        return null;
     }
 
     const { data, caption, color } = useLocation().state;
+    console.log(data);
 
     const [search, setSearch] = useState('medicine_name');
     const [searchType, setSearchType] = useState('medicine_name');
@@ -33,42 +25,42 @@ const SummaryDetails = () =>{
     const componentRef = useRef(null);
 
     // open modal
-    const [open_update_modal, setOpen_update_modal] = useState({ render: true, modal_open: false })
+    const [open_update_modal, setOpen_update_modal] = useState({ render: true, modal_open: false });
 
     const columns = [
         {
             name: "Medicine Id",
-            selector: (row: StockDetails) => row.medicine_id,
+            selector: (row: Medicine) => row.medicine_id,
             sortable: true
         },
         {
             name: "Medicine Name",
-            selector: (row: StockDetails) => row.medicine_name,
+            selector: (row: Medicine) => row.medicine_name,
             sortable: true
         },
         {
             name: "Stock in Qty",
-            selector: (row: StockDetails) => row.containers,
+            selector: (row: Medicine) => row.containers,
             sortable: true
         },
         {
             name: "Open Stock",
-            selector: (row: StockDetails) => row.open_container_units,
+            selector: (row: Medicine) => row.open_container_units,
             sortable: true
         },
         {
             name: "Warining Limit",
-            selector: (row: StockDetails) => row.warning_limit,
+            selector: (row: Medicine) => row.warning_limit,
             sortable: true
         },
         {
             name: "Last Stocked",
-            selector: (row: StockDetails) => new Date(row.last_stocked).toLocaleDateString(),
+            selector: (row: Medicine) => new Date(row?.last_stocked).toLocaleDateString(),
             sortable: true
         },
         {
             name: "Action",
-            cell: (row: StockDetails) => <>
+            cell: (row: Medicine) => <>
                 {/* <button onClick={() => onHandleActionDetails(row)} className=" btn btn-info btn-sm ms-1"  >
                     <FontAwesomeIcon icon={faCircleInfo} />
                 </button> */}
@@ -100,10 +92,13 @@ const SummaryDetails = () =>{
     
     return(
         <div className='body2 bg-white pb-5' style={{paddingTop: "4rem"}}>
-            <Update_stock_modal 
-                select_data={selectData} open_update_data_modal={open_update_modal}
-                btn_type = "update" 
-            />
+            {   
+                selectData && 
+                    <Update_stock_modal 
+                    select_data={selectData} open_update_data_modal={open_update_modal}
+                    btn_type = "update" 
+                />
+            }
             <div ref={componentRef} className="container-fluid px-5" >
                 <div className="pt-3">
                     <button type="button" onClick={() => navigate("/user/dashboard")}

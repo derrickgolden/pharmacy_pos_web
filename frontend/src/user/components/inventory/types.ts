@@ -23,7 +23,22 @@ export interface Medicine {
     action: string;
     containers: number;
     warning_limit: number;
+    last_stocked?: Date;
+    open_container_units?: number;
+    stock_id?: number;
+    units_per_container: number;
   }
+
+export interface StockDetails{
+    containers: number;
+    last_stocked: Date;
+    medicine_id: number;
+    medicine_name: string;
+    open_container_units: number;
+    stock_id: number;
+    units_per_container: number;
+    warning_limit: number;
+}
 
 export interface MedicineDetailsProps{
     onHandleActionDetails:{}, 

@@ -1,13 +1,7 @@
 import { Medicine } from "../inventory/types";
 
 export interface DataTableComponentProps{
-    apidata:{
-      medicine_id: number;
-      medicine_name: string;
-      group_name: string;
-      stock_qty: number;
-      action: string;
-    }[], 
+    apidata: Medicine[], 
     columns: ({
         name: string;
         selector: (row: Medicine) => number;
@@ -15,7 +9,7 @@ export interface DataTableComponentProps{
         cell?: undefined;
     } | {
         name: string;
-        selector: (row: Medicine) => string;
+        selector: (row: Medicine) => string ;
         sortable: boolean;
         cell?: undefined;
     } | {
