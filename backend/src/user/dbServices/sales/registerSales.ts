@@ -5,19 +5,32 @@ const { pool } = require("../../../mysqlSetup");
 
 export const registerSales = async (saleDetails: RegisterSalesProp, user_id: number ): Promise<universalResponse> => {
 
-    console.log(saleDetails);
+    // console.log(saleDetails);
     const orderDetails = saleDetails.orderDetails;
     const totalPrice = saleDetails.totalPrice;
     const moneyTrans = saleDetails.moneyTrans;
     const updateStock = saleDetails.updateStock;
     const pharmacy_id = saleDetails.pharmacy_id;
-console.log("pharma_id:", pharmacy_id)
+
     const sale_date = new Date()
 
     try {
         const connection: RowDataPacket = await pool.getConnection();
 
         await connection.beginTransaction();
+
+            // var [update_res] = await connection.query(`
+            //     SELECT * FROM update_online
+            //     WHERE update_flag = ?
+            // `, [true]);
+            
+            // if(update_res.length === 0){
+            //     var [update] = await connection.query(`
+            //         INSERT INTO update_online (update_flag, start_date)
+            //         VALUES (?, ?)
+            //     `, [true, sale_date]);
+            // }
+
             const {customerGave, change} = moneyTrans;
             var [res] = await connection.query(`
                 INSERT INTO sales (sale_date, total_price, change_amount, cashier, pharmacy_id)

@@ -1,10 +1,11 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { OrderDetail } from "../../pages/SalesEntry";
 import { FaAngleLeft } from "react-icons/fa";
 import OrderDisplay from "./OrderDisplay";
 import { FaDeleteLeft } from "react-icons/fa6";
 import { Order } from "./types";
-import { Link } from "react-router-dom";
+
+import { FaPlus } from "react-icons/fa";
 
 interface ListOfOrdersProps {
     ordersList: Order[];
@@ -19,6 +20,7 @@ interface ListOfOrdersProps {
 const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, totalPrice, 
     setEntryStep, handleNewCustomerOrder, handleDeleteCustomerOrder, setOrdersList }) =>{
 
+    const [showReview, setShowReview] = useState(false); 
     const scrollRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -32,11 +34,11 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, tota
         setOrdersList((arr) => {
             return arr.map(prevOrder =>{
                 if(prevOrder.date === order.date ){
-                    setEntryStep(order.status);
+                    // setEntryStep(order.status);
                     return({ ...prevOrder, activeOrder: true });   
                 }else{
                     return({ ...prevOrder, activeOrder: false });
-                }
+                };
             }); 
         });
     };
@@ -45,8 +47,12 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, tota
         ordersList.map(orders =>{
             if(orders.activeOrder){
                 setEntryStep(orders.status);
-            }
-        })
+            };
+        });
+    };
+
+    const handleReviewOrder = () =>{
+
     }
 
     const handleEditOrder = (order: OrderDetail) =>{
@@ -54,15 +60,23 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, tota
 
     return(
         <div className="d-flex sales-entry-container" >
-            <div className="col-12 col-sm-6 col-md-7 bg-light h-100 ">
+            <div className={`${showReview? "d-none ": ""} col-12 col-sm-6 col-md-7 bg-light h-100 `}>
                 <div className="d-flex py-1 px-2 gap-4 bg-secondary" style={{height: "3rem"}}>
                     <button onClick={() => handleEntryStep()}
-                        className="navbar-brand pl-2 btn btn-light">
+                        className="d-none d-md-block navbar-brand pl-2 btn btn-light">
                             &nbsp;<FaAngleLeft /> Back
                     </button>
+                    <button onClick={() => handleEntryStep()}
+                        className="d-none d-sm-block d-md-none navbar-brand btn btn-light">
+                            &nbsp;<FaAngleLeft size={25}/> 
+                    </button>
                     <button onClick={() => handleNewCustomerOrder({date: new Date().toLocaleString()})}
-                        className="navbar-brand pl-2 btn btn-warning">
+                        className="d-none d-md-block navbar-brand pl-2 btn btn-warning">
                             New Order
+                    </button>
+                    <button onClick={() => handleNewCustomerOrder({date: new Date().toLocaleString()})}
+                        className="d-md-none navbar-brand pl-2 btn btn-warning">
+                            <FaPlus />
                     </button>
                     <div className="input-group ">
                         <input type="text" className="form-control flex-grow-1" placeholder="Search orders..." aria-label="Recipient's username" aria-describedby="basic-addon2" />
@@ -96,7 +110,7 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, tota
                             {
                                 ordersList.map((order, i) =>(
                                     <tr key={i} onClick={() => handleChangeActiveOrder(order)}
-                                    className={`${i === 1? "table-active" : " "}`}>
+                                    className={`${order.activeOrder? "table-active" : " "}`}>
                                         <td>{order.date}</td>
                                         <td>{order.totalPrice} Ksh</td>
                                         <td className="text-capitalize">{order.status}</td>
@@ -111,26 +125,28 @@ const ListOfOrders: React.FC<ListOfOrdersProps> = ({ordersList, activeCard, tota
                         </tbody>
                     </table>
                 </div>
-                <div className="d-flex d-sm-none fixed-bottom">
+                <div className="d-flex  fixed-bottom">
                     <button type="button" onClick={() => handleEntryStep()}
-                    className="btn col-6 py-3 rounded-0 btn-warning">
+                    className="btn col-6 col-md-7 py-3 rounded-0 btn-warning">
                         <h5 className="mb-0"><b>Load Order</b></h5>
                     </button>
-                    <button type="button" onClick={() => handleEntryStep()}
-                    className="btn col-6 py-3 rounded-0 btn-info text-center">
+                    <button type="button" onClick={() => setShowReview(true)}
+                    className="d-sm-none btn col-6 py-3 rounded-0 btn-info text-center">
                         <h5 className="mb-0"><b>Review</b></h5>
                     </button>
                 </div>
             </div>
-            <div className=" d-none d-sm-block col-6 col-md-5" >
+            <div className={`${showReview? "" : "d-none "} d-sm-block col-12 col-sm-6 col-md-5`} >
                 {ordersList.map((order, i) =>{
                     return order.activeOrder === true ?
                         <OrderDisplay key={i}
-                            window = "orders"
+                            windowDisplay = "orders"
                             activeCard = {activeCard}
                             handleEditOrder = {handleEditOrder}
                             orderDetails = {order.orderDetails}
                             totalPrice = {totalPrice}
+                            setShowReview = {setShowReview}
+                            handleEntryStep = {handleEntryStep}
                         /> : null
                     })
                 }

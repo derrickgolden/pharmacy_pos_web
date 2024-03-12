@@ -7,5 +7,4 @@ const server_baseurl = "https://pharmabackend.karibuchakula.co.ke"
 export {
     client_baseurl,
     server_baseurl,
-}
-
+};

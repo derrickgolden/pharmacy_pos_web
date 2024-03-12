@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 import { Group } from "../../../../../redux/groupList";
 
 export const getMedicineGroupList = async(
-        filterNull: boolean, pharmacy_id: number
+        filterNull: boolean, pharmacy_id: number, isOnline?: boolean
     ): Promise<Group[] | []> =>{
 
     const tokenString = sessionStorage.getItem("userToken");
@@ -21,6 +21,9 @@ export const getMedicineGroupList = async(
     }
     
     const data = JSON.stringify({ filterNull, pharmacy_id });
+    const url = isOnline ? `https://pharmabackend.karibuchakula.co.ke/user/inventory/get-groups` :
+                `http://localhost:5020/user/inventory/get-groups`;
+
     let config = {
         method: 'post',
         maxBodyLength: Infinity,
@@ -35,7 +38,6 @@ export const getMedicineGroupList = async(
     return await axios.request(config)
     .then((response) => {
         if(response.data.success){ 
-            console.log(response.data.details)           
             return(response.data.details)
         }else{
             Swal.fire({

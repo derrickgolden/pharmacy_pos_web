@@ -36,6 +36,15 @@ export const regiterSalesApi = ({
         return
     }
 
+    if (!isOnline) {
+        Swal.fire({
+            title: "Network connection",
+            text: "Check your internet connection. Maybe disconnected or unstable",
+            icon: "warning"
+        });
+        return
+    } 
+
     let data = JSON.stringify({orderDetails, totalPrice, moneyTrans, updateStock, payMethods, pharmacy_id});
     
     // console.log(data);

@@ -18,7 +18,9 @@ export interface CommonSalesEntryProps{
   totalPrice?: number;
   orderDetails: OrderDetail[];
   handleEditOrder: (order: OrderDetail) => void;
-  window?: string;
+  windowDisplay?: string;
+  setShowReview?: React.Dispatch<React.SetStateAction<boolean>>;
+  handleEntryStep?: () => void
 }
 
 export interface MedicineDetails {

@@ -23,6 +23,7 @@ const POSnavbar: React.FC<POSnavbar> = ({
     const userPharm = getSessionStorage();
     const { localPharm: pharm } = userPharm.localPharm;
     const { user } = userPharm.user;
+    console.log(showInventoryOrders, entryStep)
 
     return(
         <nav className="navbar navbar-expand z-30 navbar-light w-100 py-0"
@@ -30,7 +31,7 @@ const POSnavbar: React.FC<POSnavbar> = ({
               <div className="container-fluid"  style={{backgroundColor: "#f2f2f3"}}>
                 <div>
                   {
-                    showInventoryOrders !== "inventory" && entryStep === "ordersentry" && (
+                    showInventoryOrders !== "inventory" && entryStep === "inProgress" && (
                       <button type="button" onClick={() => setShowInventoryOrders("inventory")}
                         className="btn btn-outline-link d-md-none">Inventory <FaAnglesRight />
                       </button>
