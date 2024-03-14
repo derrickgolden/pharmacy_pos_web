@@ -1,12 +1,12 @@
 import React from 'react';
 import DataTable from 'react-data-table-component';
-import { Pharmacy } from '../../../redux/activePharmacy';
+import { PharmacyState } from '../../../redux/activePharmacy';
 
 interface salesItemProps{
     medicine_id: number,
     medicine_name: string,
     sales_item_id: number,
-    sub_total: string,
+    sub_total: number,
     units_sold: number
 }
 export interface salesProps{
@@ -21,24 +21,48 @@ export interface salesDataProps{
     activePharmacy: PharmacyState;
 }
 
-const SalesTable: React.FC<salesDataProps> = ({ salesData, activePharmacy }: salesDataProps) => {
-    
+interface subColumnsProps {
+    sub_total: string;
+    id: string;
+    medicine_id: number;
+    medicine_name: string;
+    sales_item_id: number;
+    units_sold: number;
+}
+interface columnsProps {
+    id: number;
+    sale_id: number;
+    sale_date: string;
+    total_price: string;
+    cashier: {
+        cashier_f_name: string;
+        cashier_l_name: string;
+        cashier_id: number;
+    };
+    children: subColumnsProps[];
+}[];
+
+interface mappedDataProps{
+    data: columnsProps;
+}
+
+const SalesTable: React.FC<salesDataProps> = ({ salesData, activePharmacy }) => {
     // Define columns for the main DataTable
   const columns = [
-    { name: 'Sale ID', selector: (row: salesProps) => row.sale_id, sortable: true },
-    { name: 'Sale Date', selector: (row: salesProps) => row.sale_date, sortable: true },
-    { name: 'Total Price', selector: (row: salesProps) => row.total_price, sortable: true },
-    { name: 'Cashier Name', selector: (row: salesProps) => row.cashier.cashier_f_name, sortable: true },
-    { name: 'Cashier Id', selector: (row: salesProps) => row.cashier.cashier_id, sortable: true },
+    { name: 'Sale ID', selector: (row: columnsProps) => row.sale_id, sortable: true },
+    { name: 'Sale Date', selector: (row: columnsProps) => row.sale_date, sortable: true },
+    { name: 'Total Price', selector: (row: columnsProps) => row.total_price, sortable: true },
+    { name: 'Cashier Name', selector: (row: columnsProps) => row.cashier.cashier_f_name, sortable: true },
+    { name: 'Cashier Id', selector: (row: columnsProps) => row.cashier.cashier_id, sortable: true },
   ];
 
   // Define columns for the nested DataTable (Sales Items)
   const subColumns = [
-    { name: 'Sales Item ID', selector: (row: salesItemProps) => row.sales_item_id, sortable: true },
-    { name: 'Medicine ID', selector: (row: salesItemProps) => row.medicine_id, sortable: true },
-    { name: 'Medicine Name', selector: (row: salesItemProps) => row.medicine_name, sortable: true },
-    { name: 'Units Sold', selector: (row: salesItemProps) => row.units_sold, sortable: true },
-    { name: 'Sub Total', selector: (row: salesItemProps) => row.sub_total, sortable: true },
+    { name: 'Sales Item ID', selector: (row: subColumnsProps) => row.sales_item_id, sortable: true },
+    { name: 'Medicine ID', selector: (row: subColumnsProps) => row.medicine_id, sortable: true },
+    { name: 'Medicine Name', selector: (row: subColumnsProps) => row.medicine_name, sortable: true },
+    { name: 'Units Sold', selector: (row: subColumnsProps) => row.units_sold, sortable: true },
+    { name: 'Sub Total', selector: (row: subColumnsProps) => row.sub_total, sortable: true },
   ];
 
   // Map the sales data to match the main DataTable structure
@@ -50,14 +74,13 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData, activePharmacy }: sal
         cashier: sale.cashier,
         children: sale.sales_items.map((item) => ({
             ...item,
-            sub_total: `Ksh. ${parseFloat(item.sub_total).toFixed(2)}`,
+            sub_total: `Ksh. ${(item.sub_total).toFixed(2)}`,
         id: `${sale.sale_id}-${item.sales_item_id}`, // Unique identifier for each row
         })),
     }));
 
     // const nestData = mappedData?.children
-    const ExpandedComponent = ({data}) => {
-        // console.log(data);
+    const ExpandedComponent = ({data}: mappedDataProps) => {
         return(
             <div className="card " style={{border: "1px solid #91becc", borderTop: "2px solid #3aaed1" }}>
                 <div className="card-header d-flex justify-content-between border-bottom pb-1">
@@ -66,17 +89,16 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData, activePharmacy }: sal
                 <div className="card-body pt-0">
                     {mappedData.length ? <div className="table-responsive ">
                     <DataTable
-                    columns={subColumns}
-                    data={data.children}
-                    highlightOnHover
+                        columns={subColumns}
+                        data={data.children}
+                        highlightOnHover
                     />
                 </div>
                     :
                     <h1>No data to show</h1>
                     }  
                 </div>
-            </div>
-           
+            </div>          
         );
     };
 
@@ -94,20 +116,21 @@ const SalesTable: React.FC<salesDataProps> = ({ salesData, activePharmacy }: sal
                     </select> */}
                 </div>
                 <div className="card-body">
-                    {activePharmacy?.pharmacy? <div className="table-responsive ">
-                        <DataTable
-                        columns={columns}
-                        data={mappedData}
-                        pagination
-                        expandableRows
-                        expandOnRowClicked
-                        expandableRowsComponent={ExpandedComponent}
-                        highlightOnHover
-                        striped
-                        />
-                    </div>
-                    :
-                    <h1>Select a pharmacy first</h1>
+                    {activePharmacy?.pharmacy? 
+                        (<div className="table-responsive ">
+                            <DataTable
+                                columns={columns}
+                                data={mappedData}
+                                pagination
+                                expandableRows
+                                expandOnRowClicked
+                                expandableRowsComponent={ExpandedComponent}
+                                highlightOnHover
+                                striped
+                            />
+                        </div>) :   (
+                        <h1>Select a pharmacy first</h1>
+                        )
                     }  
                 </div>
             </div>

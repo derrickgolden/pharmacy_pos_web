@@ -1,4 +1,5 @@
 import { SelectedDate } from "../../components/reports/ReportHeader";
+import { salesProps } from "../../components/reports/SalesTable";
 
 interface SalesItem {
     sub_total: number;
@@ -23,16 +24,16 @@ export interface ResultItem {
         units_sold: number;
         Clients: number;
     }[];
-    sortedSales: {}[]
+    sortedSales: salesProps[]
 }
 
 interface calculateTotalSalesProps {
-    data: Sale[], date: SelectedDate, keyType: "payment_methods" | "sales_items"
+    data: salesProps[], date: SelectedDate, keyType: "payment_methods" | "sales_items"
 }
 
 export function calculateTotalSales({data, date, keyType}: calculateTotalSalesProps): ResultItem {
     const accumulatedSales = [];
-    const sortedSales: {}[] = [];
+    const sortedSales: salesProps[] = [];
     const startDate = new Date(date?.startDate);
     const endDate = new Date(date?.endDate);
 
@@ -56,7 +57,7 @@ export function calculateTotalSales({data, date, keyType}: calculateTotalSalesPr
                 acc[saleDate].units_sold += item.units_sold;
             });
             acc[saleDate].Clients += 1;
-
+            // console.log(sale)
             sortedSales.push(sale)
         }
         return acc;

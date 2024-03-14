@@ -71,7 +71,6 @@ const MedicineList: React.FC<MedicineListProps> = ({onHandleActionDetails}) =>{
         if(activePharmacy.pharmacy){
             const medicineList = getMedicineListApi(activePharmacy.pharmacy.pharmacy_id);
             medicineList.then(data =>{
-                console.log(data);
                 dispatch(setMedicineList(data));
             })
         }

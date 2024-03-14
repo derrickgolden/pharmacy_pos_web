@@ -1,6 +1,7 @@
 import axios from "axios";
 import { server_baseurl } from "../../../../baseUrl";
 import Swal from "sweetalert2";
+import { NavigateFunction } from "react-router-dom";
 
 interface handleAddGroupProps{
     pharmacyDetails: {
@@ -9,9 +10,9 @@ interface handleAddGroupProps{
          pharmacy_email: string;
          pharmacy_tel: string;
          extra_info: string;
-         logo: {}
+         logo: string;
     }
-    navigate: (arg: number | string) => void   
+    navigate: NavigateFunction   
 }
 export const regiterPharmacyApi = ({pharmacyDetails, navigate}: handleAddGroupProps) =>{
 

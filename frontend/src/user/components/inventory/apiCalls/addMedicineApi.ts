@@ -1,26 +1,19 @@
 import axios from "axios";
 import { server_baseurl } from "../../../../baseUrl";
 import Swal from "sweetalert2";
+import { NewMedicineDetailsProps } from "../types";
 
 interface handleAddGroupProps{
     addMedicineDetails:{
-        newMedicineDetails: {
-            group_id: number;
-            medicine_code: string;
-            medicine_name: string;
-            group_name: string;
-            stock_qty: number;
-            instructions: string;
-            side_effect: string;
-            img_path: File;
-        }
+        newMedicineDetails: NewMedicineDetailsProps;
         pricingDetails:{
             price: number, unit_of_mesurement: number, package_size: number
-        }
+        };
     };
     setShowDetails: (component: string) =>void;
     pharmacy_id : number;
 }
+
 export const addMedicineApi = ({addMedicineDetails, setShowDetails, pharmacy_id}: handleAddGroupProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
@@ -59,7 +52,7 @@ export const addMedicineApi = ({addMedicineDetails, setShowDetails, pharmacy_id}
     formData.append('package_size', package_size.toString());
     formData.append('unit_of_mesurement', unit_of_mesurement.toString());
 
-    formData.append('logo', img_path);
+    img_path ? formData.append('logo', img_path) : null;
     formData.append('pharmacy_id', pharmacy_id.toString());
     
     let config = {

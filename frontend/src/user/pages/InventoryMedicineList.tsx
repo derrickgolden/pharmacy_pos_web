@@ -10,9 +10,7 @@ import Swal from "sweetalert2";
 
 const InventoryMedicineList = () =>{
     const [showDetails, setShowDetails] = useState("list")
-    const [medicineDetails, setMedicineDetails] = useState({
-        medicine_id: 0, medicine_name: "", group_name: "", stock_qty: 0, action: ""
-    })
+    const [medicineDetails, setMedicineDetails] = useState<Medicine>()
 
     const handleActionDetails = (row: Medicine) =>{
         setMedicineDetails(row);
@@ -48,7 +46,7 @@ const InventoryMedicineList = () =>{
                     onHandleActionDetails = {handleActionDetails} 
                     onHandleUpdateStock = {handleUpdateStock}
                 />}
-            {showDetails === "details" && 
+            {showDetails === "details" && medicineDetails &&
                 <MedicineDetails
                     onHandleActionDetails = {handleActionDetails}
                     medicineDetails = {medicineDetails}

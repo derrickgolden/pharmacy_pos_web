@@ -31,9 +31,7 @@ export const getMedicineListApi = async(pharmacy_id: number) =>{
 
     return await axios.request(config)
     .then((response) => {
-        if(response.data.success){
-            console.log(response.data.details);
-            
+        if(response.data.success){            
             return response.data.details
         }else{
             Swal.fire({

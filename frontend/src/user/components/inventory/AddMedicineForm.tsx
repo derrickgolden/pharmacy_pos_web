@@ -7,7 +7,6 @@ import { setGroupList } from "../../../redux/groupList";
 import PricingDetailsCard from "./PricingDetailsCard";
 
 interface AddMedicineFormProps{
-    onHandleAddMedicineForm: ({}) => void;
     setShowDetails: (showDetails: string) => void
 }
 export interface GroupListProps{
@@ -23,9 +22,9 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
 
     const [medicineDetails, setMedicineDetails] = useState({
         medicine_code: '', medicine_name: "", group_name: "", 
-        instructions: "", side_effect: "", group_id: null
+        instructions: "", side_effect: "", group_id: null, img_path: null
     })
-    const [pricingDetails, setPricingDetails] = useState({});
+    const [pricingDetails, setPricingDetails] = useState({price: 0, unit_of_mesurement: 0, package_size: 0});
     const [selectRows, setSelectRows] = useState(3)
 
     useEffect(() =>{
@@ -66,7 +65,8 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
         const addMedicineDetails = {newMedicineDetails, pricingDetails};
         const pharmacy_id = activePharmacy.pharmacy?.pharmacy_id;
         
-        addMedicineApi({addMedicineDetails, setShowDetails, pharmacy_id})
+        pharmacy_id ? 
+        addMedicineApi({addMedicineDetails, setShowDetails, pharmacy_id}) : null
     }
 
     return(

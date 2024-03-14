@@ -2,13 +2,13 @@ export interface MedicineGroup {
     medicine_totals: number;
     action: string;
     group_name: string;
-    medicines: [{
+    medicines: {
         medicine_id: number;
         medicine_name: string;
         group_name: string;
         stock_qty: number;
         action: string;
-    }]
+    }[]
   }
 
   export interface GroupMedicineDetailsProps{

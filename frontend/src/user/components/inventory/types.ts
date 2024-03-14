@@ -27,7 +27,7 @@ export interface Medicine {
     open_container_units?: number;
     stock_id?: number;
     units_per_container: number;
-  }
+}
 
 export interface StockDetails{
     containers: number;
@@ -49,9 +49,9 @@ export interface MedicineDetailsProps{
 export interface MedicineListProps {
     onHandleActionDetails: (row: Medicine) => void;
     onHandleUpdateStock: (row: Medicine) => void;
-  }
+}
 
-  export interface Medicine {data:{
+export interface Medicine {data:{
     medicine_id: number;
     medicine_code: string;
     medicine_name: string;
@@ -62,3 +62,13 @@ export interface MedicineListProps {
     group_name: string;
     description: string;
 }}
+
+export interface NewMedicineDetailsProps {
+    group_id: number;
+    medicine_code: string;
+    medicine_name: string;
+    group_name: string;
+    instructions: string;
+    side_effect: string;
+    img_path: File | null;
+}

@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { salesProps } from '../user/components/reports/SalesTable';
 
+const initialState: salesProps[] = [];
 const salesReportSlice = createSlice({
   name: 'salesReport',
-  initialState: [],
+  initialState,
   reducers: {
     setSalesReportList: (state, action) => {      
         return action.payload;

@@ -1,4 +1,6 @@
 import { SelectedDate } from "../../components/reports/ReportHeader";
+import { salesProps } from "../../components/reports/SalesTable";
+import { paymentProps } from "../types";
 
 interface SalesItem {
     sub_total: number;
@@ -13,10 +15,10 @@ interface Sale {
     sale_date: string;
     total_price: string;
     sales_items: SalesItem[];
-    payment_methods: {payment_method: string, amount: number}[];
+    payment_methods: {payment_method: "Cash" | "Bank" | "Customer account", amount: number}[];
 }
 
-export interface ResultItem {
+export interface PayMethodResult {
     amtPerMethod:{
         day: string;
         Cash: number; 
@@ -29,17 +31,17 @@ export interface ResultItem {
         Bank: number; 
         Customer_account: number;
     }[];
-    sortedSales: {}[]
+    sortedPayments: paymentProps[]
 }
 
 interface calculateTotalSalesProps {
-    data: Sale[], date: SelectedDate, keyType: "payment_methods" | "sales_items"
+    data: paymentProps[], date: SelectedDate, keyType: "payment_methods" | "sales_items"
 }
 
-export function calcSalesPayMethodTotals({data, date, keyType}: calculateTotalSalesProps): ResultItem {
+export function calcSalesPayMethodTotals({data, date, keyType}: calculateTotalSalesProps): PayMethodResult {
     const amtPerMethod = [];
     const transPerMethod = [];
-    const sortedSales: {}[] = [];
+    const sortedPayments: paymentProps[] = [];
     const startDate = new Date(date?.startDate);
     const endDate = new Date(date?.endDate);
 
@@ -76,8 +78,8 @@ export function calcSalesPayMethodTotals({data, date, keyType}: calculateTotalSa
                     }
                 }
             });
-
-            sortedSales.push(sale)
+console.log(sale);
+            sortedPayments.push(sale)
         }
         return acc;
     }, {} as Record<string, {   Cash: { amt: number; trans: number; }; 
@@ -99,6 +101,5 @@ export function calcSalesPayMethodTotals({data, date, keyType}: calculateTotalSa
             Customer_account: salesByDate[date].Customer_account.trans,
         });
     }
-
-    return {amtPerMethod, transPerMethod, sortedSales};
+    return {amtPerMethod, transPerMethod, sortedPayments};
 }

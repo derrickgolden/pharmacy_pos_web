@@ -9,7 +9,7 @@ const InventoryMedicineGroup = () =>{
     const [showDetails, setShowDetails] = useState("list");
     const [medicineDetails, setMedicineDetails] = useState({
         medicine_totals: 0, action: "", group_name: "",
-        medicine_list:[{
+        medicines:[{
             medicine_id: 0, medicine_name: "", group_name: "", stock_qty: 0, action: ""
         }]
     });

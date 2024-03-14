@@ -1,9 +1,9 @@
 
 interface PricingDetailsCardProps{
-    handlePricingInput: () => void; 
+    handlePricingInput: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void; 
     pricingDetails: {
         price: number;
-        unit_of_mesurement: string;
+        unit_of_mesurement: number;
         package_size: number
     }
 }

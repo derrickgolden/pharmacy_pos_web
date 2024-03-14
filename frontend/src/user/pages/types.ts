@@ -33,3 +33,24 @@ export interface SaleRes {
     remaining: number;
     customerGave: { [key: string]: number };
 }
+
+export interface paymentProps{
+    sale_id: number,
+    sale_date: Date,
+    total_price: string,
+    payment_methods:
+        {
+            amount: number,
+            payment_method: "Bank" | "Cash" | "Customer account"
+        }[]
+}
+export interface mappedPaymentProps{
+    id: number;
+    sale_id: number;
+    sale_date: string;
+    total_price: string;
+    payment_methods: {
+        amount: number;
+        payment_method: "Cash" | "Bank" | "Customer account";
+    }[];
+}

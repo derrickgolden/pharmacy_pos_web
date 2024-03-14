@@ -1,6 +1,7 @@
 import Papa from 'papaparse';
 
 import { salesProps } from "./SalesTable";
+import { paymentProps } from '../../pages/types';
 
 export const csvAttributes = (salesData: salesProps[]) =>{
     // Flatten the nested structure
@@ -49,7 +50,7 @@ export const csvAttributes = (salesData: salesProps[]) =>{
 
     return {headers, csvData}
 }
-export const csvPaymentsAttributes = (salesData: salesProps[]) =>{
+export const csvPaymentsAttributes = (salesData: paymentProps[]) =>{
     // Flatten the nested structure
     const flattenedData = salesData.map((sale) => {
         const { sale_id, sale_date, total_price, payment_methods } = sale;

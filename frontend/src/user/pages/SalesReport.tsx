@@ -7,14 +7,15 @@ import { setSalesReportList } from '../../redux/salesReport';
 import { RootState } from '../../redux/store';
 import { ResultItem, calculateTotalSales } from './calculations/totalSalesUnits';
 import ReportHeader, { SelectedDate } from '../components/reports/ReportHeader';
-import SalesTable from '../components/reports/SalesTable';
-import Swal from 'sweetalert2';
+import SalesTable from "../components/reports/SalesTable"
 
 export const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
 const SalesReport = () =>{
-    const [sortedSalesByDateSelect, setSortedSalesByDateSelect] = useState<ResultItem>({accumulatedSales: [], sortedSales: []})
+    const [sortedSalesByDateSelect, setSortedSalesByDateSelect] = useState<ResultItem>({
+        accumulatedSales: [], sortedSales: []
+    })
     const [selectedDate, setSelectedDate] = useState<SelectedDate>({
         startDate:  thirtyDaysAgo,
         endDate: new Date(),
@@ -91,7 +92,7 @@ const SalesReport = () =>{
             </div>
         </div>
         <SalesTable 
-            salesData={sortedSalesByDateSelect?.sortedSales} 
+            salesData={sortedSalesByDateSelect?.sortedSales } 
             activePharmacy = {activePharmacy}    
         />
         </div>

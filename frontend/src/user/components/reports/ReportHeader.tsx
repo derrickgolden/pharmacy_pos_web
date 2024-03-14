@@ -7,11 +7,13 @@ import { SlCalender } from "react-icons/sl";
 import { salesProps } from "./SalesTable";
 import { CSVLink } from 'react-csv';
 import { csvAttributes, csvPaymentsAttributes } from "./csvAttributes";
+import { paymentProps } from "../../pages/types";
 
 interface PagesHeaderProps{
     handleRegenerateGraph: (date: SelectedDate) => void;
-    salesData: salesProps[] | undefined
-    dataType: "Payments" | "Sales"
+    salesData?: salesProps[];
+    paymentData?: paymentProps[];
+    dataType: "Payments" | "Sales";
 }
 export interface SelectedDate {
     startDate: Date;
@@ -33,15 +35,15 @@ const today = new Date();
 const thirtyDaysAgo = new Date();
 thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesData, dataType}) =>{
+const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesData, paymentData, dataType}) =>{
     const [selectedDate, setSelectedDate] = useState<SelectedDate>({
         startDate:  thirtyDaysAgo,
         endDate: new Date(),
     });
 
-    const handleDateChange = (date: Date | [Date, Date]) => {
+    const handleDateChange = (date: [Date | null, Date | null]) => {
         if (Array.isArray(date)) {            
-            setSelectedDate({ startDate: date[0], endDate: date[1] });
+            setSelectedDate((dates) =>({ startDate: date[0] || dates.startDate, endDate: date[1] || dates.endDate }));
         } else {
             setSelectedDate((dates) =>({ ...dates, startDate: date }));
         }
@@ -51,10 +53,10 @@ const ReportHeader: React.FC<PagesHeaderProps> = ({handleRegenerateGraph, salesD
     const handleDownload = () => {
         // console.log(salesData);
         let data;
-        if(dataType === "Sales"){
+        if(dataType === "Sales" && salesData){
             data = csvAttributes(salesData);
-        }else if(dataType === "Payments"){
-            data = csvPaymentsAttributes(salesData);
+        }else if(dataType === "Payments" && paymentData){
+            data = csvPaymentsAttributes(paymentData);
         }
         if(data){
             const startDate = new Date(selectedDate.startDate).toLocaleDateString()

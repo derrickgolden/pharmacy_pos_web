@@ -57,7 +57,7 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
     useEffect(() => {
         setApiState(medicineDetails.medicines)
         // setApiCol(columns)
-        console.log("render from transactions")
+        console.log(medicineDetails)
     }, [rerendarApi])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
