@@ -1,7 +1,5 @@
 import { FaInfoCircle } from "react-icons/fa";
 import { pharmacy } from "../../../assets/images"
-import { OrderDetail } from "../../pages/SalesEntry";
-import { Medicine } from "../inventory/types";
 import { MedicineDetails } from "../../sections/pointOfEntry/types";
 interface POEmedicineCardProps {
     handleNewOrderSelect: (newOrder: MedicineDetails) =>void;

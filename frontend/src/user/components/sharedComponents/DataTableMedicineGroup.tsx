@@ -1,33 +1,26 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import DataTable from 'react-data-table-component'
-import { DataTableComponentProps } from './types'
-import { Medicine } from '../inventory/types'
+import { DataTableMedicineGroupProps } from './types'
 
-const DataTableComponent: React.FC<DataTableComponentProps> = ({ apidata, columns, search }) =>{
-  const [data, setData] = useState(apidata as Medicine[])
+const DataTableMedicineGroup: React.FC<DataTableMedicineGroupProps> = ({ apidata, columns, search }) =>{
+  const [data, setData] = useState(apidata)
   const [datafilter, setFilter] = useState('')
-  const [datafinals, setFinals] = useState(apidata as Medicine[])
+  const [datafinals, setFinals] = useState(apidata)
 
+  // console.log(apidata)
   useEffect(() => {
-    let result: Medicine[] = data?.filter((val ) => {      
-      if (search == 'medicine_name') {
-        return val.medicine_name?.toLowerCase().match(datafilter?.toLowerCase())
-      }
-      else if (search == 'group_name') {
+    let result = data?.filter((val ) => {      
+      if (search == 'group_name') {
         return val.group_name?.toLowerCase().match(datafilter?.toLowerCase())
       }
-      else if (search == 'medicine_id') {
-        return val.medicine_id?.toString().match(datafilter?.toString())
-      }
-    }) as Medicine[]
+    })
 
     setFinals(result)
-
   }, [datafilter])
 
   useEffect(() => {
-    setFinals(apidata as Medicine[])
-    setData(apidata as Medicine[])
+    setFinals(apidata)
+    setData(apidata)
   }, [apidata])
 
 
@@ -60,4 +53,4 @@ const DataTableComponent: React.FC<DataTableComponentProps> = ({ apidata, column
   )
 }
 
-export default DataTableComponent;
+export default DataTableMedicineGroup;

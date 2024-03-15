@@ -3,7 +3,7 @@ import React, { useState, ChangeEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { changePasswordApi } from '../components/auth/apiCalls/changePassword';
-import { MagnifyingGlass, ThreeDots } from 'react-loader-spinner';
+import { ThreeDots } from 'react-loader-spinner';
 
 const ChangePassword: React.FC = () => {
   const [oldPassword, setOldPassword] = useState<string>('');

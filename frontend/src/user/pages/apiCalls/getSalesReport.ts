@@ -10,7 +10,6 @@ interface salesReportProps{
 export const getSalesReportApi = async({url, pharmacy_id}: salesReportProps) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
-    const localPharm = sessionStorage.getItem("activepharmacy")
 
     if (tokenString !== null) {
         var token = JSON.parse(tokenString);

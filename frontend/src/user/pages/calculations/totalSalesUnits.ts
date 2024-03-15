@@ -1,22 +1,6 @@
 import { SelectedDate } from "../../components/reports/ReportHeader";
 import { salesProps } from "../../components/reports/SalesTable";
 
-interface SalesItem {
-    sub_total: number;
-    units_sold: number;
-    medicine_id: number;
-    sales_item_id: number;
-    medicine_name: string;
-}
-
-interface Sale {
-    sale_id: number;
-    sale_date: string;
-    total_price: string;
-    sales_items: SalesItem[];
-    payment_methods: {}[];
-}
-
 export interface ResultItem {
     accumulatedSales:{
         day: string;

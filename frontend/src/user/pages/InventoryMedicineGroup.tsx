@@ -2,19 +2,14 @@ import { useState } from "react";
 import PagesHeader from "../components/sharedComponents/PagesHeader";
 import GroupList from "../components/inventory/medicineGroup/GroupList";
 import GroupMedicineDetails from "../components/inventory/medicineGroup/GroupMedicineDetails";
-import { MedicineGroup } from "../components/inventory/medicineGroup/types";
 import AddGroupForm from "../components/inventory/medicineGroup/AddGroupForm";
+import { Group } from "../../redux/groupList";
 
 const InventoryMedicineGroup = () =>{
     const [showDetails, setShowDetails] = useState("list");
-    const [medicineDetails, setMedicineDetails] = useState({
-        medicine_totals: 0, action: "", group_name: "",
-        medicines:[{
-            medicine_id: 0, medicine_name: "", group_name: "", stock_qty: 0, action: ""
-        }]
-    });
+    const [medicineDetails, setMedicineDetails] = useState<Group>();
 
-    const handleActionDetails = (row: MedicineGroup) =>{
+    const handleActionDetails = (row: Group) =>{
         setMedicineDetails(row);
         setShowDetails("details");
     }
@@ -30,7 +25,7 @@ const InventoryMedicineGroup = () =>{
                     onHandleActionDetails = {handleActionDetails}
                 />
             }
-            {showDetails === "details" && 
+            {showDetails === "details" && medicineDetails &&
                 <GroupMedicineDetails 
                     medicineDetails = {medicineDetails}
                     onHandleActionDetails = {handleActionDetails}

@@ -47,7 +47,6 @@ export const regiterSalesApi = ({
 
     let data = JSON.stringify({orderDetails, totalPrice, moneyTrans, updateStock, payMethods, pharmacy_id});
     
-    // console.log(data);
     const url = isOnline? `https://pharmabackend.karibuchakula.co.ke/user/sales/register-sales` : 
                 `http://localhost:5020/user/sales/register-sales`
 

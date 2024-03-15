@@ -9,13 +9,9 @@ import PricingDetailsCard from "./PricingDetailsCard";
 interface AddMedicineFormProps{
     setShowDetails: (showDetails: string) => void
 }
-export interface GroupListProps{
-    group_name: string;
-    group_id: number;
-}
 
 const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
-    const groupList: GroupListProps[] = useSelector((state: RootState) => state.groupList)
+    const groupList = useSelector((state: RootState) => state.groupList)
     const activePharmacy = useSelector((state: RootState) => state.activePharmacy);
 
     const dispatch = useDispatch();

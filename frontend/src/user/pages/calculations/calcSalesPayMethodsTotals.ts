@@ -1,22 +1,5 @@
 import { SelectedDate } from "../../components/reports/ReportHeader";
-import { salesProps } from "../../components/reports/SalesTable";
 import { paymentProps } from "../types";
-
-interface SalesItem {
-    sub_total: number;
-    Bank: number;
-    medicine_id: number;
-    sales_item_id: number;
-    medicine_name: string;
-}
-
-interface Sale {
-    sale_id: number;
-    sale_date: string;
-    total_price: string;
-    sales_items: SalesItem[];
-    payment_methods: {payment_method: "Cash" | "Bank" | "Customer account", amount: number}[];
-}
 
 export interface PayMethodResult {
     amtPerMethod:{
@@ -65,7 +48,6 @@ export function calcSalesPayMethodTotals({data, date, keyType}: calculateTotalSa
 
             // Update Cash and Bank for each sale
             sale.payment_methods.forEach((method) => {
-                console.log(method)
                 if(method.payment_method !== "Customer account"){
                     let accMethod: {
                         amt: number;
@@ -78,7 +60,6 @@ export function calcSalesPayMethodTotals({data, date, keyType}: calculateTotalSa
                     }
                 }
             });
-console.log(sale);
             sortedPayments.push(sale)
         }
         return acc;

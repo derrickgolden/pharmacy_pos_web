@@ -1,13 +1,19 @@
 import React, { useState } from 'react';
 import { FaDeleteLeft } from 'react-icons/fa6';
 import ChangeDisplay from './ChangeDisplay';
+import { ChangeDisplayProps } from './types';
+import { PoeCalcHandles } from '../../sections/pointOfEntry/types';
 
-// import { PaymentCalcHandles } from './types';
+export interface PaymentCalcProps extends ChangeDisplayProps{
+  PaymentCalcHandles: {
+    handleDigitClick: (digit: number) => void;
+    handleDeleteDigit: () => void;
+    handleSetToQuantityChange: (digit: number) => void;
+};
+}
 
-// interface PosEntryProps{
-//     PaymentCalcHandles: PaymentCalcHandles
-// }
-const PaymentCalc = ({ totalPrice, payMethods, PaymentCalcHandles, change }) => {
+const PaymentCalc: React.FC<PaymentCalcProps> = ({ totalPrice, payMethods, PaymentCalcHandles, change }) => {
+  console.log(PaymentCalcHandles)
   const renderDigitButtons = (digits: number[]) => {
     return digits.map((digit) => (
       <button
@@ -35,7 +41,7 @@ const PaymentCalc = ({ totalPrice, payMethods, PaymentCalcHandles, change }) => 
           <div className='d-flex flex-grow-1'>
             <button
               className='btn btn-outline-secondary btn-calc col-4 rounded-0'
-              onClick={PaymentCalcHandles?.handleQuantityIncByOne}
+              // onClick={PaymentCalcHandles?.handleQuantityIncByOne}
             >
               +
             </button>

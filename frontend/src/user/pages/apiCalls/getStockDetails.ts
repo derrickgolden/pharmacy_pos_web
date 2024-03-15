@@ -5,7 +5,6 @@ import Swal from "sweetalert2";
 export const getStockDetailsApi = async(pharmacy_id: number) =>{
 
     const tokenString = sessionStorage.getItem("userToken");
-    const localPharm = sessionStorage.getItem("activepharmacy")
 
     if (tokenString !== null) {
         var token = JSON.parse(tokenString);

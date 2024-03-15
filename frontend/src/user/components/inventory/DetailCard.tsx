@@ -11,7 +11,7 @@ export interface SalesProps{
     sales_item_id: number
 }
 
-const DetailCard: React.FC<Medicine> = ({data}) =>{
+const DetailCard: React.FC<{data: Medicine}> = ({data}) =>{
     const nodata = "No data"
     const [salesTotals, setSalesTotals ] = useState<{totalSales: number, totalUnits: number}>()
     const salesReport = useSelector((state: RootState) => state.salesReport);
@@ -20,7 +20,7 @@ const DetailCard: React.FC<Medicine> = ({data}) =>{
     useEffect(() =>{
         let totalSales = 0;
         let totalUnits = 0
-        salesReport.map((sales: {sales_items: [SalesProps]}) =>{
+        salesReport.map((sales) =>{
             sales.sales_items.map((details) =>{
                 if( details.medicine_id === data.medicine_id ){
                     totalSales += details.sub_total;

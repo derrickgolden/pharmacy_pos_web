@@ -18,7 +18,7 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ setShowDetails}) =>{
     const { localPharm } = userPharm.localPharm;
     // console.log(localPharm);
     useEffect(() =>{
-        if(localPharm.pharmacy_name){
+        if(localPharm?.pharmacy_name){
             setGroupDetails((obj) =>({...obj, pharmacy_id: localPharm.pharmacy_id}))
         }else{
             Swal.fire({
@@ -42,7 +42,7 @@ const AddGroupForm: React.FC<AddGroupFormProps> = ({ setShowDetails}) =>{
 
     return(
         <div className="px-5">
-            <h3>New medicine group for <span className="text-warning">{localPharm.pharmacy_name}</span></h3>
+            <h3>New medicine group for <span className="text-warning">{localPharm?.pharmacy_name}</span></h3>
             <form onSubmit={handleAddGroupSubmit}
             className="col-sm-10"> 
                 <div className="d-flex flex-wrap justify-content-between align-items-center ">

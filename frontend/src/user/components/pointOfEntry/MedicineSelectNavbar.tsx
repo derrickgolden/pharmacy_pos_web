@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
 
-const MedicineSelectNavbar =({groupNames, setShowGroup, setSearchMedicine}) =>{
+interface MedicineSelectNavbarProps {
+  groupNames: string[];
+  setShowGroup: React.Dispatch<React.SetStateAction<string>>; 
+  setSearchMedicine: React.Dispatch<React.SetStateAction<string>>;
+}
+const MedicineSelectNavbar: React.FC<MedicineSelectNavbarProps> =({groupNames, setShowGroup, setSearchMedicine}) =>{
 
     return(
       <nav className="navbar navbar-expand navbar-light bg-body-tertiary bg-light w-100 "

@@ -6,7 +6,7 @@ import { setCallApi } from "../../../redux/callApi";
 import Swal from "sweetalert2";
 
 const MedicineDetails: React.FC<MedicineDetailsProps> = ({onHandleActionDetails, medicineDetails, setShowDetails}) =>{
-    // console.log(medicineDetails);
+    console.log(medicineDetails);
     const dispatch = useDispatch();
 
     const handleMedicineDelete = (medicine_id: number, medicine_name: string) =>{

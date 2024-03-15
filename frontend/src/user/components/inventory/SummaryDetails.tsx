@@ -2,7 +2,7 @@
 import DataTableComponent from "../sharedComponents/DataTableComponent";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
-import { Medicine, StockDetails } from "./types";
+import { Medicine } from "./types";
 
 import Update_stock_modal from "./PopupModal"
 
@@ -55,7 +55,7 @@ const SummaryDetails = () =>{
         },
         {
             name: "Last Stocked",
-            selector: (row: Medicine) => new Date(row?.last_stocked).toLocaleDateString(),
+            selector: (row: Medicine) => new Date(row.last_stocked).toLocaleDateString(),
             sortable: true
         },
         {

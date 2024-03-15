@@ -7,6 +7,7 @@ import { PaymentObject } from "../../sections/pointOfEntry/ValidateOrders";
 import { calcAndSetChange } from "../../controllers/calculations/calcAndSetChange";
 import Swal from "sweetalert2";
 import ChangeDisplay from "./ChangeDisplay";
+import { PaymentCalcProps } from "./PaymentCalc";
 
 const payments = [
     {icon:<BsCashCoin size={24}/>, method_name: "Cash", method: "cash", payment_method_id: 1},
@@ -14,22 +15,14 @@ const payments = [
     {icon:<MdAccountBalanceWallet size={24}/>, method_name: "Customer Account", method: "customer_acc", payment_method_id: 2},
 ]
 
-interface PaymentMethodProps{
+interface PaymentMethodProps extends PaymentCalcProps{
     handleVilidateClick: (customerGave: {[key: string]: number}, change: {}) =>void;
     setPayMethods: React.Dispatch<React.SetStateAction<string[]>>;
-    totalPrice: number;
-    payMethods: string[];
     activePayMethod: string;
     customerGave: {[key: string]: number};
-    change: {remaining: number };
     setCustomeGave: React.Dispatch<React.SetStateAction<PaymentObject>>;
     setActivePayMethod: React.Dispatch<React.SetStateAction<string>>;
-    setChange: React.Dispatch<React.SetStateAction<{ remaining: number; change: number; }>>;
-    PaymentCalcHandles: {
-        handleDigitClick: (digit: number) => void;
-        handleDeleteDigit: () => void;
-        handleSetToQuantityChange: (digit: number) => void;
-    }
+    setChange: React.Dispatch<React.SetStateAction<{ remaining: number; change: number; }>>; 
 }
 interface PaymentProps{
     icon: JSX.Element;
@@ -121,9 +114,10 @@ const PaymentMethod: React.FC<PaymentMethodProps> = ({
                 </div>
                 {
                     payMethods.map((method, i) =>(
-                        <div className={`${activePayMethod === method? "bg-light ": ""} d-flex py-4 px-2 border col-12
+                        <div key={i}
+                        className={`${activePayMethod === method? "bg-light ": ""} d-flex py-4 px-2 border col-12
                         justify-content-between`}>
-                            <div key={i} onClick={() => handleChangeAmount(method)}
+                            <div onClick={() => handleChangeAmount(method)}
                             className={`col-10 d-flex 
                              justify-content-between `}>
                                 <h6>{method}</h6>

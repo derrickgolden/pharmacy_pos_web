@@ -1,21 +1,16 @@
-import { useEffect, useState } from "react";
-import { MedicineGroup } from "./types";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import DataTableComponent from "../../sharedComponents/DataTableComponent";
 import { getMedicineGroupList } from "./apiCalls/getMedicinGroupList";
 import { useDispatch, useSelector } from "react-redux";
-import { setGroupList } from "../../../../redux/groupList";
+import { Group, setGroupList } from "../../../../redux/groupList";
 import { RootState } from "../../../../redux/store";
-import { getMedicineListApi } from "../apiCalls/getMedicineListApi";
+import DataTableMedicineGroup from "../../sharedComponents/DataTableMedicineGroup";
 
-interface Column {
-    name: string;
-    selector?: (row: MedicineGroup) => React.ReactNode;
-    cell?: (row: MedicineGroup) => React.ReactNode;
-    sortable?: boolean;
+interface  GroupListProps{
+    onHandleActionDetails: (row: Group) => void
   }
 
-const GroupList = ({onHandleActionDetails}) =>{
+const GroupList: React.FC<GroupListProps> = ({onHandleActionDetails}) =>{
     const [search, setSearch] = useState('group_name');
     const [searchType, setSearchType] = useState('group_name');
     
@@ -23,15 +18,15 @@ const GroupList = ({onHandleActionDetails}) =>{
     const groupList = useSelector((state: RootState) => state.groupList);
     const activePharmacy = useSelector((state: RootState) => state.activePharmacy);
 
-    const columns: Column[] = [
+    const columns = [
         {
             name: "Group Name",
-            selector: (row: MedicineGroup) => row.group_name,
+            selector: (row: Group) => row.group_name,
             sortable: true
         },
         {
             name: "No of Medicine",
-            selector: (row: MedicineGroup) => {
+            selector: (row: Group) => {
                 if(row.medicines.length === 1 && row.medicines[0].medicine_id === null){
                     return 0;
                 }
@@ -41,7 +36,7 @@ const GroupList = ({onHandleActionDetails}) =>{
         },
         {
             name: "Action",
-            cell: (row: MedicineGroup) => <>
+            cell: (row: Group) => <>
             <button onClick={() => onHandleActionDetails(row)} 
                 disabled= {row.medicines[0].medicine_id === null ? true : false}
                 className={`btn p-0 px-1 btn-primary btn-sm`}  >
@@ -70,7 +65,7 @@ const GroupList = ({onHandleActionDetails}) =>{
         <div className="px-md-5 pb-5">
             <div className="container-fluid" >
                 {/* <Breadcrumb title={title} brad={brad} /> */}
-                {/* <Link to="#" ><button type="button" className="btn btn-outline-success active btn-sm ">All</button></Link> */}
+                <Link to="#" ><button type="button" className="btn btn-outline-success active btn-sm ">All</button></Link>
                 <div className="row my-3">
                     <div className="col-12">
                         <div className="card" style={{ borderTop: "2px solid #4723d9" }}>
@@ -84,7 +79,7 @@ const GroupList = ({onHandleActionDetails}) =>{
                             </div>
                             <div className="card-body">
                                 {activePharmacy.pharmacy ?  
-                                    <DataTableComponent search={ searchType }
+                                    <DataTableMedicineGroup search={ searchType }
                                         apidata={groupList} columns={columns} 
                                     />  :
                                     <h2>Select a pharmacy first.</h2>

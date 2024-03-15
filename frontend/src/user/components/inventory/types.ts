@@ -23,10 +23,12 @@ export interface Medicine {
     action: string;
     containers: number;
     warning_limit: number;
-    last_stocked?: Date;
-    open_container_units?: number;
+    last_stocked: Date;
+    open_container_units: number;
     stock_id?: number;
     units_per_container: number;
+    instructions?: string;
+    side_effect?: string;
 }
 
 export interface StockDetails{

@@ -93,14 +93,20 @@ const MedicineList: React.FC<MedicineListProps> = ({onHandleActionDetails}) =>{
     
     return(
         <div>
-            <Update_stock_modal 
-                select_data={selectData} open_update_data_modal={open_update_modal}
-                btn_type = "update" 
-            />
-            <Edit_medicine_details 
-                select_data={selectData} open_update_data_modal={open_edit_modal}
-                btn_type = "edit" 
-            />
+            {
+                selectData && (
+                    <>
+                    <Update_stock_modal 
+                        select_data={selectData} open_update_data_modal={open_update_modal}
+                        btn_type = "update" 
+                    />
+                    <Edit_medicine_details 
+                        select_data={selectData} open_update_data_modal={open_edit_modal}
+                        btn_type = "edit" 
+                    />
+                    </>
+                )
+            }
             <div className="container-fluid px-md-5" >
                 <div className="row my-3">
                     <div className="col-12">

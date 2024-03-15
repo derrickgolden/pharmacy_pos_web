@@ -1,4 +1,6 @@
-const ChangeDisplay = ({payMethods, totalPrice, change}) =>{
+import { ChangeDisplayProps } from "./types";
+
+const ChangeDisplay: React.FC<ChangeDisplayProps> = ({payMethods, totalPrice, change}) =>{
     return(
         <div className='border' style={{height: "22vh"}}>
         {!payMethods.length && (

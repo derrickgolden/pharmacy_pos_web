@@ -1,55 +1,47 @@
 import { Link } from "react-router-dom";
 import DataTableComponent from "../../sharedComponents/DataTableComponent";
-import { GroupMedicineDetailsProps, MedicineGroup } from "./types";
+import { GroupMedicineDetailsProps } from "./types";
 import { useEffect, useState } from "react";
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../redux/store";
-import { GroupListProps } from "../AddMedicineForm";
 import { shiftMedicineGroupApi } from "./apiCalls/shiftMedicineGroupApi";
-
-interface Column {
-    name: string;
-    selector?: (row: MedicineGroup) => React.ReactNode;
-    cell?: (row: MedicineGroup) => React.ReactNode;
-    sortable?: boolean;
-  }
+import { Medicine } from "../types";
 
 const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> = 
     ({medicineDetails, onHandleActionDetails, setShowDetails}) =>{
         
-    const [search, setSearch] = useState('group_name');
-    const [searchType, setSearchType] = useState('group_name');
-    const [apidata, setApiState] = useState([])
+    const [search, setSearch] = useState('medicine_name');
+    const [searchType, setSearchType] = useState('medicine_name');
+    const [apidata, setApiState] = useState(medicineDetails.medicines)
     {/* data table column name */ }
     const [apicol, setApiCol] = useState([])
     const [rerendarApi, setRerendarApi] = useState(false)
 
     const [selectedGroup, setSelectedGroup ] = useState<string>()
-    const [selectedMedicine, setSelectedMedicine ] = useState<number>()
+    const [selectedMedicine, setSelectedMedicine ] = useState<Medicine>()
 
-    const groupList: GroupListProps[] = useSelector((state: RootState) => state.groupList)
-
-    const columns: Column[] = [
+    const groupList = useSelector((state: RootState) => state.groupList)
+console.log(medicineDetails);
+    const columns = [
         {
             name: "Medicine Name",
-            selector: (row: MedicineGroup) => row.medicine_name,
+            selector: (row: Medicine) => row.medicine_name,
             sortable: true
         },
         {
             name: "Stock Qty",
-            selector: (row: MedicineGroup) => row.stock_qty,
+            selector: (row: Medicine) => row.stock_qty,
             sortable: true
         },
         {
             name: "Action",
-            cell: (row: MedicineGroup) => <>
-            <button variant="primary" onClick={() => handleShow(row)} 
+            cell: (row: Medicine) => <>
+            <button onClick={() => handleShow(row)} 
                 className={`btn p-0 px-1 btn-outline-danger btn-sm`}  >
                     Shift group
-                </button></>,
+            </button></>,
         },
     ]
 
@@ -57,7 +49,6 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
     useEffect(() => {
         setApiState(medicineDetails.medicines)
         // setApiCol(columns)
-        console.log(medicineDetails)
     }, [rerendarApi])
 
     const handleSearchChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -68,17 +59,14 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
-    const handleShow = (row) =>{
+    const handleShow = (row: Medicine) =>{
         setSelectedMedicine(row)
         setShow(true);
     } 
     const handleShiftGroup = () =>{
-
-        console.log(selectedGroup)
-        console.log(selectedMedicine)
         const [group ]= groupList.filter((group) => group.group_name === selectedGroup)
         
-        shiftMedicineGroupApi(group.group_id, Number(selectedMedicine.medicine_id), handleClose);
+        shiftMedicineGroupApi(group.group_id, Number(selectedMedicine?.medicine_id), handleClose);
     }
     
 
@@ -86,17 +74,16 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
         <div className="px-1 px-sm-5">
              <div className="container-fluid" >
                 {/* <Breadcrumb title={title} brad={brad} /> */}
-                <Link to="#" ><button type="button" className="btn btn-outline-success active btn-sm ">All</button></Link>
+                {/* <Link to="#" ><button type="button" className="btn btn-outline-success active btn-sm ">All</button></Link> */}
                 <div className="row my-3">
                     <div className="col-12">
                         <div className="card" style={{ borderTop: "2px solid #4723d9" }}>
                             <div className="card-header d-flex justify-content-between border-bottom pb-1">
-                                <h4>Medicine Groups</h4>
-                                {/* <select value={search} onChange={handleSearchChange}>
+                                <h4>{medicineDetails.group_name} Group</h4>
+                                <select value={search} onChange={handleSearchChange}>
                                     <option value="medicine_name">Medicine Name</option>
-                                    <option value="group_name">Medicine Group</option>
                                     <option value="medicine_id">Medicine Id</option>
-                                </select> */}
+                                </select>
                             </div>
                             <div className="card-body">
                                 <DataTableComponent search={ searchType }
@@ -113,7 +100,7 @@ const GroupMedicineDetails: React.FC<GroupMedicineDetailsProps> =
                                 <div className="form-group mb-3 col-sm-12">
                                     <h6 className="p-2">Select a different group to shift the medicine to.</h6>
                                     <select onChange={(e) => setSelectedGroup(e.target.value)} value={selectedGroup}
-                                    className="form-control" name="group_name">
+                                    className="form-control" name="group_name" required>
                                         <option>-select group-</option>
                                         {groupList.map((group, i)=>(
                                             <option key={i} >{group.group_name}</option>

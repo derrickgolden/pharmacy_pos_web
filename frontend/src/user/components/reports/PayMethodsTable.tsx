@@ -29,24 +29,10 @@ const PayMethodTable: React.FC<salesDataProps> = ({ paymentData, activePharmacy 
         { name: 'Sale ID', selector: (row: mappedPaymentProps) => row.sale_id, sortable: true },
         { name: 'Sale Date', selector: (row: mappedPaymentProps) => row.sale_date, sortable: true },
         { name: 'Payment Method', selector: (row: mappedPaymentProps) => {
-            return(
-                <div className='d-flex flex-column'>{
-                    row.payment_methods.map((method, i: number) =>(
-                        <span key={i}>{method.payment_method}</span>
-                    ))
-                }
-                </div>
-            )
+            return row.payment_methods.map(method => method.payment_method).join(', ');
         }, sortable: true},
         { name: 'Amount', selector: (row: mappedPaymentProps) => {
-            return(
-                <div className='d-flex flex-column'>{
-                    row.payment_methods.map((method, i: number) =>(
-                        <span key={i}>{method.amount}</span>
-                    ))
-                }
-                </div>
-            )
+            return row.payment_methods.map(method => method.amount).join(', ');
         }, sortable: true },
         { name: 'Total Price', selector: (row: mappedPaymentProps) => row.total_price, sortable: true },
     ];

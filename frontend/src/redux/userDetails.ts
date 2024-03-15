@@ -7,12 +7,6 @@ export interface UserDetails {
   last_name: string;
 }
 
-interface UserDetailsState {
-  user_id: string;
-  first_name: string;
-  last_name: string;
-}
-
 const initialState: UserDetails = {
   user_id: "",
   first_name: "",
