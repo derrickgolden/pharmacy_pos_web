@@ -1,8 +1,10 @@
 import axios from "axios";
 import { server_baseurl } from "../../../../baseUrl";
 import Swal from "sweetalert2";
+import { Pharmacy } from "../../../../redux/activePharmacy";
 
-export const getPharmacyDetailsApi = async() =>{
+
+export const getPharmacyDetailsApi = async(): Promise<Pharmacy[] | undefined> =>{
 
     const tokenString = sessionStorage.getItem("userToken");
     if (tokenString !== null) {
@@ -13,7 +15,7 @@ export const getPharmacyDetailsApi = async() =>{
             text: "Try to login Again then add the group.",
             icon: "warning"
         });
-        return
+        return undefined
     }
 
     let config = {
@@ -29,6 +31,7 @@ export const getPharmacyDetailsApi = async() =>{
     return await axios.request(config)
     .then((response) => {
         if(response.data.success){
+            console.log(response.data.details);
            return response.data.details
         }else{
             Swal.fire({
@@ -37,6 +40,7 @@ export const getPharmacyDetailsApi = async() =>{
                 icon: "warning"
             });
         }
+        return undefined;
     })
     .catch((error) => {
         console.log(error);
@@ -45,5 +49,6 @@ export const getPharmacyDetailsApi = async() =>{
             text: `Server side error`,
             icon: "warning"
         });
+        return undefined;
     });   
 }

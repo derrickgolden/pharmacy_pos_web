@@ -31,7 +31,7 @@ const Login: React.FC = () =>{
 
             loginApi({data, dispatch, setUserDetails, navigate, setLoginDetails});
         }
-    });
+    },[]);
 
     useEffect(()=>{
         setLoginDetails((obj) => ({...obj, acc_type}));

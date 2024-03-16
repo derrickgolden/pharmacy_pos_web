@@ -46,8 +46,9 @@ export default function LandingPageHeader() {
     
     useEffect(() =>{
         const medicineList = getPharmacyDetailsApi()
+        console.log(medicineList);
         medicineList.then(data =>{
-            if(!activePharmacy.pharmacy) {
+            if(!activePharmacy.pharmacy && data !== undefined) {
                 sessionStorage.setItem("activepharmacy", JSON.stringify(data[0]));
                 dispatch(setActivePharmacy({pharmacy: data[0]}));
             }
@@ -159,10 +160,8 @@ export default function LandingPageHeader() {
                                     <MdDashboard />
                                     <span className="nav_name ">Dashboard</span>
                                 </Link>
-                                <Link onClick={handleLinkClick} to={{ pathname: '/user/session',
-                                    state: { activePharmacy },
-                                  }}id='session'
-                                className={`${activeLink === 'session'? 'text-white font-weight-bold ' :"" }nav_link`}>
+                                <Link onClick={handleLinkClick} to= '/user/session' id='session'
+                                    className={`${activeLink === 'session'? 'text-white font-weight-bold ' :"" }nav_link`}>
                                     <MdPointOfSale />
                                     <span className="nav_name ">Session</span>
                                 </Link>

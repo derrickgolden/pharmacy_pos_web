@@ -5,14 +5,12 @@ import { useSelector } from "react-redux";
 
 const Session = () =>{
     const navigate = useNavigate()
-    const rerender = useSelector((state: RootState) => state.rerender)
     const activePharmacy = useSelector((state: RootState) => state.activePharmacy); 
 
     const handleSessionStart = () => {
             navigate("/user/sales-entry");
     }; 
 
-    console.log(activePharmacy);
     return(
         <div className='body2 bg-white' style={{paddingTop: "2rem"}}>
             <div className="h-100 bg-light px-5 py-5 " 

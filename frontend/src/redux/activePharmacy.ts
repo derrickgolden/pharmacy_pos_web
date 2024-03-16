@@ -15,14 +15,10 @@ export interface Pharmacy {
 
 export interface PharmacyState {
     pharmacy: Pharmacy | null;
-    loading: boolean;
-    error: string | null;
 }
 
 const initialState: PharmacyState = {
     pharmacy: null,
-    loading: false,
-    error: null
 };
 
 const activePharmacySlice = createSlice({
