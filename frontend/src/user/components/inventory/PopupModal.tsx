@@ -32,25 +32,21 @@ const Add_data_modal: React.FC<Add_data_modal_Props> = ({ select_data, open_upda
 
     const [newStock, setNewStock] = useState<number>()
     const [editDetails, setEditDetails] = useState(
-        {medicine_name: select_data?.medicine_name, warning_limit: select_data?.warning_limit}
+        {medicine_name: '', warning_limit: 0}
     )
         
     const stock = select_data?.stock_qty || select_data?.containers || 0;
     const [totalStock, setTotalStock] = useState<number>(stock);
  
     useEffect(() => {
-
+        const {group_name, medicine_id, medicine_name, warning_limit} = select_data;
         setUpdate_modal_data({
-            group_name: select_data?.group_name, 
-            medicine_id: select_data?.medicine_id,
-            medicine_name: select_data?.medicine_name,
-            stock_qty: stock
+            group_name, medicine_id, medicine_name, stock_qty: stock
         })
 
         setNewStock(undefined);
-        
-        // setTotalStock(stock);
-        // setEditDetails({medicine_name: select_data.medicine_name, warning_limit: select_data.warning_limit })
+        setTotalStock(stock);
+        setEditDetails({medicine_name, warning_limit })
         setBtnType(btn_type)
     }, [select_data])
 

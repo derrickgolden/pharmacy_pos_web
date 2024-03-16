@@ -13,7 +13,6 @@ export interface PaymentCalcProps extends ChangeDisplayProps{
 }
 
 const PaymentCalc: React.FC<PaymentCalcProps> = ({ totalPrice, payMethods, PaymentCalcHandles, change }) => {
-  console.log(PaymentCalcHandles)
   const renderDigitButtons = (digits: number[]) => {
     return digits.map((digit) => (
       <button

@@ -107,7 +107,7 @@ const AddMedicineForm: React.FC<AddMedicineFormProps> = ({ setShowDetails}) =>{
                 />
 
                 <div className="form-group mb-3 ">
-                    <label htmlFor="exampleFormControlTextarea1">How to Use</label>
+                    <label htmlFor="exampleFormControlTextarea1">Instructions</label>
                     <textarea onChange={handleFormInput} value={medicineDetails.instructions}
                     className="form-control" id="exampleFormControlTextarea1" required name="instructions"
                         aria-required rows={selectRows}></textarea>
